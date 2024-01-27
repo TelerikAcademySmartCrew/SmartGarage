@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using SmartGarage.Data.Models.VehicleModels;
+using SmartGarage.Data.Models;
 using SmartGarage.Data.Seeding;
 using SmartGarage.WebAPI.Models;
 using System.Reflection.Emit;
@@ -42,7 +42,7 @@ namespace SmartGarage.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
 
-            builder.Entity<Model>()
+            builder.Entity<VehicleModel>()
                 .HasOne(m => m.Brand)
                 .WithMany(b => b.Models)
                 .HasForeignKey(m => m.BrandId)

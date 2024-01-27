@@ -1,4 +1,4 @@
-﻿using SmartGarage.Data.Models.VehicleModels;
+﻿using SmartGarage.Data.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,13 +12,13 @@ namespace SmartGarage.WebAPI.Models
         [Required]
         public int BrandId { get; set; }
         [ForeignKey(nameof(BrandId))]
-        public Brand Brand { get; set; }
+        public VehicleBrand Brand { get; set; }
 
         [Required]
         public int ModelId { get; set; }
         [ForeignKey(nameof(ModelId))]
 
-        public Model Model { get; set; }
+        public VehicleModel Model { get; set; }
 
         [Required]
         public string UserId { get; set; }
@@ -26,5 +26,8 @@ namespace SmartGarage.WebAPI.Models
         [ForeignKey(nameof(UserId))]
         public AppUser User { get; set; }
         public List<Service> Services { get; set; } = new List<Service>();
+
+        [Required]
+        public bool IsDeleted { get; set; }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartGarage.Data;
 using SmartGarage.Data.Seeding;
+using SmartGarage.WebAPI.Models;
 using static SmartGarage.Data.ApplicationDbContext;
 
 namespace SmartGarage
@@ -19,7 +20,7 @@ namespace SmartGarage
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -30,7 +31,7 @@ namespace SmartGarage
             using (var scope = app.Services.CreateScope())
             {
                 var serviceProvider = scope.ServiceProvider;
-                var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
                 var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
                 SeedData.Initialize(userManager, roleManager).Wait();

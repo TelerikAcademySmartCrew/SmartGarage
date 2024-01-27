@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SmartGarage.Data.Models.VehicleModels
+namespace SmartGarage.Data.Models
 {
     public class Service
     {
