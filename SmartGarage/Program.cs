@@ -20,6 +20,8 @@ namespace SmartGarage
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
+                .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
@@ -29,7 +31,9 @@ namespace SmartGarage
             {
                 var serviceProvider = scope.ServiceProvider;
                 var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                SeedData.Initialize(userManager).Wait();
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                SeedData.Initialize(userManager, roleManager).Wait();
             }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
