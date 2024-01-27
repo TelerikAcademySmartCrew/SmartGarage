@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.VehicleModels;
 
 namespace SmartGarage.WebAPI.Models
 {

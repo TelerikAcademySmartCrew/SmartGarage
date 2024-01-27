@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SmartGarage.Data;
+using SmartGarage.Data.Seeding;
+using static SmartGarage.Data.ApplicationDbContext;
 
 namespace SmartGarage
 {
@@ -8,6 +10,7 @@ namespace SmartGarage
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -20,8 +23,14 @@ namespace SmartGarage
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
 
+            var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+                SeedData.Initialize(userManager).Wait();
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
