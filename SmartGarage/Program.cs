@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using SmartGarage.Data;
+using SmartGarage.Data.Seeding;
+using SmartGarage.WebAPI.Models;
+using static SmartGarage.Data.ApplicationDbContext;
 
 namespace SmartGarage
 {
@@ -9,6 +12,7 @@ namespace SmartGarage
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -16,23 +20,20 @@ namespace SmartGarage
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-            builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-			{
-                options.SignIn.RequireConfirmedAccount = true;
-
-                options.Password.RequiredLength = 8;
-                options.Password.RequiredUniqueChars = 5;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireDigit = true;
-                options.Password.RequireNonAlphanumeric = true;
-			})
+            
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            var app = builder.Build();
 
+            var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                SeedData.Initialize(userManager, roleManager).Wait();
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
