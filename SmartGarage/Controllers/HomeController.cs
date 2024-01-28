@@ -23,8 +23,15 @@ namespace SmartGarage.Controllers
 
         public IActionResult Index()
         {
-            
-            return View();
+            LocationLists model = new LocationLists();
+            var locations = new List<Location>()
+            {
+                new Location(1, "SmartGarage", "SmartGarage", 42.65033853376936, 23.379256507391496)
+            };
+            model.Locations = locations;
+            model.ServiceLocation = locations[0];
+
+            return View(model);
         }
 
         public IActionResult Privacy()
