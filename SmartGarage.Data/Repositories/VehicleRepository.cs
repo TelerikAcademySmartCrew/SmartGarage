@@ -33,6 +33,13 @@ namespace SmartGarage.Data.Repositories
         {
             var vehiclesToReturn = applicationDbContext.Vehicles.AsQueryable();
 
+            vehiclesToReturn = FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
+
+            return await vehiclesToReturn.ToListAsync();
+        }
+
+        private static IQueryable<Vehicle> FilterVehiclesByQuery(VehicleQueryParameters vehicleQueryParameters, IQueryable<Vehicle> vehiclesToReturn)
+        {
             if (!string.IsNullOrEmpty(vehicleQueryParameters.Brand))
             {
                 vehiclesToReturn = vehiclesToReturn.Where(v => v.Brand.Name == vehicleQueryParameters.Brand);
@@ -48,7 +55,7 @@ namespace SmartGarage.Data.Repositories
                 vehiclesToReturn = vehiclesToReturn.Where(v => v.User.UserName == vehicleQueryParameters.Username);
             }
 
-            return await vehiclesToReturn.ToListAsync();
+            return vehiclesToReturn;
         }
 
         public async Task<Vehicle> GetVehicleByIdAsync(int vehicleId)

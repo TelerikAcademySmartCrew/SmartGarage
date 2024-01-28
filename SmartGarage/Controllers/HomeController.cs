@@ -12,7 +12,7 @@ namespace SmartGarage.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<AppUser> userManager;
 
-        public HomeController(ILogger<HomeController> logger, 
+        public HomeController(ILogger<HomeController> logger,
             RoleManager<IdentityRole> roleManager,
             UserManager<AppUser> userManager)
         {
@@ -23,6 +23,10 @@ namespace SmartGarage.Controllers
 
         public IActionResult Index()
         {
+            if (this.User.IsInRole("Admin"))
+            {
+                return this.RedirectToAction("Index", "Home", new { Area = "Admin" });
+            }
             LocationLists model = new LocationLists();
             var locations = new List<Location>()
             {
