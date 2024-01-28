@@ -1,4 +1,5 @@
-﻿using SmartGarage.Data.Models.DTOs;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.WebAPI.Models;
 using System;
@@ -20,17 +21,17 @@ namespace SmartGarage.Data.Repositories
         }
 
 
-        public Vehicle CreateVehicle(Vehicle vehicle, AppUser currentUser)
+        public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, AppUser currentUser)
         {
-            this.applicationDbContext.Vehicles.Add(vehicle);
+            applicationDbContext.Vehicles.Add(vehicle);
             currentUser.Vehicles.Add(vehicle);
-            applicationDbContext.SaveChanges();
+            await applicationDbContext.SaveChangesAsync();
             return vehicle;
         }
-        public IList<Vehicle> GetAll(VehicleQueryParameters vehicleQueryParameters)
+
+        public async Task<IList<Vehicle>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
         {
-            var vehiclesToReturn = this.applicationDbContext.Vehicles
-                .AsQueryable();
+            var vehiclesToReturn = applicationDbContext.Vehicles.AsQueryable();
 
             if (!string.IsNullOrEmpty(vehicleQueryParameters.Brand))
             {
@@ -47,20 +48,19 @@ namespace SmartGarage.Data.Repositories
                 vehiclesToReturn = vehiclesToReturn.Where(v => v.User.UserName == vehicleQueryParameters.Username);
             }
 
-            return vehiclesToReturn.ToList();
+            return await vehiclesToReturn.ToListAsync();
         }
 
-        public Vehicle GetVehicleById(int vehicleId)
+        public async Task<Vehicle> GetVehicleByIdAsync(int vehicleId)
         {
-            return applicationDbContext.Vehicles
-                .FirstOrDefault(v => v.Id == vehicleId)
+            return await applicationDbContext.Vehicles
+                .FirstOrDefaultAsync(v => v.Id == vehicleId)
                 ?? throw new ArgumentNullException(VehicleNotFoundMessage);
-            //TODO: Implement custom exceptions
         }
 
-        public IList<Vehicle> GetVehiclesByUser(string userId, VehicleQueryParameters vehicleQueryParameters)
+        public async Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters)
         {
-            var vehiclesToReturn = this.applicationDbContext.Vehicles
+            var vehiclesToReturn = applicationDbContext.Vehicles
                 .Where(v => v.UserId == userId)
                 .AsQueryable();
 
@@ -79,25 +79,26 @@ namespace SmartGarage.Data.Repositories
                 vehiclesToReturn = vehiclesToReturn.Where(v => v.User.UserName == vehicleQueryParameters.Username);
             }
 
-            return vehiclesToReturn.ToList();
+            return await vehiclesToReturn.ToListAsync();
         }
 
-        public Vehicle UpdateVehicle(int vehicleId, Vehicle updatedVehicle)
+        public async Task<Vehicle> UpdateVehicleAsync(int vehicleId, Vehicle updatedVehicle)
         {
-            var vehicleToUpdate = this.GetVehicleById(vehicleId);
+            var vehicleToUpdate = await GetVehicleByIdAsync(vehicleId);
 
             vehicleToUpdate.BrandId = updatedVehicle.BrandId;
             vehicleToUpdate.ModelId = updatedVehicle.ModelId;
             vehicleToUpdate.UserId = updatedVehicle.UserId;
 
-            applicationDbContext.SaveChanges();
+            await applicationDbContext.SaveChangesAsync();
             return vehicleToUpdate;
         }
-        public void DeleteVehicle(int vehicleId)
+
+        public async Task DeleteVehicleAsync(int vehicleId)
         {
-            var vehicle = this.GetVehicleById(vehicleId);
+            var vehicle = await GetVehicleByIdAsync(vehicleId);
             vehicle.IsDeleted = true;
-            applicationDbContext.SaveChanges();
+            await applicationDbContext.SaveChangesAsync();
         }
     }
 }

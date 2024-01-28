@@ -10,11 +10,11 @@ namespace SmartGarage.Data.Repositories.Contracts
 {
     public interface IVehicleRepository
     {
-        IList<Vehicle> GetAll(VehicleQueryParameters vehicleQueryParameters);
-        IList<Vehicle> GetVehiclesByUser(string userId, VehicleQueryParameters vehicleQueryParameters);
-        Vehicle GetVehicleById(int vehicleId);
-        Vehicle CreateVehicle(Vehicle vehicle, AppUser currentUser);
-        Vehicle UpdateVehicle(int vehicleId, Vehicle updatedVehicle);
-        void DeleteVehicle(int vehicleId);
+        Task<IList<Vehicle>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters);
+        Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters);
+        Task<Vehicle> GetVehicleByIdAsync(int vehicleId);
+        Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, AppUser currentUser);
+        Task<Vehicle> UpdateVehicleAsync(int vehicleId, Vehicle updatedVehicle);
+        Task DeleteVehicleAsync(int vehicleId);
     }
 }
