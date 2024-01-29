@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Models;
 using SmartGarage.WebAPI.Models;
 using System.Diagnostics;
+using static SmartGarage.Common.GeneralApplicationConstants;
 
 namespace SmartGarage.Controllers
 {
@@ -23,9 +24,9 @@ namespace SmartGarage.Controllers
 
         public IActionResult Index()
         {
-            if (this.User.IsInRole("Admin"))
+            if (this.User.IsInRole(AdminRoleName))
             {
-                return this.RedirectToAction("Index", "Home", new { Area = "Admin" });
+                return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
             }
             LocationLists model = new LocationLists();
             var locations = new List<Location>()
