@@ -42,7 +42,7 @@
 
 		private string ShuffleString(string inputString)
 		{
-			var inputStringAsList = password.ToCharArray().ToList();
+			var inputStringAsList = inputString.ToCharArray().ToList();
 			var lenght = inputStringAsList.Count;
 
 			var shuffledStringAsList = new List<char>();
@@ -56,7 +56,6 @@
 			}
 
 			return string.Join("", shuffledStringAsList);
-
 		}
 	}
 }
