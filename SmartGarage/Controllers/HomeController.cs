@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Models;
 using SmartGarage.WebAPI.Models;
 using System.Diagnostics;
+using static SmartGarage.Common.GeneralApplicationConstants;
 
 namespace SmartGarage.Controllers
 {
@@ -12,7 +13,7 @@ namespace SmartGarage.Controllers
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<AppUser> userManager;
 
-        public HomeController(ILogger<HomeController> logger, 
+        public HomeController(ILogger<HomeController> logger,
             RoleManager<IdentityRole> roleManager,
             UserManager<AppUser> userManager)
         {
@@ -23,6 +24,10 @@ namespace SmartGarage.Controllers
 
         public IActionResult Index()
         {
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
+            }
             LocationLists model = new LocationLists();
             var locations = new List<Location>()
             {
