@@ -14,12 +14,22 @@
         @* <p style="text-align:start;">Learn about <a href="https://docs.microsoft.com/aspnet/core" style="text-decoration:none">building Web apps with ASP.NET Core</a>.</p> *@
     </div>
 
-    <div class="d-flex col justify-content-center" style="margin-top:50px;">
-        <button asp-controller="Home" asp-action="Login" class="btn log-in-button text-black btn-outline-light opacity-75" type="button">
-            Log In
-        </button>
+    <div class="d-flex flex-column justify-content-center" style="margin-top:50px;">
+        <form class="d-flex flex-column m-auto justify-content-center" asp-controller="Posts" asp-action="Search" method="get">
+            <input name="title" class="form-control me-2" type="text" placeholder="Emai" aria-label="Search">
+            <div d-flex flex-row my-2>
+                <button typeof="submit" class="btn my-4 log-in-button text-black btn-outline-light opacity-75" type="submit">
+                    Submit
+                </button>
+                <button class="btn btn-outline-light opacity-75" type="submit">Cancel</button>
+            </div>
+        </form>
     </div>
-
+@* 
+    <div class="d-flex col justify-content-center" style="margin-top:50px;">
+    </div>
+ *@
+@* 
     <div class="d-flex col mt-4 justify-content-center">
         <p>
             <a href="#" style="text-decoration:none">
@@ -27,23 +37,8 @@
             </a>
         </p>
     </div>
-
+ *@
 </div>
 
-
-<div class="d-flex col justify-content-center row">
-    <div id="myMap" style="width:400px; height:300px;"></div>
-</div>
-
-<script src="~/js/maps.js" asp-append-version="true"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-@section scripts {
-    <script type="text/javascript">
-        document.addEventListener("DOMContentLoaded", function () {
-            LoadMap();
-        });
-    </script>
-}
