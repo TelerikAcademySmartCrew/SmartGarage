@@ -21,6 +21,15 @@ namespace SmartGarage.WebAPI.Models
         public VehicleModel Model { get; set; }
 
         [Required]
+        public string VIN { get; set; }
+
+        [Required, Range(1886, int.MaxValue)]
+        public int CreationYear { get; set; }
+
+        [Required]
+        public string LicensePlate { get; set; }
+
+        [Required]
         public string UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
