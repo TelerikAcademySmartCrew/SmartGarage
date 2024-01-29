@@ -4,10 +4,10 @@
 	{
 		internal string Generate()
 		{
-			var passwordSymbols = GenerateRandomString();
-			var actualPassword = ShuffleString(passwordSymbols);
+			var randomString = GenerateRandomString();
+			var password = ShuffleString(randomString);
 
-			return actualPassword;
+			return password;
 		}
 
 		private string GenerateRandomString()
@@ -40,22 +40,22 @@
 			return result;
 		}
 
-		private string ShuffleString(string password)
+		private string ShuffleString(string stringToShuffle)
 		{
-			var passwordList = password.ToCharArray().ToList();
-			var lenght = passwordList.Count;
+			var stringToShuffleAsList = inputString.ToCharArray().ToList();
+			var lenght = stringToShuffleAsList.Count;
 
-			var actualPasswordList = new List<char>();
+			var resultAsList = new List<char>();
 
 			for (int i = 0; i < lenght; i++)
 			{
-				var currentSymbol = passwordList[new Random().Next(0, passwordList.Count - 1)];
+				var currentSymbol = stringToShuffleAsList[new Random().Next(0, stringToShuffleAsList.Count - 1)];
 
-				actualPasswordList.Insert(0, currentSymbol);
-				passwordList.Remove(currentSymbol);
+				resultAsList.Insert(0, currentSymbol);
+				stringToShuffleAsList.Remove(currentSymbol);
 			}
 
-			return string.Join("", actualPasswordList);
+			return string.Join("", resultAsList);
 
 		}
 	}
