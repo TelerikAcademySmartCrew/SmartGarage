@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.WebAPI.Models;
@@ -25,8 +26,8 @@ namespace SmartGarage.Data.Repositories
         {
             vehicle.UserId = "d1499578-6274-48aa-b4f7-495baba0721d";
             applicationDbContext.Vehicles.Add(vehicle);
-            var brand = await applicationDbContext.VehicleBrands.FirstOrDefaultAsync(b => b.Id == 1);
-            var model = await applicationDbContext.VehicleModels.FirstOrDefaultAsync(b => b.Id == 1);
+            var brand = await applicationDbContext.VehicleBrands.FirstOrDefaultAsync(b => b.Id == vehicle.BrandId);
+            var model = await applicationDbContext.VehicleModels.FirstOrDefaultAsync(m => m.Id == vehicle.ModelId);
             model.Vehicles.Add(vehicle);
             brand.Vehicles.Add(vehicle);
             currentUser.Vehicles.Add(vehicle);
@@ -36,7 +37,10 @@ namespace SmartGarage.Data.Repositories
 
         public async Task<IList<Vehicle>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
         {
-            var vehiclesToReturn = applicationDbContext.Vehicles.AsQueryable();
+            var vehiclesToReturn = applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .AsQueryable();
 
             vehiclesToReturn = FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
 
@@ -46,13 +50,17 @@ namespace SmartGarage.Data.Repositories
         public async Task<Vehicle> GetVehicleByIdAsync(int vehicleId)
         {
             return await applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
                 .FirstOrDefaultAsync(v => v.Id == vehicleId)
-                ?? throw new ArgumentNullException(VehicleNotFoundMessage);
+                ?? throw new EntityNotFoundException(VehicleNotFoundMessage);
         }
 
         public async Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters)
         {
             var vehiclesToReturn = applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
                 .Where(v => v.UserId == userId)
                 .AsQueryable();
 

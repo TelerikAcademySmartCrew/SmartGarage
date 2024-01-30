@@ -65,7 +65,7 @@ namespace SmartGarage.WebAPI.Controllers
 
        // POST: api/vehicles
        [HttpPost]
-        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleDTO vehicleCreateDTO)
+        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace SmartGarage.WebAPI.Controllers
 
         // PUT: api/vehicles/id
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVehicleAsync([FromRoute]int id, [FromBody] VehicleDTO vehicleDTO)
+        public async Task<IActionResult> UpdateVehicleAsync([FromRoute]int id, [FromBody] VehicleCreateDTO vehicleDTO)
         {
             try
             {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartGarage.Data.Models.DTOs
 {
-    public class VehicleDTO
+    public class VehicleCreateDTO
     {
         [Required]
         public int BrandId { get; set; }
