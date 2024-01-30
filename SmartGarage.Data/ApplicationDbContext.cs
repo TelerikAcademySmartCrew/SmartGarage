@@ -19,21 +19,17 @@ namespace SmartGarage.Data
 
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Service> Services { get; set; }
+        public DbSet<VehicleModel> VehicleModels { get; set; }
+        public DbSet<VehicleBrand> VehicleBrands { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            ConfigureEntityRelationships(builder);
-        }
-
-        private static void ConfigureEntityRelationships(ModelBuilder builder)
-        {
-
             builder.Entity<Vehicle>()
-                .HasOne(l => l.User)
-                .WithMany(p => p.Vehicles)
-                .HasForeignKey(r => r.UserId)
+                .HasOne(v => v.User)
+                .WithMany(u => u.Vehicles)
+                .HasForeignKey(v => v.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Vehicle>()
@@ -42,6 +38,11 @@ namespace SmartGarage.Data
                 .HasForeignKey(v => v.BrandId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            builder.Entity<Vehicle>()
+               .HasOne(v => v.Model)
+               .WithMany(m => m.Vehicles)
+               .HasForeignKey(v => v.ModelId)
+               .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<VehicleModel>()
                 .HasOne(m => m.Brand)
@@ -54,8 +55,6 @@ namespace SmartGarage.Data
                 .WithMany(v => v.Services)
                 .HasForeignKey(s => s.VehicleId)
                 .OnDelete(DeleteBehavior.Restrict);
-
         }
-
     }
 }

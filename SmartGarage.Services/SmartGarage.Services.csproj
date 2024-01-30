@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.25" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartGarage.Data\SmartGarage.Data.csproj" />
     <ProjectReference Include="..\SmartGarage.Utilities\SmartGarage.Utilities.csproj" />
   </ItemGroup>
 

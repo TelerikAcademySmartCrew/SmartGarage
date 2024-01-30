@@ -11,7 +11,7 @@ namespace SmartGarage.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly RoleManager<IdentityRole> roleManager;
-        private readonly UserManager<AppUser> userManager;
+        private readonly UserManager<AppUser> userService;
 
         public HomeController(ILogger<HomeController> logger,
             RoleManager<IdentityRole> roleManager,
@@ -19,7 +19,7 @@ namespace SmartGarage.Controllers
         {
             _logger = logger;
             this.roleManager = roleManager;
-            this.userManager = userManager;
+            this.userService = userManager;
         }
 
         public IActionResult Index()
@@ -28,6 +28,7 @@ namespace SmartGarage.Controllers
             {
                 return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
             }
+           
             LocationLists model = new LocationLists();
             var locations = new List<Location>()
             {
@@ -35,7 +36,7 @@ namespace SmartGarage.Controllers
             };
             model.Locations = locations;
             model.ServiceLocation = locations[0];
-
+            
             return View(model);
         }
 

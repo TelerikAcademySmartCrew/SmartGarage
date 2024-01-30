@@ -23,7 +23,12 @@ namespace SmartGarage.Data.Repositories
 
         public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, AppUser currentUser)
         {
+            vehicle.UserId = "d1499578-6274-48aa-b4f7-495baba0721d";
             applicationDbContext.Vehicles.Add(vehicle);
+            var brand = await applicationDbContext.VehicleBrands.FirstOrDefaultAsync(b => b.Id == 1);
+            var model = await applicationDbContext.VehicleModels.FirstOrDefaultAsync(b => b.Id == 1);
+            model.Vehicles.Add(vehicle);
+            brand.Vehicles.Add(vehicle);
             currentUser.Vehicles.Add(vehicle);
             await applicationDbContext.SaveChangesAsync();
             return vehicle;
@@ -36,26 +41,6 @@ namespace SmartGarage.Data.Repositories
             vehiclesToReturn = FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
 
             return await vehiclesToReturn.ToListAsync();
-        }
-
-        private static IQueryable<Vehicle> FilterVehiclesByQuery(VehicleQueryParameters vehicleQueryParameters, IQueryable<Vehicle> vehiclesToReturn)
-        {
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Brand))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.Brand.Name == vehicleQueryParameters.Brand);
-            }
-
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Model))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.Model.Name == vehicleQueryParameters.Model);
-            }
-
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Username))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.User.UserName == vehicleQueryParameters.Username);
-            }
-
-            return vehiclesToReturn;
         }
 
         public async Task<Vehicle> GetVehicleByIdAsync(int vehicleId)
@@ -71,20 +56,7 @@ namespace SmartGarage.Data.Repositories
                 .Where(v => v.UserId == userId)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Brand))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.Brand.Name == vehicleQueryParameters.Brand);
-            }
-
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Model))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.Model.Name == vehicleQueryParameters.Model);
-            }
-
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Username))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.User.UserName == vehicleQueryParameters.Username);
-            }
+            vehiclesToReturn = FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
 
             return await vehiclesToReturn.ToListAsync();
         }
@@ -106,6 +78,36 @@ namespace SmartGarage.Data.Repositories
             var vehicle = await GetVehicleByIdAsync(vehicleId);
             vehicle.IsDeleted = true;
             await applicationDbContext.SaveChangesAsync();
+        }
+
+        private static IQueryable<Vehicle> FilterVehiclesByQuery(VehicleQueryParameters vehicleQueryParameters, IQueryable<Vehicle> vehiclesToReturn)
+        {
+            if (!string.IsNullOrEmpty(vehicleQueryParameters.Brand))
+            {
+                vehiclesToReturn = vehiclesToReturn.Where(v => v.Brand.Name == vehicleQueryParameters.Brand);
+            }
+
+            if (!string.IsNullOrEmpty(vehicleQueryParameters.Model))
+            {
+                vehiclesToReturn = vehiclesToReturn.Where(v => v.Model.Name == vehicleQueryParameters.Model);
+            }
+
+            if (!string.IsNullOrEmpty(vehicleQueryParameters.Username))
+            {
+                vehiclesToReturn = vehiclesToReturn.Where(v => v.User.UserName == vehicleQueryParameters.Username);
+            }
+
+            if (!string.IsNullOrEmpty(vehicleQueryParameters.VIN))
+            {
+                vehiclesToReturn = vehiclesToReturn.Where(v => v.VIN == vehicleQueryParameters.VIN);
+            }
+
+            if (!string.IsNullOrEmpty(vehicleQueryParameters.LicensePlate))
+            {
+                vehiclesToReturn = vehiclesToReturn.Where(v => v.LicensePlate == vehicleQueryParameters.LicensePlate);
+            }
+
+            return vehiclesToReturn;
         }
     }
 }
