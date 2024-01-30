@@ -1,16 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.WebAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartGarage.Data.Repositories
 {
-    public class VehicleRepository : IVehicleRepository
+	public class VehicleRepository : IVehicleRepository
     {
         private const string VehicleNotFoundMessage = "Vehicle not found!";
         private readonly ApplicationDbContext applicationDbContext;
