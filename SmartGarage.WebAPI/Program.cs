@@ -100,6 +100,7 @@ namespace SmartGarage.WebAPI
             builder.Services.AddScoped<IVehicleService, VehicleService>();
 
             builder.Services.AddScoped<IVehicleDTOMapper, VehicleDTOMapper>();
+            builder.Services.AddScoped<IUserMapper, UserMapper>();
             builder.Services.AddScoped<PasswordGenerator>();
 
             

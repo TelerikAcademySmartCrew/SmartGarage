@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services;
+using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.WebAPI.Models;
 
@@ -14,44 +16,30 @@ namespace SmartGarage.WebAPI.Controllers
         private readonly UserManager<AppUser> userManager;
         private readonly JwtService jwtService;
         private readonly PasswordGenerator passwordGenerator;
+        private readonly IUserMapper userMapper;
 
         public AuthAPIController(UserManager<AppUser> userManager,
             JwtService jwtService,
-            PasswordGenerator passwordGenerator)
+            PasswordGenerator passwordGenerator,
+            IUserMapper userMapper)
         {
             this.userManager = userManager;
             this.jwtService = jwtService;
             this.passwordGenerator = passwordGenerator;
+            this.userMapper = userMapper;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO userRegisterDto)
         {
-            AppUser user = new()
-            {
-                Email = userRegisterDto.Username,
-                UserName = userRegisterDto.Username,
-            };
-            // const string password = "Paramore789Bear!";
+            var user = this.userMapper.Map(userRegisterDto);
             var password = this.passwordGenerator.Generate();
             var createdUserResult = await this.userManager.CreateAsync(user, password);
-            
-            switch (userRegisterDto.Role)
-            {
-                case "Employee":
-                    await userManager.AddToRoleAsync(user, "Employee");
-                    break;
-                case "Customer":
-                    await userManager.AddToRoleAsync(user, "Customer");
-                    break;
-            }
 
-            if (createdUserResult.Succeeded)
-            {
-                return Ok("User created successfully!");
-            }
+            if (!createdUserResult.Succeeded) return BadRequest("Operation unsuccessful!");
+            await userManager.AddToRoleAsync(user, "Customer");
+            return Ok("User created successfully!");
 
-            return BadRequest("Operation unsuccessful!");
         }
 
         [HttpPost("login")]
