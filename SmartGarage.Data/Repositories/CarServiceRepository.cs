@@ -16,12 +16,11 @@ namespace SmartGarage.Data.Repositories
             this.applicationDbContext = applicationDbContext;
         }
 
-        public async Task<Service> CreateServiceAsync(Service service, AppUser currentUser)
+        public async Task<Service> CreateServiceAsync(Service service)
         {
-            this.applicationDbContext.Services.Add(service);
-            currentUser.Services.Add(service);
+            this.applicationDbContext.Services.Add(service);           
 
-            await applicationDbContext.SaveChangesAsync();
+            await this.applicationDbContext.SaveChangesAsync();
             return service;
         }
 
@@ -37,25 +36,25 @@ namespace SmartGarage.Data.Repositories
                 ?? throw new ArgumentNullException(ServiceNotFound);
         }
 
-        public async Task<IList<Service>> GetServicesByUserIdAsync(string userId)
-        {
-            return await this.applicationDbContext.Services
-                .Where(s => s.UserId == userId)
-                .ToListAsync();
-        }
+        //public async Task<IList<Service>> GetServicesByUserIdAsync(string userId)
+        //{
+        //    return await this.applicationDbContext.Services
+        //        .Where(s => s.UserId == userId)
+        //        .ToListAsync();
+        //}
 
-        public async Task<IList<Service>> GetServicesByVehicleIdAsync(int vehicleId)
-        {
-            return await this.applicationDbContext.Services
-                .Where(s => s.VehicleId == vehicleId)
-                .ToListAsync();
-        }
+        //public async Task<IList<Service>> GetServicesByVehicleIdAsync(int vehicleId)
+        //{
+        //    return await this.applicationDbContext.Services
+        //        .Where(s => s.VehicleId == vehicleId)
+        //        .ToListAsync();
+        //}
 
         public async Task<Service> UpdateServiceAsync(int serviceId, Service service)
         {
             var serviceToUpdate = await this.GetServiceByIdAsync(serviceId);
 
-            serviceToUpdate = service;
+            // todo:
 
             await this.applicationDbContext.SaveChangesAsync();
             return serviceToUpdate;
@@ -63,8 +62,9 @@ namespace SmartGarage.Data.Repositories
 
         public async Task DeleteServiceAsync(int serviceId)
         {
-            var serviceToDelete = await this.GetServiceByIdAsync(serviceId); 
+            var serviceToDelete = await this.GetServiceByIdAsync(serviceId);
 
+            this.applicationDbContext.Services.Remove(serviceToDelete);
             await this.applicationDbContext.SaveChangesAsync();           
         } 
     }
