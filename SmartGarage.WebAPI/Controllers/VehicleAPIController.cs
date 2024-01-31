@@ -34,7 +34,7 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // GET: api/vehicles/users/id
-        [HttpGet("users/{id}")]
+        [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetVehiclesByUser([FromRoute]string userId, [FromQuery] VehicleQueryParameters vehicleQueryParameters)
         {
             try

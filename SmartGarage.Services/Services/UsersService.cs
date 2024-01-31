@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using SmartGarage.Data;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Utilities;
@@ -12,16 +17,19 @@ namespace SmartGarage.WebAPI.Services
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly ApplicationDbContext applicationDbContext;
         private readonly EmailService emailService;
+        private readonly IConfiguration configuration;
 
         public UsersService(UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager,
             ApplicationDbContext applicationDbContext,
-            EmailService emailService)
+            EmailService emailService,
+            IConfiguration configuration)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.applicationDbContext = applicationDbContext;
             this.emailService = emailService;
+            this.configuration = configuration;
         }
 
         public async Task<IdentityResult> Create(AppUser appUser)
