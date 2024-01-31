@@ -1,10 +1,14 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using SmartGarage.Data;
 using SmartGarage.Data.Seeding;
+using SmartGarage.Services.Services.Contracts;
+using SmartGarage.Utilities;
+using SmartGarage.Utilities.Models;
 using SmartGarage.WebAPI.Models;
-using static SmartGarage.Data.ApplicationDbContext;
+using SmartGarage.WebAPI.Services;
 
 namespace SmartGarage
 {
@@ -27,6 +31,15 @@ namespace SmartGarage
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            // Configure Emails
+            var emailConfig = builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>();
+            builder.Services.AddSingleton(emailConfig);
+            builder.Services.AddScoped<EmailService>();
+
+            // Configure DinkToPDF Generator
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
@@ -36,6 +49,7 @@ namespace SmartGarage
 
                 SeedData.Initialize(userManager, roleManager).Wait();
             }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -63,8 +77,8 @@ namespace SmartGarage
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "/{controller=Home}/{action=Index}/{id?}");
-            
+                pattern: "/{controller=Auth}/{action=Login}/{id?}");
+
             app.MapRazorPages();
 
             app.Run();

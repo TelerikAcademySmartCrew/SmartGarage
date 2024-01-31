@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartGarage.Common\SmartGarage.Common.csproj" />
     <ProjectReference Include="..\SmartGarage.Services\SmartGarage.Services.csproj" />
   </ItemGroup>
 
