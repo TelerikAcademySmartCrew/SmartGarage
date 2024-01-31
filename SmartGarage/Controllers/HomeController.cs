@@ -28,7 +28,7 @@ namespace SmartGarage.Controllers
             {
                 return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
             }
-           
+
             LocationLists model = new LocationLists();
             var locations = new List<Location>()
             {

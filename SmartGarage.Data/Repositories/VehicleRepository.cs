@@ -21,6 +21,10 @@ namespace SmartGarage.Data.Repositories
         {
             applicationDbContext.Vehicles.Add(vehicle);
             currentUser.Vehicles.Add(vehicle);
+            var brand = await this.applicationDbContext.VehicleBrands.FirstAsync();
+            var model = await this.applicationDbContext.VehicleModels.FirstAsync();
+            brand.Vehicles.Add(vehicle);
+            model.Vehicles.Add(vehicle);
             await applicationDbContext.SaveChangesAsync();
             return vehicle;
         }

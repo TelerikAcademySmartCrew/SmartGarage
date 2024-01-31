@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using SmartGarage.Data;
@@ -7,6 +8,7 @@ using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Services.Mappers;
 using SmartGarage.Services.Mappers.Contracts;
+using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.WebAPI
 {
@@ -27,6 +29,11 @@ namespace SmartGarage.WebAPI
                 });
 
             // Configure scope
+
+            builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
+          .AddRoles<IdentityRole>()
+          .AddRoleManager<RoleManager<IdentityRole>>()
+               .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
             builder.Services.AddScoped<IVehicleService, VehicleService>();

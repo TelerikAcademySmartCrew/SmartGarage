@@ -69,8 +69,8 @@ namespace SmartGarage.WebAPI.Controllers
         {
             try
             {
-                var currentUser = new AppUser();
-                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, currentUser);
+                string userId = "629ddf3d-addf-45df-837a-c5ce82e8ba73";
+                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, userId);
                 return Ok(createdVehicle);
             }
             catch (Exception ex)

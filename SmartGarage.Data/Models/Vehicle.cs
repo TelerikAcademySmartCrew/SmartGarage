@@ -31,7 +31,6 @@ namespace SmartGarage.WebAPI.Models
         public int ProductionYear { get; set; }
 
         [Required]
-        [MaxLength(8)]
         public string LicensePlateNumber { get; set; } = null!;
 
         [Required]
