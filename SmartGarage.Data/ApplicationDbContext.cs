@@ -1,35 +1,44 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+
 using SmartGarage.Data.Models;
-using SmartGarage.Data.Seeding;
 using SmartGarage.WebAPI.Models;
-using System.Reflection.Emit;
 
 namespace SmartGarage.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+	public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
         }
 
         public DbSet<Vehicle> Vehicles { get; set; }
+
         public DbSet<Service> Services { get; set; }
-        public DbSet<VehicleModel> VehicleModels { get; set; }
+
+        public DbSet<ServiceType> ServiceTypes { get; set; }
+
         public DbSet<VehicleBrand> VehicleBrands { get; set; }
+
+        public DbSet<VehicleModel> VehicleModels { get; set; }
+
+        public DbSet<Visit> Visits { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
+            ConfigureEntityRelationships(builder);
+        }
+
+        private static void ConfigureEntityRelationships(ModelBuilder builder)
+        {
             builder.Entity<Vehicle>()
-                .HasOne(v => v.User)
-                .WithMany(u => u.Vehicles)
-                .HasForeignKey(v => v.UserId)
+                .HasOne(l => l.User)
+                .WithMany(p => p.Vehicles)
+                .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Vehicle>()
@@ -38,11 +47,11 @@ namespace SmartGarage.Data
                 .HasForeignKey(v => v.BrandId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Vehicle>()
-               .HasOne(v => v.Model)
-               .WithMany(m => m.Vehicles)
-               .HasForeignKey(v => v.ModelId)
-               .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Visit>()
+                .HasOne(v => v.Vehicle)
+                .WithMany(v => v.Visits)
+                .HasForeignKey(v => v.VehicleId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<VehicleModel>()
                 .HasOne(m => m.Brand)
@@ -51,9 +60,15 @@ namespace SmartGarage.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Service>()
-                .HasOne(s => s.Vehicle)
+                .HasOne(s => s.Visit)                
                 .WithMany(v => v.Services)
-                .HasForeignKey(s => s.VehicleId)
+                .HasForeignKey(s => s.VisitId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Service>()
+                .HasOne(s => s.ServiceType)
+                .WithMany(s =>  s.Services)
+                .HasForeignKey(s => s.ServiceTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

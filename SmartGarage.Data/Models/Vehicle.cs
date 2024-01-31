@@ -1,6 +1,7 @@
-﻿using SmartGarage.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using SmartGarage.Common.Attributes;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.WebAPI.Models
 {
@@ -9,34 +10,39 @@ namespace SmartGarage.WebAPI.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
-        public int BrandId { get; set; }
+		[Required]
+		public int BrandId { get; set; }
+
         [ForeignKey(nameof(BrandId))]
-        public VehicleBrand Brand { get; set; }
+        public VehicleBrand Brand { get; set; } = null!;
 
         [Required]
         public int ModelId { get; set; }
+
         [ForeignKey(nameof(ModelId))]
-
-        public VehicleModel Model { get; set; }
-
-        [Required]
-        public string VIN { get; set; }
-
-        [Required, Range(1886, int.MaxValue)]
-        public int CreationYear { get; set; }
+        public VehicleModel Model { get; set; } = null!;
 
         [Required]
-        public string LicensePlate { get; set; }
+        [StringLength(17)]
+        public string VIN { get; set; } = null!;
+
+        [Required] 
+        [NotInTheFuture] 
+        public int ProductionYear { get; set; }
 
         [Required]
-        public string UserId { get; set; }
+        [MaxLength(8)]
+        public string LicensePlateNumber { get; set; } = null!;
+
+        [Required]
+        public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
-        public AppUser User { get; set; }
-        public List<Service> Services { get; set; } = new List<Service>();
+        public AppUser User { get; set; } = null!;
 
         [Required]
         public bool IsDeleted { get; set; }
+        
+        public ICollection<Visit> Visits { get; set; } = new List<Visit>();
     }
 }

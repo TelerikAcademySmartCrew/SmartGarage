@@ -1,22 +1,20 @@
-﻿using SmartGarage.WebAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartGarage.Data.Models
 {
-    public class VehicleModel
+	public class VehicleModel
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public int BrandId { get; set; }
+
+        [Required]
+        public string Name { get; set; } = null!;
+
+		[Required]
+		public int BrandId { get; set; }
+
         [ForeignKey(nameof(BrandId))]
-        public VehicleBrand Brand { get; set; }
-        public List<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        public VehicleBrand Brand { get; set; } = null!;
     }
 }

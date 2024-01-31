@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
 using SmartGarage.Models;
 using SmartGarage.WebAPI.Models;
-using System.Diagnostics;
-using static SmartGarage.Common.GeneralApplicationConstants;
+using static SmartGarage.Common.GeneralApplicationConstants.Admin;
 
 namespace SmartGarage.Controllers
 {
-    public class HomeController : Controller
+	public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly RoleManager<IdentityRole> roleManager;
