@@ -9,6 +9,7 @@ namespace SmartGarage.Data.Models.DTOs
         [Required]
         public int ModelId { get; set; }
         [Required]
+        [StringLength(17)]
         public string VIN { get; set; }
 
         [Required, Range(1886, int.MaxValue)]

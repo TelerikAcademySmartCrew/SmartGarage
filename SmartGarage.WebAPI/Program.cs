@@ -21,7 +21,7 @@ namespace SmartGarage.WebAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var configuration = builder.Configuration;
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -81,10 +81,12 @@ namespace SmartGarage.WebAPI
             
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("AdminPolicy", policy =>
+                options.AddPolicy("AdminRequired", policy =>
                 {
-                    policy.RequireClaim("Admin", "True");
+                    policy.RequireRole("Admin");
                 });
+                options.AddPolicy("EmployeeRequired", policy =>
+                    policy.RequireRole("Employee"));
             });
             // Configure scope
 
@@ -97,7 +99,12 @@ namespace SmartGarage.WebAPI
             builder.Services.AddScoped<IVehicleService, VehicleService>();
 
             builder.Services.AddScoped<IVehicleDTOMapper, VehicleDTOMapper>();
-            builder.Services.AddScoped<JwtService>();
+            
+            var jwtSecret = configuration["JwtSettings:Secret"];
+            builder.Services.AddScoped<JwtService>(_ => new JwtService(
+                _.GetRequiredService<IConfiguration>(),
+                _.GetRequiredService<UserManager<AppUser>>(),
+                jwtSecret));
 
             
             // Add services to the container.
@@ -116,6 +123,7 @@ namespace SmartGarage.WebAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
