@@ -41,6 +41,7 @@ namespace SmartGarage.WebAPI.Controllers
             var password = splitCredentials[1];
 
             var user = await this.userManager.FindByNameAsync(username);
+            
             if (!await this.userManager.CheckPasswordAsync(user, password))
             {
                 return BadRequest("Invalid credentials!");
