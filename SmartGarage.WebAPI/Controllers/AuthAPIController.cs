@@ -8,7 +8,7 @@ using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.WebAPI.Controllers
 {
-    [Route("api/auth/")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthAPIController : ControllerBase
     {
@@ -23,18 +23,18 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] string email)
+        public async Task<IActionResult> Register([FromBody] UserRegisterDTO userRegisterDto)
         {
             AppUser user = new()
             {
-                Email = email,
+                Email = userRegisterDto.Username,
             };
             await this.userManager.CreateAsync(user);
             return Ok("User created successfully!");
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] string credentials)
+        public async Task<IActionResult> Login([FromHeader] string credentials)
         {
             var splitCredentials = credentials.Split(":");
             var username = splitCredentials[0];

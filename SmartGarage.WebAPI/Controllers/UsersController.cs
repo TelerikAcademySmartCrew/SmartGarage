@@ -10,20 +10,20 @@ namespace SmartGarage.WebAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UsersService usersService;
-
-        internal UsersController(UsersService usersService)
-        {
-            this.usersService = usersService;
-        }
-
-        public IActionResult Create()
-        {
-            AppUser appUser = new AppUser();
-
-            var user = usersService.Create(appUser);
-
-            return Ok();
-        }
+        // private readonly UsersService usersService;
+        //
+        // internal UsersController(UsersService usersService)
+        // {
+        //     this.usersService = usersService;
+        // }
+        //
+        // public IActionResult Create()
+        // {
+        //     AppUser appUser = new AppUser();
+        //
+        //     var user = usersService.Create(appUser);
+        //
+        //     return Ok();
+        // }
     }
 }

@@ -13,16 +13,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee7c6d49-446d-4b87-8e2d-52db523aea57" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/UserRegisterResponseDTO.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/dataSources/917234dc-ec99-405e-aa61-cc28f89c1ddc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/dataSources/917234dc-ec99-405e-aa61-cc28f89c1ddc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.Services/JwtService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Services/JwtService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.Services/Services/UsersService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Services/Services/UsersService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/UserRegisterResponseDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/UserRegisterDTO.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/VehicleAPIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/VehicleAPIController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Properties/launchSettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/SmartGarage.WebAPI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/SmartGarage.WebAPI.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/UsersController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +24,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -47,6 +46,7 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/aspnetcore/d504a7b7dab277712646747e9f5cce0d9507245e/src/Identity/Extensions.Core/src/UserManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f53745e7f6e85d65317047eeae9af151fe9aca1cb284d27e5c83962a50be46/ServiceDescriptor.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -68,13 +68,13 @@
     ".NET Launch Settings Profile.SmartGarage.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Cherry-picking in main",
+    "git-widget-placeholder": "auth-api-controller",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.intentionPowerPack",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -186,7 +186,8 @@
       <option name="presentableId" value="Default" />
       <updated>1706710375076</updated>
       <workItem from="1706710376993" duration="2458000" />
-      <workItem from="1706713266914" duration="4284000" />
+      <workItem from="1706713266914" duration="5000000" />
+      <workItem from="1706718353443" duration="1028000" />
     </task>
     <task id="LOCAL-00001" summary="adding rider specific files(project remains unaffected)">
       <option name="closed" value="true" />
@@ -196,7 +197,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706711166421</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="implement auth api controller and jwt generation">
+      <option name="closed" value="true" />
+      <created>1706717924461</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1706717924461</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -217,6 +226,7 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="adding rider specific files(project remains unaffected)" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding rider specific files(project remains unaffected)" />
+    <MESSAGE value="implement auth api controller and jwt generation" />
+    <option name="LAST_COMMIT_MESSAGE" value="implement auth api controller and jwt generation" />
   </component>
 </project>
