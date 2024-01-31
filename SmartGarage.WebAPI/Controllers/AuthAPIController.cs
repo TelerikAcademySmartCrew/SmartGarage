@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services;
+using SmartGarage.Utilities;
 using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.WebAPI.Controllers
@@ -12,12 +13,15 @@ namespace SmartGarage.WebAPI.Controllers
     {
         private readonly UserManager<AppUser> userManager;
         private readonly JwtService jwtService;
+        private readonly PasswordGenerator passwordGenerator;
 
         public AuthAPIController(UserManager<AppUser> userManager,
-            JwtService jwtService)
+            JwtService jwtService,
+            PasswordGenerator passwordGenerator)
         {
             this.userManager = userManager;
             this.jwtService = jwtService;
+            this.passwordGenerator = passwordGenerator;
         }
 
         [HttpPost("register")]
@@ -28,8 +32,10 @@ namespace SmartGarage.WebAPI.Controllers
                 Email = userRegisterDto.Username,
                 UserName = userRegisterDto.Username,
             };
-            const string password = "Paramore789Bear!";
+            // const string password = "Paramore789Bear!";
+            var password = this.passwordGenerator.Generate();
             var createdUserResult = await this.userManager.CreateAsync(user, password);
+            
             switch (userRegisterDto.Role)
             {
                 case "Employee":

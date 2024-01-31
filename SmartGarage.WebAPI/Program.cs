@@ -12,6 +12,7 @@ using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Services.Mappers;
 using SmartGarage.Services.Mappers.Contracts;
+using SmartGarage.Utilities;
 using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.WebAPI
@@ -99,6 +100,8 @@ namespace SmartGarage.WebAPI
             builder.Services.AddScoped<IVehicleService, VehicleService>();
 
             builder.Services.AddScoped<IVehicleDTOMapper, VehicleDTOMapper>();
+            builder.Services.AddScoped<PasswordGenerator>();
+
             
             var jwtSecret = configuration["JwtSettings:Secret"];
             builder.Services.AddScoped<JwtService>(_ => new JwtService(
