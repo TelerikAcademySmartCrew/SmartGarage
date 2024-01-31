@@ -9,6 +9,14 @@
     }
   },
   "profiles": {
+    "PDFGenerator": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5282",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "SmartGarage.WebAPI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
@@ -16,7 +24,7 @@
       "launchUrl": "swagger",
       "applicationUrl": "http://localhost:5282",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
       }
     },
     "IIS Express": {

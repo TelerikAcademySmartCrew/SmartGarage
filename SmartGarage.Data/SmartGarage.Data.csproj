@@ -16,8 +16,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.26" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SmartGarage.Common\SmartGarage.Common.csproj" />
-  </ItemGroup>
-
 </Project>

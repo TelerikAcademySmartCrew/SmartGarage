@@ -1,0 +1,17 @@
+﻿@model ConfirmEmailViewModel
+
+<div style="width:30%;" class="d-flex flex-column align-items-center justify-content-center m-auto">
+    <p>
+        Hello, @Model.UserName
+    </p>
+    <p class="bg-warning px-2 py-1">
+        Password: &#64;User123
+    </p>
+    <p>
+        Please confirm your email!
+    </p>
+    <a asp-controller="Auth" asp-action="ConfirmEmail" asp-route-userId="@Model.UserId" asp-route-confirmToken="@Model.EmailConfirmToken" type="button" class="btn my-1 primary-button text-black btn-outline-light bg-secondary opacity-50 flex-shrink-1"
+       style="width: 8.0rem;">
+        Confirm
+    </a>
+</div>
