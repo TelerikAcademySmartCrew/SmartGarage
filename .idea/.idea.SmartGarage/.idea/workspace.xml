@@ -12,11 +12,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee7c6d49-446d-4b87-8e2d-52db523aea57" name="Changes" comment="implement jwt token in login endpoint">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/SmartGarage.WebAPI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/SmartGarage.WebAPI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/appsettings.json" afterDir="false" />
+    <list default="true" id="ee7c6d49-446d-4b87-8e2d-52db523aea57" name="Changes" comment="configured program.cs for jwt">
+      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,7 +190,7 @@
       <updated>1706710375076</updated>
       <workItem from="1706710376993" duration="2458000" />
       <workItem from="1706713266914" duration="5000000" />
-      <workItem from="1706718353443" duration="4951000" />
+      <workItem from="1706718353443" duration="5253000" />
     </task>
     <task id="LOCAL-00001" summary="adding rider specific files(project remains unaffected)">
       <option name="closed" value="true" />
@@ -235,7 +232,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706722987805</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="configured program.cs for jwt">
+      <option name="closed" value="true" />
+      <created>1706723391276</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1706723391276</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -260,7 +265,8 @@
     <MESSAGE value="fixed user register method to accept a dto" />
     <MESSAGE value="removing unnecessary class from web api" />
     <MESSAGE value="implement jwt token in login endpoint" />
-    <option name="LAST_COMMIT_MESSAGE" value="implement jwt token in login endpoint" />
+    <MESSAGE value="configured program.cs for jwt" />
+    <option name="LAST_COMMIT_MESSAGE" value="configured program.cs for jwt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
