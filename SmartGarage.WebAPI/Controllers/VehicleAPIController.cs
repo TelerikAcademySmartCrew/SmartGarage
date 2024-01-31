@@ -65,12 +65,12 @@ namespace SmartGarage.WebAPI.Controllers
 
        // POST: api/vehicles
        [HttpPost]
-        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO)
+        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO, 
+            [FromQuery] string customerEmail)
         {
             try
             {
-                const string userId = "629ddf3d-addf-45df-837a-c5ce82e8ba73";
-                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, userId);
+                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, customerEmail);
                 return Ok(createdVehicle);
             }
             catch (Exception ex)

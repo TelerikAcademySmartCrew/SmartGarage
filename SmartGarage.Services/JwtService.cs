@@ -31,6 +31,12 @@ namespace SmartGarage.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
+            var roles = userManager.GetRolesAsync(user).Result;
+            foreach (var role in roles)
+            {
+                authClaims.Add(new Claim(ClaimTypes.Role, role));
+            }
+            
             var jwtSecret = this.configuration["JWT:Secret"];
             var jwtSecretBytes = Encoding.UTF8.GetBytes(jwtSecret);
             var authSigningKey = new SymmetricSecurityKey(jwtSecretBytes);

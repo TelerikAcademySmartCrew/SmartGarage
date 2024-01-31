@@ -30,6 +30,16 @@ namespace SmartGarage.WebAPI.Controllers
             };
             const string password = "Paramore789Bear!";
             var createdUserResult = await this.userManager.CreateAsync(user, password);
+            switch (userRegisterDto.Role)
+            {
+                case "Employee":
+                    await userManager.AddToRoleAsync(user, "Employee");
+                    break;
+                case "Customer":
+                    await userManager.AddToRoleAsync(user, "Customer");
+                    break;
+            }
+
             if (createdUserResult.Succeeded)
             {
                 return Ok("User created successfully!");
