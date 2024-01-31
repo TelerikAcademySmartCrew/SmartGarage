@@ -20,8 +20,8 @@ namespace SmartGarage.Services.Mappers
                 BrandId = vehicleCreateDTO.BrandId,
                 ModelId = vehicleCreateDTO.ModelId,
                 VIN = vehicleCreateDTO.VIN,
-                CreationYear = vehicleCreateDTO.CreationYear,
-                LicensePlate = vehicleCreateDTO.LicensePlate,
+                ProductionYear = vehicleCreateDTO.CreationYear,
+                LicensePlateNumber = vehicleCreateDTO.LicensePlate,
             };
             return vehicle;
         }
@@ -33,8 +33,8 @@ namespace SmartGarage.Services.Mappers
                 Brand = vehicle.Brand.Name,
                 Model = vehicle.Model.Name,
                 VIN = vehicle.VIN,
-                CreationYear = vehicle.CreationYear,
-                LicensePlate = vehicle.LicensePlate,
+                CreationYear = vehicle.ProductionYear,
+                LicensePlate = vehicle.LicensePlateNumber,
             };
             return vehicleResponseDto;
         }
