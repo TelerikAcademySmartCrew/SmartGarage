@@ -1,13 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-using SmartGarage.Data;
 using SmartGarage.Models;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.WebAPI.Models;
-using System.IO;
 
 namespace SmartGarage.Controllers
 {

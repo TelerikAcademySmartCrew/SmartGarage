@@ -1,5 +1,4 @@
 ﻿using SmartGarage.Data.Models;
-using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.Data.Repositories.Contracts
 {

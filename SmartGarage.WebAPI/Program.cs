@@ -1,5 +1,3 @@
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -10,11 +8,7 @@ using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Services.Mappers;
 using SmartGarage.Services.Mappers.Contracts;
-using SmartGarage.Services.Services.Contracts;
-using SmartGarage.Utilities;
-using SmartGarage.Utilities.Models;
 using SmartGarage.WebAPI.Models;
-using SmartGarage.WebAPI.Services;
 
 namespace SmartGarage.WebAPI
 {

@@ -12,10 +12,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ee7c6d49-446d-4b87-8e2d-52db523aea57" name="Changes" comment="fixed user register method to accept a dto">
+    <list default="true" id="ee7c6d49-446d-4b87-8e2d-52db523aea57" name="Changes" comment="removing unnecessary class from web api">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SmartGarage/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/ApplicationDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/ApplicationDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/VehicleCreateDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/VehicleCreateDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/VehicleQueryParameters.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/VehicleQueryParameters.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/VehicleResponseDTO.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Models/DTOs/VehicleResponseDTO.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Repositories/CarServiceRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Repositories/CarServiceRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Repositories/Contracts/ICarServiceRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Repositories/Contracts/ICarServiceRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Repositories/Contracts/IVehicleRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Repositories/Contracts/IVehicleRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Data/Seeding/SeedData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Data/Seeding/SeedData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Services/Contracts/IVehicleService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Services/Contracts/IVehicleService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Services/Mappers/VehicleDTOMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Services/Mappers/VehicleDTOMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Services/Services/UsersService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Services/Services/UsersService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Services/VehicleService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Services/VehicleService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Utilities/Models/EmailConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Utilities/Models/EmailConfig.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.Utilities/Models/Message.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.Utilities/Models/Message.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/UsersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/VehicleAPIController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/VehicleAPIController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage.WebAPI/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage.WebAPI/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage/Areas/Admin/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage/Areas/Admin/Controllers/HomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage/Controllers/AuthController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage/Controllers/AuthController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SmartGarage/Views/Auth/Login.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/SmartGarage/Views/Auth/Login.cshtml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +64,11 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/aspnetcore/d504a7b7dab277712646747e9f5cce0d9507245e/src/Identity/Extensions.Core/src/UserManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b756d57b94fb4ab9aa95a9b2a97fce1fa24ea0/0f/ba77f6a7/List`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b756d57b94fb4ab9aa95a9b2a97fce1fa24ea0/31/d3042374/String.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/d6c8bf0b74d547fa8a9015f142e28a3a1cbaa0/28/02cb76d4/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/f53745e7f6e85d65317047eeae9af151fe9aca1cb284d27e5c83962a50be46/ServiceDescriptor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/bobistefx/source/repos/SmartGarage/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/bobistefx/source/repos/SmartGarage/SmartGarage.WebAPI/Controllers/AuthAPIController.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -63,7 +85,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    ".NET Launch Settings Profile.SmartGarage.WebAPI.executor": "Run",
+    ".NET Launch Settings Profile.SmartGarage.WebAPI.executor": "Debug",
     ".NET Launch Settings Profile.SmartGarage.WebAPI: IIS Express.executor": "Run",
     ".NET Launch Settings Profile.SmartGarage.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
@@ -187,7 +209,7 @@
       <updated>1706710375076</updated>
       <workItem from="1706710376993" duration="2458000" />
       <workItem from="1706713266914" duration="5000000" />
-      <workItem from="1706718353443" duration="1895000" />
+      <workItem from="1706718353443" duration="4328000" />
     </task>
     <task id="LOCAL-00001" summary="adding rider specific files(project remains unaffected)">
       <option name="closed" value="true" />
@@ -213,7 +235,15 @@
       <option name="project" value="LOCAL" />
       <updated>1706719417542</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="removing unnecessary class from web api">
+      <option name="closed" value="true" />
+      <created>1706720409083</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1706720409083</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -236,6 +266,39 @@
     <MESSAGE value="adding rider specific files(project remains unaffected)" />
     <MESSAGE value="implement auth api controller and jwt generation" />
     <MESSAGE value="fixed user register method to accept a dto" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed user register method to accept a dto" />
+    <MESSAGE value="removing unnecessary class from web api" />
+    <option name="LAST_COMMIT_MESSAGE" value="removing unnecessary class from web api" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs</url>
+          <line>24</line>
+          <properties documentPath="C:\Users\bobistefx\source\repos\SmartGarage\SmartGarage.WebAPI\Controllers\AuthAPIController.cs" initialLine="24" containingFunctionPresentation="Method 'Register'">
+            <startOffsets>
+              <option value="762" />
+            </startOffsets>
+            <endOffsets>
+              <option value="763" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/SmartGarage.WebAPI/Controllers/AuthAPIController.cs</url>
+          <line>43</line>
+          <properties documentPath="C:\Users\bobistefx\source\repos\SmartGarage\SmartGarage.WebAPI\Controllers\AuthAPIController.cs" initialLine="43" containingFunctionPresentation="Method 'Login'">
+            <startOffsets>
+              <option value="1403" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1449" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

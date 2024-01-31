@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartGarage.Services.Services.Contracts;
-using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.Areas.Admin.Controllers
 {

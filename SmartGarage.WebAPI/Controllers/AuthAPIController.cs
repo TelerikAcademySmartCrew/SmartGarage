@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services;
-using SmartGarage.Services.Services.Contracts;
 using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.WebAPI.Controllers
@@ -28,27 +26,34 @@ namespace SmartGarage.WebAPI.Controllers
             AppUser user = new()
             {
                 Email = userRegisterDto.Username,
+                UserName = userRegisterDto.Username,
             };
-            await this.userManager.CreateAsync(user);
-            return Ok("User created successfully!");
+            const string password = "Paramore789Bear!";
+            var createdUserResult = await this.userManager.CreateAsync(user, password);
+            if (createdUserResult.Succeeded)
+            {
+                return Ok("User created successfully!");
+            }
+
+            return BadRequest("Operation unsuccessful!");
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromHeader] string credentials)
         {
             var splitCredentials = credentials.Split(":");
-            var username = splitCredentials[0];
+            var email = splitCredentials[0];
             var password = splitCredentials[1];
 
-            var user = await this.userManager.FindByNameAsync(username);
-            
+            var user = this.userManager.FindByEmailAsync(email).Result;
+
             if (!await this.userManager.CheckPasswordAsync(user, password))
             {
                 return BadRequest("Invalid credentials!");
             }
 
             var tokenString = this.jwtService.GenerateJsonWebToken(user);
-            return Ok(tokenString);
+            return Ok(new { Token = tokenString });
         }
     }
 }
