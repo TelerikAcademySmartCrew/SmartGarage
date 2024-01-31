@@ -1,3 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using SmartGarage.Data;
+using SmartGarage.Data.Repositories;
+using SmartGarage.Data.Repositories.Contracts;
+using SmartGarage.Services;
+using SmartGarage.Services.Contracts;
+using SmartGarage.Services.Mappers;
+using SmartGarage.Services.Mappers.Contracts;
+
 namespace SmartGarage.WebAPI
 {
     public class Program
@@ -5,6 +15,23 @@ namespace SmartGarage.WebAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            builder.Services.AddControllersWithViews()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
+
+            // Configure scope
+
+            builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+            builder.Services.AddScoped<IVehicleService, VehicleService>();
+
+            builder.Services.AddScoped<IVehicleDTOMapper, VehicleDTOMapper>();
 
             // Add services to the container.
 

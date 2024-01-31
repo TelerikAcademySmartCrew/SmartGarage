@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartGarage.WebAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,5 +17,6 @@ namespace SmartGarage.Data.Models
         public int BrandId { get; set; }
         [ForeignKey(nameof(BrandId))]
         public VehicleBrand Brand { get; set; }
+        public List<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
     }
 }
