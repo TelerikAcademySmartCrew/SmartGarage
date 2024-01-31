@@ -2,7 +2,6 @@
 
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
-using SmartGarage.WebAPI.Models;
 using static SmartGarage.Common.ApplicationErrorMessages.Service;
 
 namespace SmartGarage.Data.Repositories

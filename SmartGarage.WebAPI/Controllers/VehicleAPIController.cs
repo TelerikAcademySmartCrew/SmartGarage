@@ -2,8 +2,6 @@
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Services.Mappers.Contracts;
-using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.WebAPI.Controllers
 {
@@ -34,7 +32,7 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // GET: api/vehicles/users/id
-        [HttpGet("users/{id}")]
+        [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetVehiclesByUser([FromRoute]string userId, [FromQuery] VehicleQueryParameters vehicleQueryParameters)
         {
             try
