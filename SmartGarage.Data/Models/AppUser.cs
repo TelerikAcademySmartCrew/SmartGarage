@@ -8,8 +8,8 @@ namespace SmartGarage.WebAPI.Models
     {
         public DateTime JoinDate { get; set; }
 
-        public IList<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
 
-        public IList<Service> Services { get; set; } = new List<Service>();
+        public ICollection<Visit> Visits { get; set; } = new List<Visit>();
     }
 }

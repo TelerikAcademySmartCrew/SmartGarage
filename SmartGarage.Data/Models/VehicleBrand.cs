@@ -9,10 +9,11 @@ namespace SmartGarage.Data.Models
         [Key]
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        [Required]
+        public string Name { get; set; } = null!;
 
-        public List<VehicleModel> Models { get; set; } = new List<VehicleModel>();
+        public ICollection<VehicleModel> Models { get; set; } = new List<VehicleModel>();
 
-        public List<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
+        public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
     }
 }

@@ -8,11 +8,13 @@ namespace SmartGarage.Data.Models
         [Key]
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        [Required]
+        public string Name { get; set; } = null!;
 
-        public int BrandId { get; set; }
+		[Required]
+		public int BrandId { get; set; }
 
         [ForeignKey(nameof(BrandId))]
-        public VehicleBrand Brand { get; set; }
+        public VehicleBrand Brand { get; set; } = null!;
     }
 }
