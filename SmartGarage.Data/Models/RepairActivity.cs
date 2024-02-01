@@ -3,24 +3,25 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartGarage.Data.Models
 {
-	public class Service
+	public class RepairActivity
     {
         [Key]
         public int Id { get; set; }
 
 		[Required]
-		public int ServiceTypeId { get; set; }
+		public int RepairActivityTypeId { get; set; }
 
-        [ForeignKey(nameof(ServiceTypeId))]
-        public ServiceType ServiceType { get; set; } = null!;
+        [ForeignKey(nameof(RepairActivityTypeId))]
+        public RepairActivityType RepairActivityType { get; set; } = null!;
 
         [Required]
+        [Range(0, double.MaxValue)]
         public double Price { get; set; }
 
 		[Required]
 		public int VisitId { get; set; }
 
         [ForeignKey(nameof(VisitId))]
-        public Visit Visit { get; set; } = null!;
+        public Visit Visit { get; set; } = null!;        
     }
 }

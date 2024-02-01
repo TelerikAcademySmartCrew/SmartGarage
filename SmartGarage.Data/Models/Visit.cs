@@ -24,6 +24,6 @@ namespace SmartGarage.Data.Models
 		[ForeignKey(nameof(VehicleId))]
         public Vehicle Vehicle { get; set; } = null!;
 
-		public ICollection<Service> Services { get; set; } = new List<Service>();
+		public ICollection<RepairActivity> RepairActivities { get; set; } = new List<RepairActivity>();
 	}
 }
