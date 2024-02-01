@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 
 using SmartGarage.Data.Models;
-using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.Data
 {
@@ -15,9 +14,9 @@ namespace SmartGarage.Data
 
         public DbSet<Vehicle> Vehicles { get; set; }
 
-        public DbSet<Service> Services { get; set; }
+        public DbSet<RepairActivity> RepairActivities { get; set; }
 
-        public DbSet<ServiceType> ServiceTypes { get; set; }
+        public DbSet<RepairActivityType> RepairActivityTypes { get; set; }
 
         public DbSet<VehicleBrand> VehicleBrands { get; set; }
 
@@ -35,8 +34,8 @@ namespace SmartGarage.Data
         private static void ConfigureEntityRelationships(ModelBuilder builder)
         {
             builder.Entity<Vehicle>()
-                .HasOne(l => l.User)
-                .WithMany(p => p.Vehicles)
+                .HasOne(v => v.User)
+                .WithMany(u => u.Vehicles)
                 .HasForeignKey(r => r.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -58,17 +57,17 @@ namespace SmartGarage.Data
                 .HasForeignKey(m => m.BrandId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Service>()
-                .HasOne(s => s.Visit)                
-                .WithMany(v => v.Services)
-                .HasForeignKey(s => s.VisitId)
+            builder.Entity<RepairActivity>()
+                .HasOne(ra => ra.Visit)                
+                .WithMany(v => v.RepairActivities)
+                .HasForeignKey(ra => ra.VisitId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<Service>()
-                .HasOne(s => s.ServiceType)
-                .WithMany(s =>  s.Services)
-                .HasForeignKey(s => s.ServiceTypeId)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<RepairActivity>()
+    		.HasOne(ra => ra.RepairActivityType)
+		.WithMany(rat => rat.RepairActivities)
+		.HasForeignKey(ra => ra.RepairActivityTypeId)
+		.OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using SmartGarage.Data.Models.DTOs;
+﻿using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Services.Mappers.Contracts;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Services
 {
@@ -11,23 +10,18 @@ namespace SmartGarage.Services
     {
         private readonly IVehicleRepository vehicleRepository;
         private readonly IVehicleDTOMapper vehicleDTOMapper;
-        private readonly UserManager<AppUser> userManager;
 
         public VehicleService(IVehicleRepository vehicleRepository,
-            IVehicleDTOMapper vehicleDTOMapper,
-            UserManager<AppUser> userManager)
+            IVehicleDTOMapper vehicleDTOMapper)
         {
             this.vehicleRepository = vehicleRepository;
             this.vehicleDTOMapper = vehicleDTOMapper;
-            this.userManager = userManager;
         }
 
-        public async Task<VehicleResponseDTO> CreateVehicleAsync(VehicleCreateDTO vehicleDTO, string email)
+        public async Task<VehicleResponseDTO> CreateVehicleAsync(VehicleCreateDTO vehicleDTO, AppUser currentUser)
         {
-            var user = await this.userManager.FindByEmailAsync(email);
             var vehicle = this.vehicleDTOMapper.Map(vehicleDTO);
-            vehicle.UserId = user.Id;
-            return this.vehicleDTOMapper.Map(await vehicleRepository.CreateVehicleAsync(vehicle, user));
+            return this.vehicleDTOMapper.Map(await vehicleRepository.CreateVehicleAsync(vehicle, currentUser));
         }
 
         public async Task<IList<VehicleResponseDTO>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)

@@ -1,14 +1,9 @@
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+
 using SmartGarage.Data;
+using SmartGarage.Data.Models;
 using SmartGarage.Data.Seeding;
-using SmartGarage.Services.Services.Contracts;
-using SmartGarage.Utilities;
-using SmartGarage.Utilities.Models;
-using SmartGarage.WebAPI.Models;
-using SmartGarage.WebAPI.Services;
 
 namespace SmartGarage
 {
@@ -25,20 +20,11 @@ namespace SmartGarage
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
            .AddRoles<IdentityRole>()
            .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
-
-            // Configure Emails
-            var emailConfig = builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>();
-            builder.Services.AddSingleton(emailConfig);
-            builder.Services.AddScoped<EmailService>();
-
-            // Configure DinkToPDF Generator
-            builder.Services.AddScoped<IUsersService, UsersService>();
-            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
@@ -49,7 +35,6 @@ namespace SmartGarage
 
                 SeedData.Initialize(userManager, roleManager).Wait();
             }
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -77,8 +62,8 @@ namespace SmartGarage
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "/{controller=Auth}/{action=Login}/{id?}");
-
+                pattern: "/{controller=Home}/{action=Index}/{id?}");
+            
             app.MapRazorPages();
 
             app.Run();

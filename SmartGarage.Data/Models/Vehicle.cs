@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SmartGarage.Common.Attributes;
-using SmartGarage.Data.Models;
 
-namespace SmartGarage.WebAPI.Models
+using SmartGarage.Common.Attributes;
+using static SmartGarage.Common.Exceptions.ExceptionMessages.Vehicle;
+
+namespace SmartGarage.Data.Models
 {
     public class Vehicle
     {
@@ -26,8 +27,8 @@ namespace SmartGarage.WebAPI.Models
         [StringLength(17)]
         public string VIN { get; set; } = null!;
 
-        [Required] 
-        [NotInTheFuture] 
+        [Required]
+        [IsBefore(ErrorMessage = InvalidYear)]
         public int ProductionYear { get; set; }
 
         [Required]

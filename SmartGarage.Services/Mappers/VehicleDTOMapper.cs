@@ -1,6 +1,6 @@
-﻿using SmartGarage.Data.Models.DTOs;
+﻿using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Mappers.Contracts;
-using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.Services.Mappers
 {
@@ -28,7 +28,6 @@ namespace SmartGarage.Services.Mappers
                 VIN = vehicle.VIN,
                 CreationYear = vehicle.ProductionYear,
                 LicensePlate = vehicle.LicensePlateNumber,
-                Username = vehicle.User.UserName,
             };
             return vehicleResponseDto;
         }
