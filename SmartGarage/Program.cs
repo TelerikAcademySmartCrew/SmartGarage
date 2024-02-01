@@ -1,9 +1,15 @@
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Seeding;
+using SmartGarage.Services.Services.Contracts;
+using SmartGarage.Utilities;
+using SmartGarage.Utilities.Models;
+using SmartGarage.WebAPI.Services;
 
 namespace SmartGarage
 {
@@ -25,6 +31,15 @@ namespace SmartGarage
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            // Configure Emails
+            var emailConfig = builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>();
+            builder.Services.AddSingleton(emailConfig);
+            builder.Services.AddScoped<EmailService>();
+
+            // Configure DinkToPDF Generator
+            builder.Services.AddScoped<IUsersService, UsersService>();
+            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
             {
