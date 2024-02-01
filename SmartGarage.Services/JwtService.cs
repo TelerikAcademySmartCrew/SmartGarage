@@ -4,7 +4,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Services
 {

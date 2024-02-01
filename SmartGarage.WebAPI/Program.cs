@@ -13,7 +13,7 @@ using SmartGarage.Services.Contracts;
 using SmartGarage.Services.Mappers;
 using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Utilities;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.WebAPI
 {

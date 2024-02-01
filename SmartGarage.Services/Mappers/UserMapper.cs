@@ -1,6 +1,6 @@
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Mappers.Contracts;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Services.Mappers;
 

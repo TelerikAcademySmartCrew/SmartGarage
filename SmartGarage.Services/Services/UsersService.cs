@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using SmartGarage.Data;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Utilities;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.WebAPI.Services
 {

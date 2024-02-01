@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Models;
 using SmartGarage.Services.Services.Contracts;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Controllers
 {
