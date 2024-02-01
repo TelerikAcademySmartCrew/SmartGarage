@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Contracts;
@@ -7,6 +8,7 @@ namespace SmartGarage.WebAPI.Controllers
 {
     [Route("api/vehicles")]
     [ApiController]
+    [Authorize(Policy = "EmployeeRequired")]
     public class VehicleAPIController : ControllerBase
     {
         private readonly IVehicleService vehicleService;
@@ -63,12 +65,12 @@ namespace SmartGarage.WebAPI.Controllers
 
        // POST: api/vehicles
        [HttpPost]
-        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO)
+        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO, 
+            [FromQuery] string customerEmail)
         {
             try
             {
-                string userId = "629ddf3d-addf-45df-837a-c5ce82e8ba73";
-                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, userId);
+                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, customerEmail);
                 return Ok(createdVehicle);
             }
             catch (Exception ex)

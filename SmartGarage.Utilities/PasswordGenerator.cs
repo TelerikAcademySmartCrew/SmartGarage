@@ -1,8 +1,8 @@
 ﻿namespace SmartGarage.Utilities
 {
-	internal class PasswordGenerator
+	public class PasswordGenerator
 	{
-		internal string Generate()
+		public string Generate()
 		{
 			var randomString = GenerateRandomString();
 			var actualPassword = ShuffleString(randomString);
