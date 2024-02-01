@@ -1,13 +1,6 @@
-﻿using SmartGarage.Data.Models.DTOs;
-using SmartGarage.Services.Contracts;
+﻿using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Mappers.Contracts;
-using SmartGarage.WebAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartGarage.Services.Mappers
 {

@@ -2,10 +2,9 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
 using SmartGarage.Common.Attributes;
-using SmartGarage.Data.Models;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Vehicle;
 
-namespace SmartGarage.WebAPI.Models
+namespace SmartGarage.Data.Models
 {
     public class Vehicle
     {

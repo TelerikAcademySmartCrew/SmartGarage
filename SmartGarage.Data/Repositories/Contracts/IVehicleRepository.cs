@@ -1,10 +1,5 @@
 ﻿using SmartGarage.Data.Models.DTOs;
-using SmartGarage.WebAPI.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Data.Repositories.Contracts
 {

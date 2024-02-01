@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using SmartGarage.Common.Exceptions;
+using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Services.Mappers.Contracts;
-using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.WebAPI.Controllers
 {

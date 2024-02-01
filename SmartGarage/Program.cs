@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+
 using SmartGarage.Data;
+using SmartGarage.Data.Models;
 using SmartGarage.Data.Seeding;
-using SmartGarage.WebAPI.Models;
-using static SmartGarage.Data.ApplicationDbContext;
 
 namespace SmartGarage
 {

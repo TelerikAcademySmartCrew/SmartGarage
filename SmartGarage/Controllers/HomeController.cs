@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
+using SmartGarage.Data.Models;
 using SmartGarage.Models;
-using SmartGarage.WebAPI.Models;
 using static SmartGarage.Common.GeneralApplicationConstants.Admin;
 
 namespace SmartGarage.Controllers

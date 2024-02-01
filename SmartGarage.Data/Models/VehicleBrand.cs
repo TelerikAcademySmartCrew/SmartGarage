@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-using SmartGarage.WebAPI.Models;
-
 namespace SmartGarage.Data.Models
 {
 	public class VehicleBrand

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 
 using SmartGarage.Data.Models;
-using SmartGarage.WebAPI.Models;
 
 namespace SmartGarage.Data
 {
