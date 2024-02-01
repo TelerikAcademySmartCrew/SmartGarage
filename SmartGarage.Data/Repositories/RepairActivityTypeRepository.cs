@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
+using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
+using static SmartGarage.Common.Exceptions.ExceptionMessages.RepairActivity;
 
 namespace SmartGarage.Data.Repositories
 {
@@ -25,6 +27,36 @@ namespace SmartGarage.Data.Repositories
 		{
 			return await this.context.RepairActivityTypes
 				.ToListAsync();
+		}
+
+		public async Task<RepairActivityType> CreateAsync(RepairActivityType repairActivityType)
+		{
+			var isExistent = await this.RepairActivityTypeExists(repairActivityType.Name);
+
+			if (isExistent)
+			{
+				throw new EntityAlreadyExistsException(AlreadyExists);
+			}
+
+			await this.context.RepairActivityTypes.AddAsync(repairActivityType);
+			await this.context.SaveChangesAsync();
+			return repairActivityType;
+		}
+
+		public async Task<RepairActivityType> UpdateAsync(string name)
+		{
+			var rat = await this.context.RepairActivityTypes
+				.FirstAsync(rat => rat.Name == name);
+
+			rat.Name = name;
+			await this.context.SaveChangesAsync();
+			return rat;
+		}
+
+		private async Task<bool> RepairActivityTypeExists(string name)
+		{
+			return await this.context.RepairActivityTypes
+				.AnyAsync(rat => rat.Name == name);
 		}
 	}
 }

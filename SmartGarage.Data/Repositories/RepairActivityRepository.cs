@@ -27,7 +27,7 @@ namespace SmartGarage.Data.Repositories
         {
             var serviceType = await this.applicationDbContext.RepairActivityTypes
                 .FirstOrDefaultAsync(s => s.Name == name)
-                ?? throw new EntityNotFoundException(RepairActivityTypeNotFound);
+                ?? throw new EntityNotFoundException(TypeNotFound);
 
             return await this.applicationDbContext.RepairActivities
                 .Where(s => s.RepairActivityTypeId == serviceType.Id)
