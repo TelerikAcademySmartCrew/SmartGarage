@@ -9,5 +9,7 @@ namespace SmartGarage.Services.Contracts
 		Task<ICollection<RepairActivity>> GetByNameAsync(string name);
 
 		Task<ICollection<RepairActivity>> AddAsync (ICollection<RepairActivity> repairActivities);
+
+		Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice);
 	}
 }

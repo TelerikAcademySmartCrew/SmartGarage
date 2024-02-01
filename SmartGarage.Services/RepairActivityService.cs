@@ -27,5 +27,10 @@ namespace SmartGarage.Services
 		{
 			return await this.repairActivityRepository.AddAsync(repairActivities);
 		}
+
+		public async Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice)
+		{
+			return await this.repairActivityRepository.GetByPriceRange(startingPrice, endingPrice);
+		}
 	}
 }
