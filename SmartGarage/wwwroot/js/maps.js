@@ -12,6 +12,7 @@ var description = 'SmartGarage';
 
 // Bing Maps Lib
 function loadBingMapsScript(callback) {
+
     return new Promise((resolve, reject) => {
         var bingMapsScript = document.createElement('script');
         bingMapsScript.type = 'text/javascript';

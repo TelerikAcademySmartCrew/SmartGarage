@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using SmartGarage.Common.Exceptions;
 using SmartGarage.Data;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.WebAPI.Models;
+using System.Security.Claims;
 
 namespace SmartGarage.WebAPI.Services
 {
@@ -30,7 +32,6 @@ namespace SmartGarage.WebAPI.Services
 
         public async Task<IdentityResult> Create(AppUser appUser)
         {
-
             try
             {
                 // TODO : use the pass generator when ready
@@ -62,6 +63,12 @@ namespace SmartGarage.WebAPI.Services
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
+        {
+            return await userManager.GetUserAsync(user)
+                ?? throw new EntityNotFoundException($"User not found.");
         }
 
         public async Task<AppUser> GetByEmail(string email)

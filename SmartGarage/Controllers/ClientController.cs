@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SmartGarage.Common.Exceptions;
 using SmartGarage.Models;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.WebAPI.Models;
@@ -16,32 +17,27 @@ namespace SmartGarage.Controllers
             this.usersService = usersService;
             this.signInManager = signInManager;
         }
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(LoginViewModel loginData)
+
+        [HttpGet]
+        public IActionResult SmartGarageInfo()
         {
-            if (ModelState.IsValid)
+            //if (this.User.IsInRole("User"))
+            //{
+            //    return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
+            //}
+
+            LocationLists model = new LocationLists();
+            var locations = new List<Location>()
             {
-                var user = usersService.GetByEmail(loginData.Email);
+                new Location(1, "SmartGarage", "SmartGarage", 42.65033853376936, 23.379256507391496)
+            };
+            model.Locations = locations;
+            model.ServiceLocation = locations[0];
 
-                if (user != null)
-                {
-                    // Attempt to sign in the user
-                    var result = await signInManager.PasswordSignInAsync(user.Result, loginData.Password, false, false);
-
-                    // TODO : to check:
-                    // IsEmailConfirmedAsync
-                    // IsLockedOutAsync
-                    // etc...
-
-                    if (result.Succeeded)
-                    {
-                        // Successfully authenticated, redirect to the main page for logged-in users
-                        return View(loginData); // Adjust this based on your controller and action
-                    }
-
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt");
-                }
+            // TODO : 
+            //if (User.IsInRole("User"))
+            {
+                return View();
             }
 
             // If there are validation errors or login fails, redisplay the login form
@@ -49,16 +45,26 @@ namespace SmartGarage.Controllers
             return NotFound("Not found");
         }
 
-        public async Task<IActionResult> Index2(LoginViewModel loginViewModel)
+        [HttpGet]
+        public async Task<IActionResult> Profile()
         {
             try
             {
-                var user = await usersService.GetByEmail(loginViewModel.Email);
-                return View();
+                var user = await usersService.GetUserAsync(User);
+
+                var model = new UserViewModel()
+                {
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                };
+
+                return View(model);
             }
-            catch (Exception ex)
+            catch (EntityNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound("Not found");
             }
         }
     }

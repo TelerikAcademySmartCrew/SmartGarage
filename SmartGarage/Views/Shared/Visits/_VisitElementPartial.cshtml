@@ -1,0 +1,24 @@
+﻿@model VisitViewModel
+
+<div class="d-flex bg-light bg-opacity-50 m-2 p-3 rounded-3 flex-column">
+    <div class="d-flex justify-content-between">
+        <dv>
+            @Model.VehicleBrand @Model.VehicleModel
+        </dv>
+        <div>
+            @Model.DateCreated.ToShortDateString()
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="d-flex flex-column justify-content-start mt-4">
+        @foreach (var item in Model.VehicleServices)
+        {
+            <div class="d-flex justify-content-between flex-row">
+                <p>@item.Name</p>
+                <p>@item.Price</p>
+            </div>
+        }
+    </div>
+</div>
