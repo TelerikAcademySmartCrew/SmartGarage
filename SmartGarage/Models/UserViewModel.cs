@@ -1,5 +1,5 @@
 ﻿using SmartGarage.Data.Models;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Models
 {

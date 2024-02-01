@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 using System.Security.Claims;
 
 namespace SmartGarage.Services.Services.Contracts

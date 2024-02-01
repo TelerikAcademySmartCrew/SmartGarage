@@ -4,7 +4,7 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Data;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Utilities;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 using System.Security.Claims;
 
 namespace SmartGarage.WebAPI.Services
