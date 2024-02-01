@@ -5,7 +5,7 @@ using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services;
 using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Utilities;
-using SmartGarage.WebAPI.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.WebAPI.Controllers;
 
