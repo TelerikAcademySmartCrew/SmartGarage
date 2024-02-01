@@ -4,7 +4,8 @@
     {
         public static class RepairActivity
         {
-            public const string RepairActivityTypeNotFound = "Repair activity type not found!";
+            public const string TypeNotFound = "Repair activity type not found!";
+            public const string AlreadyExists = "Repair activity type already exists!";
         }
 
         public static class Vehicle
