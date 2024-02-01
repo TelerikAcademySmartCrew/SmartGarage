@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SmartGarage.Common.Exceptions;
 using SmartGarage.Models;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Utilities;
@@ -10,22 +11,18 @@ namespace SmartGarage.Controllers
 {
     public class AuthController : Controller
     {
-        private readonly EmailService emailService;
         private readonly SignInManager<AppUser> signInManager;
         private readonly UserManager<AppUser> userManager;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IUsersService usersService;
 
-        public AuthController(ILogger<HomeController> logger,
-            EmailService emailService,
-            UserManager<AppUser> userManager,
+        public AuthController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IWebHostEnvironment webHostEnvironment,
             IUsersService usersService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
-            this.emailService = emailService;
             this.webHostEnvironment = webHostEnvironment;
             this.usersService = usersService;
         }
@@ -39,6 +36,7 @@ namespace SmartGarage.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginData)
         {
             if (!ModelState.IsValid)
@@ -66,7 +64,7 @@ namespace SmartGarage.Controllers
                 if (result.Succeeded)
                 {
                     // Successfully authenticated
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("DisplayAll", "Visits");
                 }
 
                 ModelState.AddModelError("Password", "Invalid credentials");
@@ -87,7 +85,6 @@ namespace SmartGarage.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel registertionData)
         {
             try
@@ -97,8 +94,6 @@ namespace SmartGarage.Controllers
                     ModelState.AddModelError("Email", "Error. Please try again.");
                     return View();
                 }
-
-                var userExists = await usersService.UserWithEmailExists(registertionData.Email);
 
                 if (await usersService.UserWithEmailExists(registertionData.Email))
                 {
@@ -124,7 +119,6 @@ namespace SmartGarage.Controllers
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
                     var callbackUrl = Url.Action("Login", "Auth", new { userId = newUser.Id, code = token });
 
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");  
                     string body = string.Empty;
 
                     // Then use it to get the content root path
@@ -158,6 +152,11 @@ namespace SmartGarage.Controllers
 
                 return View("Error");
             }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("Username", ex.Message);
+                return View();
+            }
             catch (Exception ex)
             {
                 ModelState.AddModelError("Username", ex.Message);
@@ -167,6 +166,7 @@ namespace SmartGarage.Controllers
         }
 
         [AllowAnonymous]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmEmail(string userId, string confirmToken)
         {
             // NOTE : need to review validation

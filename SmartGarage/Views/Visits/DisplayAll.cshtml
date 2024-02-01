@@ -1,0 +1,19 @@
+﻿@model IList<VisitViewModel>
+
+<!-- client index page -->
+<div class="d-flex flex-column justify-content-start" style="height:100%;">
+
+    <!-- client nav bar -->
+    <partial name="/Views/Shared/_ClientNavBarPartial.cshtml" />
+
+    <div class="container">
+        <div class="container justify-content-center mt-5">
+            @foreach (var vehicle in Model)
+            {
+                <a href="#" style="text-decoration:none">
+                    <partial name="Visits/_VisitElementPartial" , model="vehicle" />
+                </a>
+            }
+        </div>
+    </div>
+</div>

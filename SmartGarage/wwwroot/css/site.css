@@ -104,6 +104,20 @@ input.log-in-form-control:focus {
     opacity: 0.75;
 }
 
+#smart-garage-watermark {
+    display:flex;
+    align-items: center;
+    font-size: 36px;
+    font-family: Lalezar;
+    color: #EAEAEA;
+    opacity: 0.5;
+}
+
+.client-nav-bar-link {
+    text-decoration:none;
+    color:antiquewhite;
+}
+
 .rounded-div {
     width: 200px;
     height: 100px;

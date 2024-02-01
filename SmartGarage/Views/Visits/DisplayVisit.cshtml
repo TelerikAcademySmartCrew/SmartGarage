@@ -1,0 +1,13 @@
+﻿@model VisitViewModel
+
+<div>
+    <div>
+        @Model.VehicleBrand @Model.VehicleModel
+    </div>
+
+    @foreach (var item in Model.VehicleServices)
+    {
+        <p>item</p>
+    }
+
+</div>
