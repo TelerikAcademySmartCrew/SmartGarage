@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using Microsoft.EntityFrameworkCore.Query;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.RepairActivity;
 
@@ -14,9 +15,56 @@ namespace SmartGarage.Data.Repositories
         public RepairActivityRepository(ApplicationDbContext applicationDbContext) 
         {
             this.context = applicationDbContext;
-        }        
+        }
 
-        public async Task<ICollection<RepairActivity>> GetByVisitId(int id)
+		public async Task<ICollection<RepairActivity>> GetAllAsync(RepairActivityQueryParameters queryParameters)
+		{
+            var repairActivitiesToReturn = this.context.RepairActivities.AsQueryable();
+
+            if (!string.IsNullOrEmpty(queryParameters.Name))
+            {
+				//var repairActivityType = await this.context.RepairActivityTypes
+				//    .FirstOrDefaultAsync(x => x.Name == queryParameters.Name)
+				//    ?? throw new EntityNotFoundException(TypeNotFound);
+
+				//repairActivitiesToReturn.Where(x => x.RepairActivityTypeId == repairActivityType.Id);
+
+				repairActivitiesToReturn.Where(x => x.RepairActivityType.Name == queryParameters.Name);
+            }
+
+            if (!string.IsNullOrEmpty(queryParameters.Price))
+            {
+                repairActivitiesToReturn.Where(x => x.Price == Convert.ToDouble(queryParameters.Price));
+            }
+
+            if (!string.IsNullOrEmpty(queryParameters.SortByName))
+            {
+                if (queryParameters.SortByName == "asc")
+                {
+                    repairActivitiesToReturn.OrderBy(x => x.RepairActivityType.Name);
+                }
+                else if (queryParameters.SortByName == "desc")
+                {
+                    repairActivitiesToReturn.OrderByDescending(x => x.RepairActivityType.Name);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(queryParameters.SortByPrice))
+            {
+                if (queryParameters.SortByPrice == "asc")
+                {
+                    repairActivitiesToReturn.OrderBy(x => x.Price);
+                }
+                else if (queryParameters.SortByPrice == "desc")
+                {
+                    repairActivitiesToReturn.OrderByDescending(x => x.Price);
+                }
+            }
+
+            return await repairActivitiesToReturn.ToListAsync();
+		}
+
+		public async Task<ICollection<RepairActivity>> GetByVisitId(int id)
         {
             return await this.context.RepairActivities
                 .Where(ra => ra.VisitId == id)
@@ -47,6 +95,6 @@ namespace SmartGarage.Data.Repositories
 
             await this.context.SaveChangesAsync();
             return repairActivities;
-        }
-    }
+        }		
+	}
 }

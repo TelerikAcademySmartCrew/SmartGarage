@@ -41,7 +41,7 @@ namespace SmartGarage.Data.Repositories
                 vehiclesToReturn = vehiclesToReturn.Where(v => v.Brand.Name == vehicleQueryParameters.Brand);
             }
 
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Model))
+            if (!string.IsNullOrEmpty(vehicleQueryParameters.Model))    
             {
                 vehiclesToReturn = vehiclesToReturn.Where(v => v.Model.Name == vehicleQueryParameters.Model);
             }

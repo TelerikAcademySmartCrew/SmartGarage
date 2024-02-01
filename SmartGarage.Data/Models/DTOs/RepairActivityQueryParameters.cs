@@ -1,10 +1,10 @@
 ﻿namespace SmartGarage.Data.Models.DTOs
 {
-	public class ServiceQueryParameters
+	public class RepairActivityQueryParameters
     {
         public string? Name { get; set; }
 
-        public decimal? Price { get; set; }
+        public string? Price { get; set; }
 
         public string? SortByName { get; set; }
 
