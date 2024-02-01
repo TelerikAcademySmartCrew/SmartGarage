@@ -1,4 +1,5 @@
-﻿using SmartGarage.Data.Models.DTOs;
+﻿using Microsoft.AspNetCore.Identity;
+using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Services.Mappers.Contracts;
@@ -10,18 +11,23 @@ namespace SmartGarage.Services
     {
         private readonly IVehicleRepository vehicleRepository;
         private readonly IVehicleDTOMapper vehicleDTOMapper;
+        private readonly UserManager<AppUser> userManager;
 
         public VehicleService(IVehicleRepository vehicleRepository,
-            IVehicleDTOMapper vehicleDTOMapper)
+            IVehicleDTOMapper vehicleDTOMapper,
+            UserManager<AppUser> userManager)
         {
             this.vehicleRepository = vehicleRepository;
             this.vehicleDTOMapper = vehicleDTOMapper;
+            this.userManager = userManager;
         }
 
-        public async Task<VehicleResponseDTO> CreateVehicleAsync(VehicleCreateDTO vehicleDTO, AppUser currentUser)
+        public async Task<VehicleResponseDTO> CreateVehicleAsync(VehicleCreateDTO vehicleDTO, string email)
         {
+            var user = await this.userManager.FindByEmailAsync(email);
             var vehicle = this.vehicleDTOMapper.Map(vehicleDTO);
-            return this.vehicleDTOMapper.Map(await vehicleRepository.CreateVehicleAsync(vehicle, currentUser));
+            vehicle.UserId = user.Id;
+            return this.vehicleDTOMapper.Map(await vehicleRepository.CreateVehicleAsync(vehicle, user));
         }
 
         public async Task<IList<VehicleResponseDTO>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
@@ -41,9 +47,9 @@ namespace SmartGarage.Services
             return this.vehicleDTOMapper.Map(vehiclesToReturn);
         }
 
-        public async Task<VehicleResponseDTO> UpdateVehicleAsync(int vehicleId, VehicleCreateDTO updatedVehicleDTO)
+        public async Task<VehicleResponseDTO> UpdateVehicleAsync(int vehicleId, VehicleCreateDTO updatedVehicleDto)
         {
-            var updatedVehicle = this.vehicleDTOMapper.Map(updatedVehicleDTO);
+            var updatedVehicle = this.vehicleDTOMapper.Map(updatedVehicleDto);
             return this.vehicleDTOMapper.Map(await vehicleRepository.UpdateVehicleAsync(vehicleId, updatedVehicle));
         }
         public async Task DeleteVehicleAsync(int vehicleId)

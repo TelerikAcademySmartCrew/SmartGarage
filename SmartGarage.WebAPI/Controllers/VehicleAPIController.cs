@@ -34,7 +34,7 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // GET: api/vehicles/users/id
-        [HttpGet("users/{id}")]
+        [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetVehiclesByUser([FromRoute]string userId, [FromQuery] VehicleQueryParameters vehicleQueryParameters)
         {
             try
@@ -49,7 +49,7 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // GET: api/vehicles/id
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetAsync(int id)
         {
             try
@@ -65,12 +65,12 @@ namespace SmartGarage.WebAPI.Controllers
 
        // POST: api/vehicles
        [HttpPost]
-        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO)
+        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO, 
+            [FromQuery] string customerEmail)
         {
             try
             {
-                var currentUser = new AppUser();
-                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, currentUser);
+                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, customerEmail);
                 return Ok(createdVehicle);
             }
             catch (Exception ex)
@@ -80,13 +80,12 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // PUT: api/vehicles/id
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVehicleAsync([FromRoute]int id, [FromBody] VehicleCreateDTO vehicleDTO)
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> UpdateVehicleAsync([FromRoute]int id, [FromBody] VehicleCreateDTO vehicleDto)
         {
             try
             {
-                var vehicle = await vehicleService.GetVehicleByIdAsync(id);
-                var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicleDTO);
+                var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicleDto);
                 return Ok(updatedVehicle);
             }
             catch (EntityNotFoundException ex)
@@ -96,7 +95,7 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // DELETE: api/vehicles/delete
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteVehicleAsync([FromRoute]int id)
         {
             try
