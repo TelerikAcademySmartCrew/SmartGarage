@@ -64,10 +64,10 @@ namespace SmartGarage.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<RepairActivity>()
-    		.HasOne(ra => ra.RepairActivityType)
-		.WithMany(rat => rat.RepairActivities)
-		.HasForeignKey(ra => ra.RepairActivityTypeId)
-		.OnDelete(DeleteBehavior.Restrict);
+                .HasOne(ra => ra.RepairActivityType)
+                .WithMany(rat => rat.RepairActivities)
+                .HasForeignKey(ra => ra.RepairActivityTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

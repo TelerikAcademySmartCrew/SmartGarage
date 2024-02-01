@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.DTOs;
@@ -29,23 +28,27 @@ namespace SmartGarage.Data.Repositories
 
 				//repairActivitiesToReturn.Where(x => x.RepairActivityTypeId == repairActivityType.Id);
 
-				repairActivitiesToReturn.Where(x => x.RepairActivityType.Name == queryParameters.Name);
+				repairActivitiesToReturn = repairActivitiesToReturn
+                    .Where(x => x.RepairActivityType.Name.Equals(queryParameters.Name));
             }
 
             if (!string.IsNullOrEmpty(queryParameters.Price))
             {
-                repairActivitiesToReturn.Where(x => x.Price == Convert.ToDouble(queryParameters.Price));
+                repairActivitiesToReturn = repairActivitiesToReturn
+                    .Where(x => x.Price.Equals(Convert.ToDouble(queryParameters.Price)));
             }
 
             if (!string.IsNullOrEmpty(queryParameters.SortByName))
             {
                 if (queryParameters.SortByName == "asc")
                 {
-                    repairActivitiesToReturn.OrderBy(x => x.RepairActivityType.Name);
+                    repairActivitiesToReturn = repairActivitiesToReturn
+                        .OrderBy(x => x.RepairActivityType.Name);
                 }
                 else if (queryParameters.SortByName == "desc")
                 {
-                    repairActivitiesToReturn.OrderByDescending(x => x.RepairActivityType.Name);
+                    repairActivitiesToReturn = repairActivitiesToReturn
+                        .OrderByDescending(x => x.RepairActivityType.Name);
                 }
             }
 
@@ -53,11 +56,13 @@ namespace SmartGarage.Data.Repositories
             {
                 if (queryParameters.SortByPrice == "asc")
                 {
-                    repairActivitiesToReturn.OrderBy(x => x.Price);
+                    repairActivitiesToReturn = repairActivitiesToReturn
+                        .OrderBy(x => x.Price);
                 }
                 else if (queryParameters.SortByPrice == "desc")
                 {
-                    repairActivitiesToReturn.OrderByDescending(x => x.Price);
+                    repairActivitiesToReturn = repairActivitiesToReturn
+                        .OrderByDescending(x => x.Price);
                 }
             }
 
