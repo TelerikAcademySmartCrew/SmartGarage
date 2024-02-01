@@ -30,12 +30,12 @@ namespace SmartGarage.Services
 
 		public async Task<RepairActivityType> UpdateAsync(string name)
 		{
-			return await this.UpdateAsync(name);
+			return await this.repairActivityTypeRepository.UpdateAsync(name);
 		}
 
 		public async Task DeleteAsync(string name)
 		{
-			await this.DeleteAsync(name);
+			await this.repairActivityTypeRepository.DeleteAsync(name);
 		}				
 	}
 }
