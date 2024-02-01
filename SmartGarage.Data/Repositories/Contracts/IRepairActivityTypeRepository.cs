@@ -11,5 +11,7 @@ namespace SmartGarage.Data.Repositories.Contracts
         Task<RepairActivityType> UpdateAsync(string name);
 
         Task<RepairActivityType> CreateAsync(RepairActivityType repairActivityType);
+
+        Task DeleteAsync(string name);
     }
 }

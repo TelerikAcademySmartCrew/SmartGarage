@@ -53,6 +53,15 @@ namespace SmartGarage.Data.Repositories
 			return rat;
 		}
 
+		public async Task DeleteAsync(string name)
+		{
+			var rat = await this.context.RepairActivityTypes
+				.FirstAsync(rat => rat.Name == name);
+
+			rat.IsDeleted = true;
+			await this.context.SaveChangesAsync();
+		}
+		
 		private async Task<bool> RepairActivityTypeExists(string name)
 		{
 			return await this.context.RepairActivityTypes
