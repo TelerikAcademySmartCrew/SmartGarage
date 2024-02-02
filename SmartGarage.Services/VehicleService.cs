@@ -31,7 +31,7 @@ namespace SmartGarage.Services
             return await vehicleRepository.GetAllAsync(vehicleQueryParameters);
         }
 
-        public async Task<Vehicle> GetVehicleByIdAsync(int vehicleId)
+        public async Task<Vehicle> GetVehicleByIdAsync(Guid vehicleId)
         {
             return await vehicleRepository.GetVehicleByIdAsync(vehicleId);
         }
@@ -41,11 +41,11 @@ namespace SmartGarage.Services
             return await vehicleRepository.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
         }
 
-        public async Task<Vehicle> UpdateVehicleAsync(int vehicleId, Vehicle updatedVehicle)
+        public async Task<Vehicle> UpdateVehicleAsync(Guid vehicleId, Vehicle updatedVehicle)
         {
             return await vehicleRepository.UpdateVehicleAsync(vehicleId, updatedVehicle);
         }
-        public async Task DeleteVehicleAsync(int vehicleId)
+        public async Task DeleteVehicleAsync(Guid vehicleId)
         {
             await vehicleRepository.DeleteVehicleAsync(vehicleId);
         }

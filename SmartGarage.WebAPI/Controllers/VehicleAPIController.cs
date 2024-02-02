@@ -57,8 +57,8 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // GET: api/vehicles/id
-        [HttpGet("{vehicleId:int}")]
-        public async Task<IActionResult> GetByIdAsync(int vehicleId)
+        [HttpGet("{vehicleId:guid}")]
+        public async Task<IActionResult> GetByIdAsync(Guid vehicleId)
         {
             try
             {
@@ -92,8 +92,8 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // PUT: api/vehicles/id
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateVehicleAsync([FromRoute]int id, [FromBody] VehicleCreateDTO vehicleDto)
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> UpdateVehicleAsync([FromRoute]Guid id, [FromBody] VehicleCreateDTO vehicleDto)
         {
             try
             {
@@ -108,8 +108,8 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // DELETE: api/vehicles/delete
-        [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteVehicleAsync([FromRoute]int id)
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> DeleteVehicleAsync([FromRoute]Guid id)
         {
             try
             {

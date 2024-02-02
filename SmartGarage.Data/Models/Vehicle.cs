@@ -9,7 +9,7 @@ namespace SmartGarage.Data.Models
     public class Vehicle
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
 		[Required]
 		public int BrandId { get; set; }

@@ -45,7 +45,7 @@ namespace SmartGarage.Data.Repositories
         }
 
 
-        public async Task<Vehicle> GetVehicleByIdAsync(int vehicleId)
+        public async Task<Vehicle> GetVehicleByIdAsync(Guid vehicleId)
         {
             return await applicationDbContext.Vehicles
                 .Include(v => v.Brand)
@@ -71,7 +71,7 @@ namespace SmartGarage.Data.Repositories
             return await vehiclesToReturn.ToListAsync();
         }
 
-        public async Task<Vehicle> UpdateVehicleAsync(int vehicleId, Vehicle updatedVehicle)
+        public async Task<Vehicle> UpdateVehicleAsync(Guid vehicleId, Vehicle updatedVehicle)
         {
             var vehicleToUpdate = await GetVehicleByIdAsync(vehicleId);
 
@@ -85,7 +85,7 @@ namespace SmartGarage.Data.Repositories
             return vehicleToUpdate;
         }
 
-        public async Task DeleteVehicleAsync(int vehicleId)
+        public async Task DeleteVehicleAsync(Guid vehicleId)
         {
             var vehicle = await GetVehicleByIdAsync(vehicleId);
             vehicle.IsDeleted = true;
