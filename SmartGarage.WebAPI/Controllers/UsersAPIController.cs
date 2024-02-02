@@ -37,7 +37,7 @@ public class UsersAPIController : ControllerBase
 
         if (!createdUserResult.Succeeded) return BadRequest("Operation unsuccessful!");
         await userManager.AddToRoleAsync(user, "Employee");
-        return Ok("Employee created successfully!");
+        return Ok(password);
     }
     
     [Authorize(Policy = "EmployeeRequired")]
@@ -50,6 +50,6 @@ public class UsersAPIController : ControllerBase
 
         if (!createdUserResult.Succeeded) return BadRequest("Operation unsuccessful!");
         await userManager.AddToRoleAsync(user, "Customer");
-        return Ok("Employee created successfully!");
+        return Ok("Customer created successfully!");
     }
 }

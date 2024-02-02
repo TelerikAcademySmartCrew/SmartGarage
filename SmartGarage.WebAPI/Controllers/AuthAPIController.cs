@@ -38,7 +38,7 @@ namespace SmartGarage.WebAPI.Controllers
 
             if (!createdUserResult.Succeeded) return BadRequest("Operation unsuccessful!");
             await userManager.AddToRoleAsync(user, "Customer");
-            return Ok("User created successfully!");
+            return Ok(password);
 
         }
 

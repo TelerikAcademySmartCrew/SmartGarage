@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
@@ -9,6 +10,7 @@ namespace SmartGarage.WebAPI.Controllers
 {
     [Route("api/vehicles")]
     [ApiController]
+    [Authorize(Policy = "EmployeeRequired")]
     public class VehicleAPIController : ControllerBase
     {
         private readonly IVehicleService vehicleService;

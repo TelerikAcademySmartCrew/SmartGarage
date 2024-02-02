@@ -28,13 +28,14 @@ namespace SmartGarage.Services.Mappers
                 VIN = vehicle.VIN,
                 CreationYear = vehicle.ProductionYear,
                 LicensePlate = vehicle.LicensePlateNumber,
+                Username = vehicle.User.UserName,
             };
             return vehicleResponseDto;
         }
 
         public IList<VehicleResponseDTO> Map(IList<Vehicle> vehicles)
         {
-            return vehicles.Select(vehicle => Map(vehicle)).ToList();
+            return vehicles.Select(Map).ToList();
         }
     }
 }

@@ -14,6 +14,7 @@ using SmartGarage.Services.Mappers;
 using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Seeding;
 
 namespace SmartGarage.WebAPI
 {
@@ -119,7 +120,14 @@ namespace SmartGarage.WebAPI
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+                var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+                var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
+                SeedData.Initialize(userManager, roleManager).Wait();
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

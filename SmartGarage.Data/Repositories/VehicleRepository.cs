@@ -31,7 +31,12 @@ namespace SmartGarage.Data.Repositories
 
         public async Task<IList<Vehicle>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
         {
-            var vehiclesToReturn = applicationDbContext.Vehicles.AsQueryable();
+            var vehiclesToReturn = applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .Include(v => v.User)
+                .Where(v => !v.IsDeleted)
+                .AsQueryable();
 
             vehiclesToReturn = FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
 
@@ -61,6 +66,10 @@ namespace SmartGarage.Data.Repositories
         public async Task<Vehicle> GetVehicleByIdAsync(int vehicleId)
         {
             return await applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .Include(v => v.User)
+                .Where(v => !v.IsDeleted)
                 .FirstOrDefaultAsync(v => v.Id == vehicleId)
                 ?? throw new ArgumentNullException(VehicleNotFoundMessage);
         }
@@ -68,23 +77,14 @@ namespace SmartGarage.Data.Repositories
         public async Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters)
         {
             var vehiclesToReturn = applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .Include(v => v.User)
+                .Where(v => !v.IsDeleted)
                 .Where(v => v.UserId == userId)
                 .AsQueryable();
 
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Brand))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.Brand.Name == vehicleQueryParameters.Brand);
-            }
-
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Model))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.Model.Name == vehicleQueryParameters.Model);
-            }
-
-            if (!string.IsNullOrEmpty(vehicleQueryParameters.Username))
-            {
-                vehiclesToReturn = vehiclesToReturn.Where(v => v.User.UserName == vehicleQueryParameters.Username);
-            }
+            FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
 
             return await vehiclesToReturn.ToListAsync();
         }
@@ -95,7 +95,9 @@ namespace SmartGarage.Data.Repositories
 
             vehicleToUpdate.BrandId = updatedVehicle.BrandId;
             vehicleToUpdate.ModelId = updatedVehicle.ModelId;
-            vehicleToUpdate.UserId = updatedVehicle.UserId;
+            vehicleToUpdate.LicensePlateNumber = updatedVehicle.LicensePlateNumber;
+            vehicleToUpdate.VIN = updatedVehicle.VIN;
+            vehicleToUpdate.ProductionYear = updatedVehicle.ProductionYear;
 
             await applicationDbContext.SaveChangesAsync();
             return vehicleToUpdate;
