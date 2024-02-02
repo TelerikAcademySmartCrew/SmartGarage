@@ -51,12 +51,12 @@ namespace SmartGarage.WebAPI.Controllers
         }
 
         // GET: api/vehicles/id
-        [HttpGet("{id:int}")]
-        public async Task<IActionResult> GetAsync(int id)
+        [HttpGet("{vehicleId:int}")]
+        public async Task<IActionResult> GetByIdAsync(int vehicleId)
         {
             try
             {
-                var vehicle = await vehicleService.GetVehicleByIdAsync(id);
+                var vehicle = await vehicleService.GetVehicleByIdAsync(vehicleId);
                 return Ok(vehicle);
             }
             catch (EntityNotFoundException ex)
@@ -67,13 +67,14 @@ namespace SmartGarage.WebAPI.Controllers
 
        // POST: api/vehicles
        [HttpPost]
-        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDTO, 
-            [FromQuery] string customerEmail)
+        public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDto, 
+            [FromQuery] string customerEmail,
+            CancellationToken cancellationToken)
         {
             try
             {
-                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDTO, customerEmail);
-                return Ok(createdVehicle);
+                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDto, customerEmail, cancellationToken);
+                return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.CreationYear}, createdVehicle);
             }
             catch (Exception ex)
             {

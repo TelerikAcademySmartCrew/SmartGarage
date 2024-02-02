@@ -58,14 +58,14 @@ public class VehicleTests
         vehicleDtoMapperMock.Setup(x => x.Map(It.IsAny<VehicleCreateDTO>()))
             .Returns(new Vehicle());
 
-        vehicleRepositoryMock.Setup(x => x.CreateVehicleAsync(It.IsAny<Vehicle>(), It.IsAny<AppUser>()))
+        vehicleRepositoryMock.Setup(x => x.CreateVehicleAsync(It.IsAny<Vehicle>(), It.IsAny<AppUser>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new Vehicle());
 
         vehicleDtoMapperMock.Setup(x => x.Map(It.IsAny<Vehicle>()))
             .Returns(expectedMappedVehicleResponseDto);
 
         // Act
-        var result = await vehicleService.CreateVehicleAsync(vehicleCreateDto, "test@example.com");
+        var result = await vehicleService.CreateVehicleAsync(vehicleCreateDto, "test@example.com", cancellationToken: new CancellationToken());
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedMappedVehicleResponseDto));

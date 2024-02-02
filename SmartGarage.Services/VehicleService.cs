@@ -22,12 +22,12 @@ namespace SmartGarage.Services
             this.userManager = userManager;
         }
 
-        public async Task<VehicleResponseDTO> CreateVehicleAsync(VehicleCreateDTO vehicleDto, string email)
+        public async Task<VehicleResponseDTO> CreateVehicleAsync(VehicleCreateDTO vehicleDto, string email, CancellationToken cancellationToken)
         {
             var user = await this.userManager.FindByEmailAsync(email);
             var vehicle = this.vehicleDtoMapper.Map(vehicleDto);
             vehicle.UserId = user.Id;
-            return this.vehicleDtoMapper.Map(await vehicleRepository.CreateVehicleAsync(vehicle, user));
+            return this.vehicleDtoMapper.Map(await vehicleRepository.CreateVehicleAsync(vehicle, user, cancellationToken));
         }
 
         public async Task<IList<VehicleResponseDTO>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
