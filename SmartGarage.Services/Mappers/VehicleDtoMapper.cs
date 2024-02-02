@@ -4,24 +4,24 @@ using SmartGarage.Services.Mappers.Contracts;
 
 namespace SmartGarage.Services.Mappers
 {
-    public class VehicleDTOMapper : IVehicleDTOMapper
+    public class VehicleDtoMapper : IVehicleDtoMapper
     {
-        public Vehicle Map(VehicleCreateDTO vehicleCreateDTO)
+        public Vehicle Map(VehicleCreateDTO vehicleCreateDto)
         {
             var vehicle = new Vehicle()
             {
-                BrandId = vehicleCreateDTO.BrandId,
-                ModelId = vehicleCreateDTO.ModelId,
-                VIN = vehicleCreateDTO.VIN,
-                ProductionYear = vehicleCreateDTO.CreationYear,
-                LicensePlateNumber = vehicleCreateDTO.LicensePlate,
+                BrandId = vehicleCreateDto.BrandId,
+                ModelId = vehicleCreateDto.ModelId,
+                VIN = vehicleCreateDto.VIN,
+                ProductionYear = vehicleCreateDto.CreationYear,
+                LicensePlateNumber = vehicleCreateDto.LicensePlate,
             };
             return vehicle;
         }
 
-        public VehicleResponseDTO Map(Vehicle vehicle)
+        public VehicleResponseDto Map(Vehicle vehicle)
         {
-            var vehicleResponseDto = new VehicleResponseDTO()
+            var vehicleResponseDto = new VehicleResponseDto()
             {
                 Brand = vehicle.Brand.Name,
                 Model = vehicle.Model.Name,
@@ -33,7 +33,7 @@ namespace SmartGarage.Services.Mappers
             return vehicleResponseDto;
         }
 
-        public IList<VehicleResponseDTO> Map(IList<Vehicle> vehicles)
+        public IList<VehicleResponseDto> Map(IEnumerable<Vehicle> vehicles)
         {
             return vehicles.Select(Map).ToList();
         }

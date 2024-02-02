@@ -5,6 +5,7 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Services.Mappers.Contracts;
 
 namespace SmartGarage.WebAPI.Controllers
 {
@@ -14,10 +15,13 @@ namespace SmartGarage.WebAPI.Controllers
     public class VehicleAPIController : ControllerBase
     {
         private readonly IVehicleService vehicleService;
+        private readonly IVehicleDtoMapper vehicleDtoMapper;
 
-        public VehicleAPIController(IVehicleService vehicleService)
+        public VehicleAPIController(IVehicleService vehicleService,
+            IVehicleDtoMapper vehicleDtoMapper)
         {
             this.vehicleService = vehicleService;
+            this.vehicleDtoMapper = vehicleDtoMapper;
         }
 
         // GET: api/vehicles
@@ -27,7 +31,8 @@ namespace SmartGarage.WebAPI.Controllers
             try
             {
                 var vehicles = await vehicleService.GetAllAsync(vehicleQueryParameters);
-                return Ok(vehicles);
+                var vehiclesToReturn = vehicleDtoMapper.Map(vehicles);
+                return Ok(vehiclesToReturn);
             }
             catch (EntityNotFoundException ex)
             {
@@ -42,7 +47,8 @@ namespace SmartGarage.WebAPI.Controllers
             try
             {
                 var vehicles = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
-                return Ok(vehicles);
+                var vehiclesResponse = this.vehicleDtoMapper.Map(vehicles);
+                return Ok(vehiclesResponse);
             }
             catch (EntityNotFoundException ex)
             {
@@ -57,7 +63,8 @@ namespace SmartGarage.WebAPI.Controllers
             try
             {
                 var vehicle = await vehicleService.GetVehicleByIdAsync(vehicleId);
-                return Ok(vehicle);
+                var vehicleResponse = this.vehicleDtoMapper.Map(vehicle);
+                return Ok(vehicleResponse);
             }
             catch (EntityNotFoundException ex)
             {
@@ -73,8 +80,10 @@ namespace SmartGarage.WebAPI.Controllers
         {
             try
             {
-                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicleCreateDto, customerEmail, cancellationToken);
-                return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.CreationYear}, createdVehicle);
+                var vehicle = vehicleDtoMapper.Map(vehicleCreateDto);
+                var createdVehicle = await vehicleService.CreateVehicleAsync(vehicle, customerEmail, cancellationToken);
+                var vehicleResponse = this.vehicleDtoMapper.Map(createdVehicle);
+                return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.Id}, vehicleResponse);
             }
             catch (Exception ex)
             {
@@ -88,7 +97,8 @@ namespace SmartGarage.WebAPI.Controllers
         {
             try
             {
-                var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicleDto);
+                var vehicle = vehicleDtoMapper.Map(vehicleDto);
+                var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicle);
                 return Ok(updatedVehicle);
             }
             catch (EntityNotFoundException ex)

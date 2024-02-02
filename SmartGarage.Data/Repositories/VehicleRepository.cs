@@ -3,6 +3,7 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Data.Models;
+using Vehicle = SmartGarage.Data.Models.Vehicle;
 
 namespace SmartGarage.Data.Repositories
 {
