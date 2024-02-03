@@ -11,4 +11,8 @@
     <PackageReference Include="MailKit" Version="4.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SmartGarage.Data\SmartGarage.Data.csproj" />
+  </ItemGroup>
+
 </Project>

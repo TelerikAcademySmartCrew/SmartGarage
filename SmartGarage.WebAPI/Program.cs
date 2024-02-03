@@ -10,11 +10,11 @@ using SmartGarage.Data.Repositories;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Services.Mappers;
-using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Seeding;
+using SmartGarage.Utilities.Mappers;
+using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.WebAPI
 {
@@ -100,7 +100,7 @@ namespace SmartGarage.WebAPI
             builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
             builder.Services.AddScoped<IVehicleService, VehicleService>();
 
-            builder.Services.AddScoped<IVehicleDtoMapper, VehicleDtoMapper>();
+            builder.Services.AddScoped<IVehicleMapper, VehicleMapper>();
             builder.Services.AddScoped<IUserMapper, UserMapper>();
             builder.Services.AddScoped<PasswordGenerator>();
 

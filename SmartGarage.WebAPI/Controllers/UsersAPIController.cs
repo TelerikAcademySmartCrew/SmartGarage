@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services;
-using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
+using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.WebAPI.Controllers;
 

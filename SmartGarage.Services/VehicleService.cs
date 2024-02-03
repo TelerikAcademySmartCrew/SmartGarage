@@ -2,7 +2,6 @@
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Data.Models;
 
 namespace SmartGarage.Services;

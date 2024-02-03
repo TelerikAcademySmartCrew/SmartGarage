@@ -5,7 +5,6 @@ using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Services.Mappers.Contracts;
 
 namespace SmartGarage.Tests;
 

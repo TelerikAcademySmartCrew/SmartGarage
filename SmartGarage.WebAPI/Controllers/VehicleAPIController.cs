@@ -5,7 +5,8 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Services.Mappers.Contracts;
+using SmartGarage.Utilities.Mappers.Contracts;
+using SmartGarage.Utilities.Models;
 
 namespace SmartGarage.WebAPI.Controllers;
 
@@ -15,23 +16,24 @@ namespace SmartGarage.WebAPI.Controllers;
 public class VehicleAPIController : ControllerBase
 {
     private readonly IVehicleService vehicleService;
-    private readonly IVehicleDtoMapper vehicleDtoMapper;
+    private readonly IVehicleMapper vehicleMapper;
 
     public VehicleAPIController(IVehicleService vehicleService,
-        IVehicleDtoMapper vehicleDtoMapper)
+        IVehicleMapper vehicleMapper)
     {
         this.vehicleService = vehicleService;
-        this.vehicleDtoMapper = vehicleDtoMapper;
+        this.vehicleMapper = vehicleMapper;
     }
 
     // GET: api/vehicles
     [HttpGet]
-    public async Task<IActionResult> GetAsync([FromQuery] VehicleQueryParameters vehicleQueryParameters)
+    public async Task<IActionResult> GetAsync([FromQuery] VehicleQueryParameters vehicleQueryParameters,
+        CancellationToken cancellationToken)
     {
         try
         {
             var vehicles = await vehicleService.GetAllAsync(vehicleQueryParameters);
-            var vehiclesToReturn = vehicleDtoMapper.Map(vehicles);
+            var vehiclesToReturn = vehicleMapper.ToViewModel(vehicles);
             return Ok(vehiclesToReturn);
         }
         catch (EntityNotFoundException ex)
@@ -42,12 +44,14 @@ public class VehicleAPIController : ControllerBase
 
     // GET: api/vehicles/users/id
     [HttpGet("users/{userId}")]
-    public async Task<IActionResult> GetVehiclesByUser([FromRoute]string userId, [FromQuery] VehicleQueryParameters vehicleQueryParameters)
+    public async Task<IActionResult> GetVehiclesByUser([FromRoute]string userId,
+        [FromQuery] VehicleQueryParameters vehicleQueryParameters,
+        CancellationToken cancellationToken)
     {
         try
         {
             var vehicles = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
-            var vehiclesResponse = this.vehicleDtoMapper.Map(vehicles);
+            var vehiclesResponse = this.vehicleMapper.ToViewModel(vehicles);
             return Ok(vehiclesResponse);
         }
         catch (EntityNotFoundException ex)
@@ -58,12 +62,12 @@ public class VehicleAPIController : ControllerBase
 
     // GET: api/vehicles/id
     [HttpGet("{vehicleId:guid}")]
-    public async Task<IActionResult> GetByIdAsync(Guid vehicleId)
+    public async Task<IActionResult> GetByIdAsync(Guid vehicleId, CancellationToken cancellationToken)
     {
         try
         {
             var vehicle = await vehicleService.GetVehicleByIdAsync(vehicleId);
-            var vehicleResponse = this.vehicleDtoMapper.Map(vehicle);
+            var vehicleResponse = this.vehicleMapper.ToViewModel(vehicle);
             return Ok(vehicleResponse);
         }
         catch (EntityNotFoundException ex)
@@ -74,15 +78,15 @@ public class VehicleAPIController : ControllerBase
 
     // POST: api/vehicles
     [HttpPost]
-    public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDto, 
+    public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleInputModel vehicleInputModel, 
         [FromQuery] string customerEmail,
         CancellationToken cancellationToken)
     {
         try
         {
-            var vehicle = vehicleDtoMapper.Map(vehicleCreateDto);
+            var vehicle = vehicleMapper.MaterializeInputModel(vehicleInputModel);
             var createdVehicle = await vehicleService.CreateVehicleAsync(vehicle, customerEmail, cancellationToken);
-            var vehicleResponse = this.vehicleDtoMapper.Map(createdVehicle);
+            var vehicleResponse = this.vehicleMapper.ToViewModel(createdVehicle);
             return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.Id}, vehicleResponse);
         }
         catch (Exception ex)
@@ -93,11 +97,13 @@ public class VehicleAPIController : ControllerBase
 
     // PUT: api/vehicles/id
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateVehicleAsync([FromRoute]Guid id, [FromBody] VehicleCreateDTO vehicleDto)
+    public async Task<IActionResult> UpdateVehicleAsync([FromRoute]Guid id, 
+        [FromBody] VehicleInputModel vehicleDto, 
+        CancellationToken cancellationToken)
     {
         try
         {
-            var vehicle = vehicleDtoMapper.Map(vehicleDto);
+            var vehicle = vehicleMapper.MaterializeInputModel(vehicleDto);
             var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicle);
             return Ok(updatedVehicle);
         }
@@ -109,7 +115,8 @@ public class VehicleAPIController : ControllerBase
 
     // DELETE: api/vehicles/delete
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteVehicleAsync([FromRoute]Guid id)
+    public async Task<IActionResult> DeleteVehicleAsync([FromRoute]Guid id,
+        CancellationToken cancellationToken)
     {
         try
         {

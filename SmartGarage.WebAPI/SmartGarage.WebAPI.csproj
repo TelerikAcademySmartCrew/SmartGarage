@@ -21,4 +21,8 @@
     <ProjectReference Include="..\SmartGarage.Services\SmartGarage.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

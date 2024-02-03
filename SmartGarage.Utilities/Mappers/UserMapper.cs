@@ -1,8 +1,8 @@
-using SmartGarage.Data.Models.DTOs;
-using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.DTOs;
+using SmartGarage.Utilities.Mappers.Contracts;
 
-namespace SmartGarage.Services.Mappers;
+namespace SmartGarage.Utilities.Mappers;
 
 public class UserMapper : IUserMapper
 {

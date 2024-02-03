@@ -1,12 +1,13 @@
 ﻿using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.DTOs;
-using SmartGarage.Services.Mappers.Contracts;
+using SmartGarage.Utilities.Mappers.Contracts;
+using SmartGarage.Utilities.Models;
 
-namespace SmartGarage.Services.Mappers;
+namespace SmartGarage.Utilities.Mappers;
 
-public class VehicleDtoMapper : IVehicleDtoMapper
+public class VehicleMapper : IVehicleMapper
 {
-    public Vehicle Map(VehicleCreateDTO vehicleCreateDto)
+    public Vehicle MaterializeInputModel(VehicleInputModel vehicleCreateDto)
     {
         var vehicle = new Vehicle()
         {
@@ -19,9 +20,9 @@ public class VehicleDtoMapper : IVehicleDtoMapper
         return vehicle;
     }
 
-    public VehicleResponseDto Map(Vehicle vehicle)
+    public VehicleViewModel ToViewModel(Vehicle vehicle)
     {
-        var vehicleResponseDto = new VehicleResponseDto()
+        var vehicleViewModel = new VehicleViewModel()
         {
             Brand = vehicle.Brand.Name,
             Model = vehicle.Model.Name,
@@ -30,11 +31,11 @@ public class VehicleDtoMapper : IVehicleDtoMapper
             LicensePlate = vehicle.LicensePlateNumber,
             Username = vehicle.User.UserName,
         };
-        return vehicleResponseDto;
+        return vehicleViewModel;
     }
 
-    public IList<VehicleResponseDto> Map(IEnumerable<Vehicle> vehicles)
+    public IList<VehicleViewModel> ToViewModel(IEnumerable<Vehicle> vehicles)
     {
-        return vehicles.Select(Map).ToList();
+        return vehicles.Select(ToViewModel).ToList();
     }
 }
