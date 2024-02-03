@@ -27,7 +27,7 @@ public class VehicleAPIController : ControllerBase
 
     // GET: api/vehicles
     [HttpGet]
-    public async Task<IActionResult> GetAsync([FromQuery] VehicleQueryParameters vehicleQueryParameters,
+    public async Task<IActionResult> GetAll([FromQuery] VehicleQueryParameters vehicleQueryParameters,
         CancellationToken cancellationToken)
     {
         try
@@ -62,7 +62,7 @@ public class VehicleAPIController : ControllerBase
 
     // GET: api/vehicles/id
     [HttpGet("{vehicleId:guid}")]
-    public async Task<IActionResult> GetByIdAsync(Guid vehicleId, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById(Guid vehicleId, CancellationToken cancellationToken)
     {
         try
         {
@@ -78,7 +78,7 @@ public class VehicleAPIController : ControllerBase
 
     // POST: api/vehicles
     [HttpPost]
-    public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleInputModel vehicleInputModel, 
+    public async Task<IActionResult> CreateVehicle([FromBody] VehicleInputModel vehicleInputModel, 
         [FromQuery] string customerEmail,
         CancellationToken cancellationToken)
     {
@@ -97,7 +97,7 @@ public class VehicleAPIController : ControllerBase
 
     // PUT: api/vehicles/id
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateVehicleAsync([FromRoute]Guid id, 
+    public async Task<IActionResult> UpdateVehicle([FromRoute]Guid id, 
         [FromBody] VehicleInputModel vehicleDto, 
         CancellationToken cancellationToken)
     {
@@ -116,7 +116,7 @@ public class VehicleAPIController : ControllerBase
 
     // DELETE: api/vehicles/delete
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteVehicleAsync([FromRoute]Guid id,
+    public async Task<IActionResult> DeleteVehicle([FromRoute]Guid id,
         CancellationToken cancellationToken)
     {
         try
