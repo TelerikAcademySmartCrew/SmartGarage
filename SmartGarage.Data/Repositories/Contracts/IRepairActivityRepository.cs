@@ -7,7 +7,7 @@ namespace SmartGarage.Data.Repositories.Contracts
     {
 		Task<ICollection<RepairActivity>> GetAllAsync(RepairActivityQueryParameters queryParameters);
 
-        Task<ICollection<RepairActivity>> GetByVisitId(int id);
+        Task<ICollection<RepairActivity>> GetByVisitId(Guid id);
 
         Task<ICollection<RepairActivity>> GetByNameAsync(string name);
 

@@ -4,7 +4,7 @@ namespace SmartGarage.Services.Contracts
 {
 	public interface IRepairActivityService
 	{
-		Task<ICollection<RepairActivity>> GetByVisitIdAsync(int id);
+		Task<ICollection<RepairActivity>> GetByVisitIdAsync(Guid id);
 
 		Task<ICollection<RepairActivity>> GetByNameAsync(string name);
 

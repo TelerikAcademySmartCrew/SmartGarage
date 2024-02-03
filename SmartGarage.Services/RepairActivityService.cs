@@ -13,7 +13,7 @@ namespace SmartGarage.Services
 			this.repairActivityRepository = repairActivityRepository;
 		}
 
-		public async Task<ICollection<RepairActivity>> GetByVisitIdAsync(int id)
+		public async Task<ICollection<RepairActivity>> GetByVisitIdAsync(Guid id)
 		{
 			return await this.repairActivityRepository.GetByVisitId(id);
 		}

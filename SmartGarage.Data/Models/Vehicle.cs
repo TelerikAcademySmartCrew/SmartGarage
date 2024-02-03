@@ -12,13 +12,13 @@ public class Vehicle
     public Guid Id { get; set; }
 
     [Required]
-    public int BrandId { get; set; }
+    public Guid BrandId { get; set; }
 
     [ForeignKey(nameof(BrandId))]
     public VehicleBrand Brand { get; set; } = null!;
 
     [Required]
-    public int ModelId { get; set; }
+    public Guid ModelId { get; set; }
 
     [ForeignKey(nameof(ModelId))]
     public VehicleModel Model { get; set; } = null!;

@@ -69,7 +69,7 @@ namespace SmartGarage.Data.Repositories
             return await repairActivitiesToReturn.ToListAsync();
 		}
 
-		public async Task<ICollection<RepairActivity>> GetByVisitId(int id)
+		public async Task<ICollection<RepairActivity>> GetByVisitId(Guid id)
         {
             return await this.context.RepairActivities
                 .Where(ra => ra.VisitId == id)

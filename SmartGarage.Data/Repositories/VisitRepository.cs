@@ -21,7 +21,7 @@ namespace SmartGarage.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Visit> GetByIdAsync(int id)
+        public async Task<Visit> GetByIdAsync(Guid id)
         {
             return await this.context.Visits
                 .FirstAsync(x => x.Id == id);

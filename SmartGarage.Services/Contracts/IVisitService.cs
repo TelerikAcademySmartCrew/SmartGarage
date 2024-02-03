@@ -6,7 +6,7 @@ namespace SmartGarage.Services.Contracts
     {
         Task<ICollection<Visit>> GetByUserIdAsync(string id);
         
-        Task<Visit> GetByIdAsync(int id);
+        Task<Visit> GetByIdAsync(Guid id);
 
         Task<Visit> CreateAsync(Visit visit);
     }
