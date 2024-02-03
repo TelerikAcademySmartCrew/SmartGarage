@@ -11,7 +11,7 @@ public class UserMapper : IUserMapper
         AppUser user = new()
         {
             Email = userRegisterDto.Email,
-            UserName = userRegisterDto.Email.Substring(0, userRegisterDto.Email.IndexOf('@'))
+            UserName = userRegisterDto.Email[..userRegisterDto.Email.IndexOf('@')]
         };
         return user;
     }

@@ -1,21 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartGarage.Data.Models.DTOs
+namespace SmartGarage.Data.Models.DTOs;
+
+public class VehicleCreateDTO
 {
-    public class VehicleCreateDTO
-    {
-        [Required]
-        public int BrandId { get; set; }
-        [Required]
-        public int ModelId { get; set; }
-        [Required]
-        [StringLength(17)]
-        public string VIN { get; set; }
+    [Required]
+    public int BrandId { get; set; }
+    [Required]
+    public int ModelId { get; set; }
+    [Required]
+    [StringLength(17)]
+    public string VIN { get; set; }
 
-        [Required, Range(1886, int.MaxValue)]
-        public int CreationYear { get; set; }
+    [Required, Range(1886, int.MaxValue)]
+    public int CreationYear { get; set; }
 
-        [Required]
-        public string LicensePlate { get; set; }
-    }
+    [Required]
+    public string LicensePlate { get; set; }
 }

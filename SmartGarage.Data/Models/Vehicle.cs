@@ -4,45 +4,44 @@ using System.ComponentModel.DataAnnotations.Schema;
 using SmartGarage.Common.Attributes;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Vehicle;
 
-namespace SmartGarage.Data.Models
+namespace SmartGarage.Data.Models;
+
+public class Vehicle
 {
-    public class Vehicle
-    {
-        [Key]
-        public Guid Id { get; set; }
+    [Key]
+    public Guid Id { get; set; }
 
-		[Required]
-		public int BrandId { get; set; }
+    [Required]
+    public int BrandId { get; set; }
 
-        [ForeignKey(nameof(BrandId))]
-        public VehicleBrand Brand { get; set; } = null!;
+    [ForeignKey(nameof(BrandId))]
+    public VehicleBrand Brand { get; set; } = null!;
 
-        [Required]
-        public int ModelId { get; set; }
+    [Required]
+    public int ModelId { get; set; }
 
-        [ForeignKey(nameof(ModelId))]
-        public VehicleModel Model { get; set; } = null!;
+    [ForeignKey(nameof(ModelId))]
+    public VehicleModel Model { get; set; } = null!;
 
-        [Required]
-        [StringLength(17)]
-        public string VIN { get; set; } = null!;
+    [Required]
+    [StringLength(17)]
+    public string VIN { get; set; } = null!;
 
-        [Required]
-        [IsBefore(ErrorMessage = InvalidYear)]
-        public int ProductionYear { get; set; }
+    [Required]
+    [IsBefore(ErrorMessage = InvalidYear)]
+    public int ProductionYear { get; set; }
 
-        [Required]
-        public string LicensePlateNumber { get; set; } = null!;
+    [Required]
+    public string LicensePlateNumber { get; set; } = null!;
 
-        [Required]
-        public string UserId { get; set; } = null!;
+    [Required]
+    public string UserId { get; set; } = null!;
 
-        [ForeignKey(nameof(UserId))]
-        public AppUser User { get; set; } = null!;
+    [ForeignKey(nameof(UserId))]
+    public AppUser User { get; set; } = null!;
 
-        [Required]
-        public bool IsDeleted { get; set; }
+    [Required]
+    public bool IsDeleted { get; set; }
         
-        public ICollection<Visit> Visits { get; set; } = new List<Visit>();
-    }
+    public ICollection<Visit> Visits { get; set; } = new List<Visit>();
 }
