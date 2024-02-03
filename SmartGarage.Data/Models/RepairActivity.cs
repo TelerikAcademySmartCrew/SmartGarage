@@ -6,10 +6,10 @@ namespace SmartGarage.Data.Models
 	public class RepairActivity
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
 		[Required]
-		public int RepairActivityTypeId { get; set; }
+		public Guid RepairActivityTypeId { get; set; }
 
         [ForeignKey(nameof(RepairActivityTypeId))]
         public RepairActivityType RepairActivityType { get; set; } = null!;
@@ -19,7 +19,7 @@ namespace SmartGarage.Data.Models
         public double Price { get; set; }
 
 		[Required]
-		public int VisitId { get; set; }
+		public Guid VisitId { get; set; }
 
         [ForeignKey(nameof(VisitId))]
         public Visit Visit { get; set; } = null!;        

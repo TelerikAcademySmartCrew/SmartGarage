@@ -18,7 +18,7 @@ namespace SmartGarage.Services
             return await this.visitRepository.GetByUserIdAsync(id);
         }
 
-        public async Task<Visit> GetByIdAsync(int id)
+        public async Task<Visit> GetByIdAsync(Guid id)
         {
             return await this.visitRepository.GetByIdAsync(id);
         }

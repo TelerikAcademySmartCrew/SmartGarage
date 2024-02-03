@@ -5,9 +5,9 @@ namespace SmartGarage.Data.Models.DTOs;
 public class VehicleCreateDTO
 {
     [Required]
-    public int BrandId { get; set; }
+    public Guid BrandId { get; set; }
     [Required]
-    public int ModelId { get; set; }
+    public Guid ModelId { get; set; }
     [Required]
     [StringLength(17)]
     public string VIN { get; set; }
