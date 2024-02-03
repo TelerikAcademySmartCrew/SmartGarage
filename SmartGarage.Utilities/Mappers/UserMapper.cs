@@ -6,12 +6,12 @@ namespace SmartGarage.Utilities.Mappers;
 
 public class UserMapper : IUserMapper
 {
-    public AppUser Map(UserRegisterDTO userRegisterDto)
+    public AppUser MaterializeInputModel(UserRegisterInputModel userRegisterInputModel)
     {
         AppUser user = new()
         {
-            Email = userRegisterDto.Email,
-            UserName = userRegisterDto.Email[..userRegisterDto.Email.IndexOf('@')]
+            Email = userRegisterInputModel.Email,
+            UserName = userRegisterInputModel.Email[..userRegisterInputModel.Email.IndexOf('@')]
         };
         return user;
     }

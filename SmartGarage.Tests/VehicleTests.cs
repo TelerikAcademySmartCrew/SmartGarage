@@ -88,14 +88,14 @@ public class VehicleTests
             .ToList();
 
         var vehicleRepositoryMock = new Mock<IVehicleRepository>();
-        vehicleRepositoryMock.Setup(x => x.GetAllAsync(vehicleQueryParameters))
+        vehicleRepositoryMock.Setup(x => x.GetAllAsync(vehicleQueryParameters, new CancellationToken()))
             .ReturnsAsync(vehicles);
         
 
         var vehicleService = new VehicleService(vehicleRepositoryMock.Object, userManagerMock.Object);
 
         // Act
-        var result = await vehicleService.GetAllAsync(vehicleQueryParameters);
+        var result = await vehicleService.GetAllAsync(vehicleQueryParameters, new CancellationToken());
 
         // Assert
         Assert.That(result, Is.Not.Null);

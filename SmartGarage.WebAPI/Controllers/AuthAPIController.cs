@@ -30,9 +30,9 @@ public class AuthAPIController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserRegisterDTO userRegisterDto)
+    public async Task<IActionResult> Register([FromBody] UserRegisterInputModel userRegisterInputModel)
     {
-        var user = this.userMapper.Map(userRegisterDto);
+        var user = this.userMapper.MaterializeInputModel(userRegisterInputModel);
         var password = this.passwordGenerator.Generate();
         var createdUserResult = await this.userManager.CreateAsync(user, password);
 
@@ -49,7 +49,7 @@ public class AuthAPIController : ControllerBase
         var email = splitCredentials[0];
         var password = splitCredentials[1];
 
-        var user = this.userManager.FindByEmailAsync(email).Result;
+        var user = await this.userManager.FindByEmailAsync(email);
 
         if (!await this.userManager.CheckPasswordAsync(user, password))
         {

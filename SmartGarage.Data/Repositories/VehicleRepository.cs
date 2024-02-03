@@ -21,15 +21,12 @@ namespace SmartGarage.Data.Repositories
         {
             applicationDbContext.Vehicles.Add(vehicle);
             currentUser.Vehicles.Add(vehicle);
-            var brand = await this.applicationDbContext.VehicleBrands.FirstOrDefaultAsync(b => b.Id == vehicle.BrandId, cancellationToken);
-            var model = await this.applicationDbContext.VehicleModels.FirstOrDefaultAsync(m => m.Id == vehicle.ModelId, cancellationToken);
-            brand?.Vehicles.Add(vehicle);
-            model?.Vehicles.Add(vehicle);
+            await AssignBrandModelToVehicleAsync(vehicle, cancellationToken);
             await applicationDbContext.SaveChangesAsync(cancellationToken);
             return vehicle;
         }
 
-        public async Task<IList<Vehicle>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
+        public async Task<IList<Vehicle>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters, CancellationToken cancellationToken)
         {
             var vehiclesToReturn = applicationDbContext.Vehicles
                 .Include(v => v.Brand)
@@ -40,22 +37,21 @@ namespace SmartGarage.Data.Repositories
 
             vehiclesToReturn = FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
 
-            return await vehiclesToReturn.ToListAsync();
+            return await vehiclesToReturn.ToListAsync(cancellationToken);
         }
 
-
-        public async Task<Vehicle> GetVehicleByIdAsync(Guid vehicleId)
+        public async Task<Vehicle> GetVehicleByIdAsync(Guid vehicleId, CancellationToken cancellationToken)
         {
             return await applicationDbContext.Vehicles
                 .Include(v => v.Brand)
                 .Include(v => v.Model)
                 .Include(v => v.User)
                 .Where(v => !v.IsDeleted)
-                .FirstOrDefaultAsync(v => v.Id == vehicleId)
+                .FirstOrDefaultAsync(v => v.Id == vehicleId, cancellationToken)
                 ?? throw new EntityNotFoundException(VehicleNotFoundMessage);
         }
 
-        public async Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters)
+        public async Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters, CancellationToken cancellationToken)
         {
             var vehiclesToReturn = applicationDbContext.Vehicles
                 .Include(v => v.Brand)
@@ -67,12 +63,12 @@ namespace SmartGarage.Data.Repositories
 
             FilterVehiclesByQuery(vehicleQueryParameters, vehiclesToReturn);
 
-            return await vehiclesToReturn.ToListAsync();
+            return await vehiclesToReturn.ToListAsync(cancellationToken);
         }
 
-        public async Task<Vehicle> UpdateVehicleAsync(Guid vehicleId, Vehicle updatedVehicle)
+        public async Task<Vehicle> UpdateVehicleAsync(Guid vehicleId, Vehicle updatedVehicle, CancellationToken cancellationToken)
         {
-            var vehicleToUpdate = await GetVehicleByIdAsync(vehicleId);
+            var vehicleToUpdate = await GetVehicleByIdAsync(vehicleId, cancellationToken);
 
             vehicleToUpdate.BrandId = updatedVehicle.BrandId;
             vehicleToUpdate.ModelId = updatedVehicle.ModelId;
@@ -80,15 +76,15 @@ namespace SmartGarage.Data.Repositories
             vehicleToUpdate.VIN = updatedVehicle.VIN;
             vehicleToUpdate.ProductionYear = updatedVehicle.ProductionYear;
 
-            await applicationDbContext.SaveChangesAsync();
+            await applicationDbContext.SaveChangesAsync(cancellationToken);
             return vehicleToUpdate;
         }
 
-        public async Task DeleteVehicleAsync(Guid vehicleId)
+        public async Task DeleteVehicleAsync(Guid vehicleId, CancellationToken cancellationToken)
         {
-            var vehicle = await GetVehicleByIdAsync(vehicleId);
+            var vehicle = await GetVehicleByIdAsync(vehicleId, cancellationToken);
             vehicle.IsDeleted = true;
-            await applicationDbContext.SaveChangesAsync();
+            await applicationDbContext.SaveChangesAsync(cancellationToken);
         }
         
         private static IQueryable<Vehicle> FilterVehiclesByQuery(VehicleQueryParameters vehicleQueryParameters, IQueryable<Vehicle> vehiclesToReturn)
@@ -114,6 +110,14 @@ namespace SmartGarage.Data.Repositories
             }
 
             return vehiclesToReturn;
+        }
+        
+        private async Task AssignBrandModelToVehicleAsync(Vehicle vehicle, CancellationToken cancellationToken)
+        {
+            var brand = await this.applicationDbContext.VehicleBrands.FirstOrDefaultAsync(b => b.Id == vehicle.BrandId, cancellationToken);
+            var model = await this.applicationDbContext.VehicleModels.FirstOrDefaultAsync(m => m.Id == vehicle.ModelId, cancellationToken);
+            brand?.Vehicles.Add(vehicle);
+            model?.Vehicles.Add(vehicle);
         }
 
     }

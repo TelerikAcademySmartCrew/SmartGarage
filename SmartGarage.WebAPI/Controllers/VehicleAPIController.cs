@@ -32,9 +32,9 @@ public class VehicleAPIController : ControllerBase
     {
         try
         {
-            var vehicles = await vehicleService.GetAllAsync(vehicleQueryParameters);
-            var vehiclesToReturn = vehicleMapper.ToViewModel(vehicles);
-            return Ok(vehiclesToReturn);
+            var vehicles = await vehicleService.GetAllAsync(vehicleQueryParameters, cancellationToken);
+            var result = vehicleMapper.ToViewModel(vehicles);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -50,9 +50,9 @@ public class VehicleAPIController : ControllerBase
     {
         try
         {
-            var vehicles = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
-            var vehiclesResponse = this.vehicleMapper.ToViewModel(vehicles);
-            return Ok(vehiclesResponse);
+            var vehicles = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters, cancellationToken);
+            var result = this.vehicleMapper.ToViewModel(vehicles);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -66,9 +66,9 @@ public class VehicleAPIController : ControllerBase
     {
         try
         {
-            var vehicle = await vehicleService.GetVehicleByIdAsync(vehicleId);
-            var vehicleResponse = this.vehicleMapper.ToViewModel(vehicle);
-            return Ok(vehicleResponse);
+            var vehicle = await vehicleService.GetVehicleByIdAsync(vehicleId, cancellationToken);
+            var result = this.vehicleMapper.ToViewModel(vehicle);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -86,8 +86,8 @@ public class VehicleAPIController : ControllerBase
         {
             var vehicle = vehicleMapper.MaterializeInputModel(vehicleInputModel);
             var createdVehicle = await vehicleService.CreateVehicleAsync(vehicle, customerEmail, cancellationToken);
-            var vehicleResponse = this.vehicleMapper.ToViewModel(createdVehicle);
-            return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.Id}, vehicleResponse);
+            var result = this.vehicleMapper.ToViewModel(createdVehicle);
+            return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.Id}, result);
         }
         catch (Exception ex)
         {
@@ -104,8 +104,9 @@ public class VehicleAPIController : ControllerBase
         try
         {
             var vehicle = vehicleMapper.MaterializeInputModel(vehicleDto);
-            var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicle);
-            return Ok(updatedVehicle);
+            var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicle, cancellationToken);
+            var result = this.vehicleMapper.ToViewModel(updatedVehicle);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -120,7 +121,7 @@ public class VehicleAPIController : ControllerBase
     {
         try
         {
-            await vehicleService.DeleteVehicleAsync(id);
+            await vehicleService.DeleteVehicleAsync(id, cancellationToken);
             return Ok();
         }
         catch (EntityNotFoundException ex)

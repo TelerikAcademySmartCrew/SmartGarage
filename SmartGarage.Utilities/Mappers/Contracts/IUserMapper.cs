@@ -5,5 +5,5 @@ namespace SmartGarage.Utilities.Mappers.Contracts;
 
 public interface IUserMapper
 {
-    AppUser Map(UserRegisterDTO userRegisterDto);
+    AppUser MaterializeInputModel(UserRegisterInputModel userRegisterInputModel);
 }
