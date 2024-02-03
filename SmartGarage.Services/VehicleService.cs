@@ -22,7 +22,7 @@ public class VehicleService : IVehicleService
     public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, string email, CancellationToken cancellationToken)
     {
         var user = await this.userManager.FindByEmailAsync(email);
-        // vehicle.UserId = user.Id;
+        vehicle.UserId = user.Id;
         return await vehicleRepository.CreateVehicleAsync(vehicle, user, cancellationToken);
     }
 
