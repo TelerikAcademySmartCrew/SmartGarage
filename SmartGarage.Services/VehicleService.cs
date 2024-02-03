@@ -10,49 +10,42 @@ namespace SmartGarage.Services
     public class VehicleService : IVehicleService
     {
         private readonly IVehicleRepository vehicleRepository;
-        private readonly IVehicleDTOMapper vehicleDtoMapper;
         private readonly UserManager<AppUser> userManager;
 
         public VehicleService(IVehicleRepository vehicleRepository,
-            IVehicleDTOMapper vehicleDtoMapper,
             UserManager<AppUser> userManager)
         {
             this.vehicleRepository = vehicleRepository;
-            this.vehicleDtoMapper = vehicleDtoMapper;
             this.userManager = userManager;
         }
 
-        public async Task<VehicleResponseDTO> CreateVehicleAsync(VehicleCreateDTO vehicleDto, string email)
+        public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, string email, CancellationToken cancellationToken)
         {
             var user = await this.userManager.FindByEmailAsync(email);
-            var vehicle = this.vehicleDtoMapper.Map(vehicleDto);
-            vehicle.UserId = user.Id;
-            return this.vehicleDtoMapper.Map(await vehicleRepository.CreateVehicleAsync(vehicle, user));
+            // vehicle.UserId = user.Id;
+            return await vehicleRepository.CreateVehicleAsync(vehicle, user, cancellationToken);
         }
 
-        public async Task<IList<VehicleResponseDTO>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
+        public async Task<IList<Vehicle>> GetAllAsync(VehicleQueryParameters vehicleQueryParameters)
         {
-            var vehicles = await vehicleRepository.GetAllAsync(vehicleQueryParameters);
-            return this.vehicleDtoMapper.Map(vehicles);
+            return await vehicleRepository.GetAllAsync(vehicleQueryParameters);
         }
 
-        public async Task<VehicleResponseDTO> GetVehicleByIdAsync(int vehicleId)
+        public async Task<Vehicle> GetVehicleByIdAsync(Guid vehicleId)
         {
-            return this.vehicleDtoMapper.Map(await vehicleRepository.GetVehicleByIdAsync(vehicleId));
+            return await vehicleRepository.GetVehicleByIdAsync(vehicleId);
         }
 
-        public async Task<IList<VehicleResponseDTO>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters)
+        public async Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters)
         {
-            var vehiclesToReturn = await vehicleRepository.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
-            return this.vehicleDtoMapper.Map(vehiclesToReturn);
+            return await vehicleRepository.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
         }
 
-        public async Task<VehicleResponseDTO> UpdateVehicleAsync(int vehicleId, VehicleCreateDTO updatedVehicleDto)
+        public async Task<Vehicle> UpdateVehicleAsync(Guid vehicleId, Vehicle updatedVehicle)
         {
-            var updatedVehicle = this.vehicleDtoMapper.Map(updatedVehicleDto);
-            return this.vehicleDtoMapper.Map(await vehicleRepository.UpdateVehicleAsync(vehicleId, updatedVehicle));
+            return await vehicleRepository.UpdateVehicleAsync(vehicleId, updatedVehicle);
         }
-        public async Task DeleteVehicleAsync(int vehicleId)
+        public async Task DeleteVehicleAsync(Guid vehicleId)
         {
             await vehicleRepository.DeleteVehicleAsync(vehicleId);
         }

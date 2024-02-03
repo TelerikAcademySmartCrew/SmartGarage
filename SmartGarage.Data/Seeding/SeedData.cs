@@ -17,25 +17,22 @@ namespace SmartGarage.Data.Seeding
         {
             var user = await userManager.FindByEmailAsync(MasterAdminEmail);
 
-            if (user == null)
+            if (user != null) return user;
+            user = new AppUser
             {
-                user = new AppUser
-                {
-                    UserName = MasterAdminEmail,
-                    Email = MasterAdminEmail,
-                    EmailConfirmed = true,
-                    JoinDate = DateTime.UtcNow
-                };
+                UserName = MasterAdminEmail,
+                Email = MasterAdminEmail,
+                EmailConfirmed = true,
+                JoinDate = DateTime.UtcNow
+            };
 
-                await userManager.CreateAsync(user, MasterAdminPassword);
+            await userManager.CreateAsync(user, MasterAdminPassword);
 
-                await roleManager.CreateAsync(new IdentityRole("Employee"));
-                await roleManager.CreateAsync(new IdentityRole("Admin"));
-                await roleManager.CreateAsync(new IdentityRole("Customer"));
+            await roleManager.CreateAsync(new IdentityRole("Employee"));
+            await roleManager.CreateAsync(new IdentityRole("Admin"));
+            await roleManager.CreateAsync(new IdentityRole("Customer"));
 
-                await userManager.AddToRoleAsync(user, "Admin");
-
-            }
+            await userManager.AddToRoleAsync(user, "Admin");
 
             return user;
         }
