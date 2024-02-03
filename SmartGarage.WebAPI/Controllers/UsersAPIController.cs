@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services;
-using SmartGarage.Services.Mappers.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
+using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.WebAPI.Controllers;
 
@@ -29,9 +29,9 @@ public class UsersAPIController : ControllerBase
 
     [Authorize(Policy = "AdminRequired")]
     [HttpPost("employees")]
-    public async Task<IActionResult> RegisterEmployee([FromBody] UserRegisterDTO userRegisterDto)
+    public async Task<IActionResult> RegisterEmployee([FromBody] UserRegisterInputModel userRegisterInputModel)
     {
-        var user = this.userMapper.Map(userRegisterDto);
+        var user = this.userMapper.MaterializeInputModel(userRegisterInputModel);
         var password = this.passwordGenerator.Generate();
         var createdUserResult = await this.userManager.CreateAsync(user, password);
 
@@ -42,9 +42,9 @@ public class UsersAPIController : ControllerBase
     
     [Authorize(Policy = "EmployeeRequired")]
     [HttpPost("customers")]
-    public async Task<IActionResult> RegisterCustomer([FromBody] UserRegisterDTO userRegisterDto)
+    public async Task<IActionResult> RegisterCustomer([FromBody] UserRegisterInputModel userRegisterInputModel)
     {
-        var user = this.userMapper.Map(userRegisterDto);
+        var user = this.userMapper.MaterializeInputModel(userRegisterInputModel);
         var password = this.passwordGenerator.Generate();
         var createdUserResult = await this.userManager.CreateAsync(user, password);
 

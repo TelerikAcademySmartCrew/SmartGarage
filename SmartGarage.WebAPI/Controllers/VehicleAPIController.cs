@@ -5,7 +5,8 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Services.Mappers.Contracts;
+using SmartGarage.Utilities.Mappers.Contracts;
+using SmartGarage.Utilities.Models;
 
 namespace SmartGarage.WebAPI.Controllers;
 
@@ -15,24 +16,25 @@ namespace SmartGarage.WebAPI.Controllers;
 public class VehicleAPIController : ControllerBase
 {
     private readonly IVehicleService vehicleService;
-    private readonly IVehicleDtoMapper vehicleDtoMapper;
+    private readonly IVehicleMapper vehicleMapper;
 
     public VehicleAPIController(IVehicleService vehicleService,
-        IVehicleDtoMapper vehicleDtoMapper)
+        IVehicleMapper vehicleMapper)
     {
         this.vehicleService = vehicleService;
-        this.vehicleDtoMapper = vehicleDtoMapper;
+        this.vehicleMapper = vehicleMapper;
     }
 
     // GET: api/vehicles
     [HttpGet]
-    public async Task<IActionResult> GetAsync([FromQuery] VehicleQueryParameters vehicleQueryParameters)
+    public async Task<IActionResult> GetAll([FromQuery] VehicleQueryParameters vehicleQueryParameters,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var vehicles = await vehicleService.GetAllAsync(vehicleQueryParameters);
-            var vehiclesToReturn = vehicleDtoMapper.Map(vehicles);
-            return Ok(vehiclesToReturn);
+            var vehicles = await vehicleService.GetAllAsync(vehicleQueryParameters, cancellationToken);
+            var result = vehicleMapper.ToViewModel(vehicles);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -42,13 +44,15 @@ public class VehicleAPIController : ControllerBase
 
     // GET: api/vehicles/users/id
     [HttpGet("users/{userId}")]
-    public async Task<IActionResult> GetVehiclesByUser([FromRoute]string userId, [FromQuery] VehicleQueryParameters vehicleQueryParameters)
+    public async Task<IActionResult> GetVehiclesByUser([FromRoute]string userId,
+        [FromQuery] VehicleQueryParameters vehicleQueryParameters,
+        CancellationToken cancellationToken)
     {
         try
         {
-            var vehicles = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
-            var vehiclesResponse = this.vehicleDtoMapper.Map(vehicles);
-            return Ok(vehiclesResponse);
+            var vehicles = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters, cancellationToken);
+            var result = this.vehicleMapper.ToViewModel(vehicles);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -58,13 +62,13 @@ public class VehicleAPIController : ControllerBase
 
     // GET: api/vehicles/id
     [HttpGet("{vehicleId:guid}")]
-    public async Task<IActionResult> GetByIdAsync(Guid vehicleId)
+    public async Task<IActionResult> GetById(Guid vehicleId, CancellationToken cancellationToken)
     {
         try
         {
-            var vehicle = await vehicleService.GetVehicleByIdAsync(vehicleId);
-            var vehicleResponse = this.vehicleDtoMapper.Map(vehicle);
-            return Ok(vehicleResponse);
+            var vehicle = await vehicleService.GetVehicleByIdAsync(vehicleId, cancellationToken);
+            var result = this.vehicleMapper.ToViewModel(vehicle);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -74,16 +78,16 @@ public class VehicleAPIController : ControllerBase
 
     // POST: api/vehicles
     [HttpPost]
-    public async Task<IActionResult> CreateVehicleAsync([FromBody] VehicleCreateDTO vehicleCreateDto, 
+    public async Task<IActionResult> CreateVehicle([FromBody] VehicleInputModel vehicleInputModel, 
         [FromQuery] string customerEmail,
         CancellationToken cancellationToken)
     {
         try
         {
-            var vehicle = vehicleDtoMapper.Map(vehicleCreateDto);
+            var vehicle = vehicleMapper.MaterializeInputModel(vehicleInputModel);
             var createdVehicle = await vehicleService.CreateVehicleAsync(vehicle, customerEmail, cancellationToken);
-            var vehicleResponse = this.vehicleDtoMapper.Map(createdVehicle);
-            return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.Id}, vehicleResponse);
+            var result = this.vehicleMapper.ToViewModel(createdVehicle);
+            return CreatedAtAction("GetById",  new { vehicleId = createdVehicle.Id}, result);
         }
         catch (Exception ex)
         {
@@ -93,13 +97,16 @@ public class VehicleAPIController : ControllerBase
 
     // PUT: api/vehicles/id
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateVehicleAsync([FromRoute]Guid id, [FromBody] VehicleCreateDTO vehicleDto)
+    public async Task<IActionResult> UpdateVehicle([FromRoute]Guid id, 
+        [FromBody] VehicleInputModel vehicleDto, 
+        CancellationToken cancellationToken)
     {
         try
         {
-            var vehicle = vehicleDtoMapper.Map(vehicleDto);
-            var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicle);
-            return Ok(updatedVehicle);
+            var vehicle = vehicleMapper.MaterializeInputModel(vehicleDto);
+            var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicle, cancellationToken);
+            var result = this.vehicleMapper.ToViewModel(updatedVehicle);
+            return Ok(result);
         }
         catch (EntityNotFoundException ex)
         {
@@ -109,11 +116,12 @@ public class VehicleAPIController : ControllerBase
 
     // DELETE: api/vehicles/delete
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteVehicleAsync([FromRoute]Guid id)
+    public async Task<IActionResult> DeleteVehicle([FromRoute]Guid id,
+        CancellationToken cancellationToken)
     {
         try
         {
-            await vehicleService.DeleteVehicleAsync(id);
+            await vehicleService.DeleteVehicleAsync(id, cancellationToken);
             return Ok();
         }
         catch (EntityNotFoundException ex)

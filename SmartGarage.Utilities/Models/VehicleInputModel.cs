@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartGarage.Data.Models.DTOs;
+namespace SmartGarage.Utilities.Models;
 
-public class VehicleCreateDTO
+public class VehicleInputModel
 {
     [Required]
     public Guid BrandId { get; set; }

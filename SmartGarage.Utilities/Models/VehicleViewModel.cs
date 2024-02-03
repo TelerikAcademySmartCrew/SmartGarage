@@ -1,6 +1,6 @@
-﻿namespace SmartGarage.Data.Models.DTOs;
+﻿namespace SmartGarage.Utilities.Models;
 
-public class VehicleResponseDto
+public class VehicleViewModel
 {
     public string? Brand{ get; set; }
     public string? Model { get; set; }
