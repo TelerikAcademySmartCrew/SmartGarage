@@ -64,7 +64,7 @@ namespace SmartGarage.Controllers
                 if (result.Succeeded)
                 {
                     // Successfully authenticated
-                    return RedirectToAction("DisplayAll", "Visits");
+                    return RedirectToAction("DisplayAll", "Visit");
                 }
 
                 ModelState.AddModelError("Password", "Invalid credentials");
