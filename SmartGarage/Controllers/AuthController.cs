@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
-using SmartGarage.Models;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.ViewModels;
 
 namespace SmartGarage.Controllers
 {
@@ -63,8 +63,21 @@ namespace SmartGarage.Controllers
 
                 if (result.Succeeded)
                 {
+                    var user = await userManager.FindByEmailAsync(loginData.Email);
+
                     // Successfully authenticated
-                    return RedirectToAction("DisplayAll", "Visits");
+                    //if (User.IsInRole("Customer"))
+                    //{
+                        return RedirectToAction("DisplayAll", "Visits");
+                    //}
+                    //else if (User.IsInRole("Employee"))
+                    //{
+                    //    return RedirectToAction("Index", "Employee");
+                    //}
+                    //else if (User.IsInRole("Admin"))
+                    //{
+
+                    //}
                 }
 
                 ModelState.AddModelError("Password", "Invalid credentials");
@@ -75,6 +88,19 @@ namespace SmartGarage.Controllers
                 ModelState.AddModelError("Email", "Invalid credentials.");
                 return View(loginData);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            if (User != null)
+            {
+                // TODO : validate if this is correct way to logout
+                var user = usersService.GetUserAsync(User);
+                await userManager.RemoveLoginAsync(user.Result, "", "");
+            }
+
+            return View("Login");
         }
 
         [HttpGet]
@@ -161,7 +187,6 @@ namespace SmartGarage.Controllers
             {
                 ModelState.AddModelError("Username", ex.Message);
                 return View();
-                //return RedirectToAction("Register", "Auth", new { ex.Message });
             }
         }
 
@@ -196,6 +221,5 @@ namespace SmartGarage.Controllers
                 return View("Error");
             }
         }
-
     }
 }

@@ -4,17 +4,78 @@
 <div class="d-flex flex-column justify-content-start" style="height:100%;">
 
     <!-- client nav bar -->
-    <partial name="/Views/Shared/_ClientNavBarPartial.cshtml" />
+    <partial name="/Views/Shared/_ClientNavBarPartial.cshtml" model="Model.UserName" />
 
     <div class="bg-light">
     </div>
 
-    <div class="d-flex flex-column justify-content-center mt-5 mx-auto text-center">
-        <h1>
-            MY PROFILE !
-        </h1>
+    <div class="d-flex flex-row m-auto gap-5 justify-content-center" style="width:50%; min-height:50%;">
+
+        <div class="d-flex bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
+
+            <h4 class="opacity-50 p-2">
+                Update profile
+            </h4>
+            <form asp-controller="Client" asp-action="UpdateUserProfile" class="d-flex flex-column m-0" method="post">
+                <div class="d-flex flex-column">
+                    <label asp-for="@Model.UserName" class="form-label p-2 m-auto">Email</label>
+                    <input name="UserName" readonly value="@Model.UserName" type="text" class="form-control">
+                </div>
+                <div class="">
+                    <label asp-for="@Model.FirstName" class="form-label p-2 m-auto">First Name</label>
+                    <input name="FirstName" value="@Model.FirstName" type="text" class="form-control">
+                </div>
+                <div class="">
+                    <label asp-for="@Model.LastName" class="form-label p-2 m-auto">Last Name</label>
+                    <input name="LastName" value="@Model.LastName" type="text" class="form-control" aria-describedby="emailHelp">
+                </div>
+                <div class="">
+                    <label asp-for="@Model.PhoneNumber" class="form-label p-2 m-auto">Phone Number</label>
+                    <input name="PhoneNumber" value="@Model.PhoneNumber" type="text" class="form-control" aria-describedby="emailHelp">
+                </div>
+                <div class="p-4">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+
+        @* <div class="d-flex card border-primary rounded-3 flex-column p-4 m-auto" style="width:50%; height:100%;"> *@
+        <div class="d-flex bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
+            <h4 class="text-center opacity-50 text-left p-2">
+                My cars
+            </h4>
+            <div class="">
+                <div>
+                    @{
+                        if (Model.Vehicles != null && Model.Vehicles.Count > 0)
+                        {
+                            foreach (var vehicle in Model.Vehicles)
+                            {
+                                <div class="card p-2">
+                                    <div>
+                                        @vehicle.Brand - @vehicle.Model
+                                    </div>
+                                    <hr />
+                                    <div>
+                                        VIN: @vehicle.VIN
+                                    </div>
+                                    <hr />
+                                    <div>
+                                        LicensePlate: @vehicle.LicensePlateNumber
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p>Ypi don't have any vehicle registered yet.</p>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@

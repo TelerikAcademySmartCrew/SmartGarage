@@ -1,7 +1,12 @@
 ﻿@model VisitViewModel
 
-<div class="d-flex bg-light bg-opacity-50 m-2 p-3 rounded-3 flex-column">
-    <div class="d-flex justify-content-between">
+@{
+    double totalPrice = Model.RepairActivities.Sum(x => x.Price);
+}
+
+<div class="d-flex flex-column bg-light bg-opacity-50 shadow m-auto p-3">
+
+    <div class="d-flex mx-2 ustify-content-between">
         <dv>
             @Model.VehicleBrand @Model.VehicleModel
         </dv>
@@ -9,15 +14,44 @@
             @Model.DateCreated.ToShortDateString()
         </div>
     </div>
+@* 
+    <div class="d-flex justify-content-between mt-4">
+        <dv>
+            Service type
+        </dv>
+        <div>
+            Price
+        </div>
+    </div>
 
     <hr />
+ *@
 
-    <div class="d-flex flex-column justify-content-start mt-4">
-        @foreach (var item in Model.VehicleServices)
-        {
-            <div class="d-flex justify-content-between flex-row">
-                <p>@item.Name</p>
-                <p>@item.Price</p>
+    <div class="d-flex flex-column justify-content-start">
+
+        @{
+            // int iterator = 1;
+            // <div class="d-flex flex-column justify-content-start gap-2">
+            //     @foreach (var item in Model.RepairActivities)
+            //     {
+            //         <div class="d-flex justify-content-between flex-row">
+            //             <div class="d-flex flex-row gap-4 text-end">
+            //                 <p style="min-width:20px;">@iterator.</p>
+            //                 <p>@item.Name</p>
+            //             </div>
+            //             <p>@item.Price лв.</p>
+            //         </div>
+            //         iterator++;
+            //     }
+            // </div>
+
+            <hr />
+
+            <div class="d-flex justify-content-between">
+                <div class="d-flex flex-row gap-4 text-end">
+                    <p class="ms-3">Total Cost</p>
+                </div>
+                <p>@totalPrice лв.</p>
             </div>
         }
     </div>

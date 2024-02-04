@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
-using SmartGarage.Models;
 using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.ViewModels;
 
 namespace SmartGarage.Controllers
 {
@@ -19,30 +19,46 @@ namespace SmartGarage.Controllers
         }
 
         [HttpGet]
-        public IActionResult SmartGarageInfo()
+        public async Task<IActionResult> SmartGarageInfo()
         {
             //if (this.User.IsInRole("User"))
             //{
             //    return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
             //}
 
-            LocationLists model = new LocationLists();
-            var locations = new List<Location>()
-            {
-                new Location(1, "SmartGarage", "SmartGarage", 42.65033853376936, 23.379256507391496)
-            };
-            model.Locations = locations;
-            model.ServiceLocation = locations[0];
+            //LocationsList model = new LocationsList();
+            //var locations = new List<Location>()
+            //{
+            //    new Location(1, "SmartGarage", "SmartGarage", 42.65033853376936, 23.379256507391496)
+            //};
+            //model.Locations = locations;
+            //model.ServiceLocation = locations[0];
 
             // TODO : 
             //if (User.IsInRole("User"))
+            try
             {
-                return View();
-            }
+                GarageInfoViewModel model = new GarageInfoViewModel();
+                var user = await usersService.GetUserAsync(User);
 
-            // If there are validation errors or login fails, redisplay the login form
-            //return View(loginData);
-            return NotFound("Not found");
+                var userModel = new UserViewModel()
+                {
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                };
+
+                model.userViewModel = userModel;
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                // If there are validation errors or login fails, redisplay the login form
+                //return View(loginData);
+                return NotFound("Not found");
+            }
         }
 
         [HttpGet]
@@ -52,19 +68,67 @@ namespace SmartGarage.Controllers
             {
                 var user = await usersService.GetUserAsync(User);
 
-                var model = new UserViewModel()
+                UserViewModel model = new UserViewModel();
+
+                model.UserName = user.UserName;
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.PhoneNumber = user.PhoneNumber;
+
+                model.Vehicles = user.Vehicles.Select(vehicle => new VehicleViewModel
                 {
-                    UserName = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    PhoneNumber = user.PhoneNumber,
-                };
+                    Brand = vehicle.Brand.Name,
+                    Model = vehicle.Model.Name,
+                    ProductionYear = vehicle.ProductionYear,
+                    VIN = vehicle.VIN,
+                    LicensePlateNumber = vehicle.LicensePlateNumber,
+                }).ToList();
+
+                model.Visits = user.Visits.Select(visit => new VisitViewModel
+                {
+                    Id = visit.Id,
+                    DateCreated = visit.Date,
+                    VehicleBrand = visit.Vehicle.Brand.Name,
+                    VehicleModel = visit.Vehicle.Model.Name,
+                    RepairActivities = visit.RepairActivities.Select(a => new VisitRepairActivityViewModel
+                    {
+                        Name = a.RepairActivityType.Name,
+                        Price = a.Price,
+                    }).ToList(),
+                }).ToList();
 
                 return View(model);
             }
             catch (EntityNotFoundException ex)
             {
                 return NotFound("Not found");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserProfile(UserViewModel viewModel)
+        {
+            try
+            {
+                var user = await usersService.GetByEmail(viewModel.UserName);
+
+                user.FirstName = viewModel.FirstName;
+                user.LastName = viewModel.LastName;
+                user.PhoneNumber = viewModel.PhoneNumber;
+
+                await usersService.Update(user);
+
+                return RedirectToAction("Profile", "Client");
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("Email", "Error occured. Try again.");
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Email", "Error occured. Try again.");
+                return View(viewModel);
             }
         }
     }

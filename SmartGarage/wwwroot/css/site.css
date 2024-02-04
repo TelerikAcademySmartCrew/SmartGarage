@@ -5,6 +5,7 @@
 :root {
     --light-color: #dedede;
     --light-gray-color: #bababa;
+    --menu-element-gray-color: #;
     --blue-color: #3094CC;
     --form-control-background-color: #b6ff00;
     --border-color: #b6ff00;
@@ -51,15 +52,15 @@ input.log-in-form-control {
     outline: none;
 }
 
-input.log-in-form-control:hover {
-    border-color: var(--light-gray-color);
-    opacity: 85%;
-}
+    input.log-in-form-control:hover {
+        border-color: var(--light-gray-color);
+        opacity: 85%;
+    }
 
-input.log-in-form-control:focus {
-    border-color: var(--blue-color);
-    opacity: 85%;
-}
+    input.log-in-form-control:focus {
+        border-color: var(--blue-color);
+        opacity: 85%;
+    }
 
 .primary-button {
     display: flex;
@@ -105,7 +106,7 @@ input.log-in-form-control:focus {
 }
 
 #smart-garage-watermark {
-    display:flex;
+    display: flex;
     align-items: center;
     font-size: 36px;
     font-family: Lalezar;
@@ -114,8 +115,8 @@ input.log-in-form-control:focus {
 }
 
 .client-nav-bar-link {
-    text-decoration:none;
-    color:antiquewhite;
+    text-decoration: none;
+    color: antiquewhite;
 }
 
 .rounded-div {
@@ -139,3 +140,52 @@ input.log-in-form-control:focus {
         opacity: 1;
     }
 }
+
+/* Employee */
+
+.eployee-menu-element {
+    background-color: var(--menu-element-gray-color);
+}
+
+/* Scrollbars */
+
+/* Scrollable container */
+.scrollable-div {
+    /*max-height: 400px;*/ /* Adjust as needed */
+    overflow-y: auto;
+    flex-shrink: 1;
+    overflow-x: hidden;
+}
+
+    /* Styling for WebKit browsers (Chrome, Safari) */
+    .scrollable-div::-webkit-scrollbar {
+        width: 6px; /* Width of the scrollbar */
+    }
+
+    .scrollable-div::-webkit-scrollbar-thumb {
+        background-color: #6c757d; /* Scrollbar thumb color */
+        border-radius: 10px;
+    }
+
+    .scrollable-div::-webkit-scrollbar-track {
+        background-color: transparent; /* Make the scrollbar background transparent */
+    }
+
+/* Styling for Firefox */
+.scrollable-div {
+    scrollbar-width: thin;
+    scrollbar-color: #6c757d transparent; /* thumb color and transparent background */
+}
+
+    /* Hide the up and down arrows */
+    .scrollable-div::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    .scrollable-div::-webkit-scrollbar-track-piece:start {
+        background-color: transparent;
+    }
+
+    .scrollable-div::-webkit-scrollbar-track-piece:end {
+        background-color: transparent;
+    }
