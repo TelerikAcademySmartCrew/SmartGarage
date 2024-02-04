@@ -98,12 +98,12 @@ public class VehicleAPIController : ControllerBase
     // PUT: api/vehicles/id
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateVehicle([FromRoute]Guid id, 
-        [FromBody] VehicleInputModel vehicleDto, 
+        [FromBody] VehicleInputModel vehicleInputModel, 
         CancellationToken cancellationToken)
     {
         try
         {
-            var vehicle = vehicleMapper.MaterializeInputModel(vehicleDto);
+            var vehicle = vehicleMapper.MaterializeInputModel(vehicleInputModel);
             var updatedVehicle = await vehicleService.UpdateVehicleAsync(id, vehicle, cancellationToken);
             var result = this.vehicleMapper.ToViewModel(updatedVehicle);
             return Ok(result);

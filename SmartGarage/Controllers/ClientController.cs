@@ -1,21 +1,24 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
-using SmartGarage.Services.Services.Contracts;
 using SmartGarage.Data.Models;
-using SmartGarage.Data.Models.ViewModels;
-
+using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities.Mappers.Contracts;
+using SmartGarage.Utilities.Models;
+using SmartGarage.Utilities.Models.ViewModels;
 namespace SmartGarage.Controllers
 {
     public class ClientController : Controller
     {
         private readonly IUsersService usersService;
         private readonly SignInManager<AppUser> signInManager;
+        private readonly IVehicleMapper vehicleMapper;
 
-        public ClientController(IUsersService usersService, SignInManager<AppUser> signInManager)
+        public ClientController(IUsersService usersService, SignInManager<AppUser> signInManager, IVehicleMapper vehicleMapper)
         {
             this.usersService = usersService;
             this.signInManager = signInManager;
+            this.vehicleMapper = vehicleMapper;
         }
 
         [HttpGet]
@@ -68,34 +71,33 @@ namespace SmartGarage.Controllers
             {
                 var user = await usersService.GetUserAsync(User);
 
-                UserViewModel model = new UserViewModel();
-
-                model.UserName = user.UserName;
-                model.FirstName = user.FirstName;
-                model.LastName = user.LastName;
-                model.PhoneNumber = user.PhoneNumber;
-
-                model.Vehicles = user.Vehicles.Select(vehicle => new VehicleViewModel
+                var model = new UserViewModel
                 {
-                    Brand = vehicle.Brand.Name,
-                    Model = vehicle.Model.Name,
-                    ProductionYear = vehicle.ProductionYear,
-                    VIN = vehicle.VIN,
-                    LicensePlateNumber = vehicle.LicensePlateNumber,
-                }).ToList();
-
-                model.Visits = user.Visits.Select(visit => new VisitViewModel
-                {
-                    Id = visit.Id,
-                    DateCreated = visit.Date,
-                    VehicleBrand = visit.Vehicle.Brand.Name,
-                    VehicleModel = visit.Vehicle.Model.Name,
-                    RepairActivities = visit.RepairActivities.Select(a => new VisitRepairActivityViewModel
+                    UserName = user.UserName,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber,
+                    Vehicles = user.Vehicles.Select(vehicle => new VehicleViewModel
                     {
-                        Name = a.RepairActivityType.Name,
-                        Price = a.Price,
+                        Brand = vehicle.Brand.Name,
+                        Model = vehicle.Model.Name,
+                        CreationYear = vehicle.ProductionYear,
+                        VIN = vehicle.VIN,
+                        LicensePlate = vehicle.LicensePlateNumber,
                     }).ToList(),
-                }).ToList();
+                    Visits = user.Visits.Select(visit => new VisitViewModel
+                    {
+                        Id = visit.Id,
+                        DateCreated = visit.Date,
+                        VehicleBrand = visit.Vehicle.Brand.Name,
+                        VehicleModel = visit.Vehicle.Model.Name,
+                        RepairActivities = visit.RepairActivities.Select(a => new VisitRepairActivityViewModel
+                        {
+                            Name = a.RepairActivityType.Name,
+                            Price = a.Price,
+                        }).ToList(),
+                    }).ToList()
+                };
 
                 return View(model);
             }
@@ -123,12 +125,12 @@ namespace SmartGarage.Controllers
             catch (EntityNotFoundException ex)
             {
                 ModelState.AddModelError("Email", "Error occured. Try again.");
-                return View(viewModel);
+                return View("Profile", viewModel);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("Email", "Error occured. Try again.");
-                return View(viewModel);
+                return View("Profile", viewModel);
             }
         }
     }

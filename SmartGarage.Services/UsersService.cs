@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data;
@@ -46,7 +47,7 @@ namespace SmartGarage.Services
                     $"Please you the following password: {randomPassword} to login." +
                     $"You will be able to fill out your user profile data upon login";
 
-                var userResult = await this.userManager.CreateAsync(appUser, randomPassword);
+                var userResult = await userManager.CreateAsync(appUser, randomPassword);
 
                 if (userResult.Succeeded)
                 {
@@ -67,8 +68,20 @@ namespace SmartGarage.Services
 
         public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
         {
-            return await userManager.GetUserAsync(user)
-                ?? throw new EntityNotFoundException($"User not found.");
+            return await userManager.Users
+                .Include(u => u.Vehicles)
+                    .ThenInclude(v => v.Brand)
+                .Include(u => u.Vehicles)
+                    .ThenInclude(v => v.Model)
+                .Include(u => u.Vehicles)
+                    .ThenInclude(v => v.Visits)
+                        .ThenInclude(visit => visit.RepairActivities)
+                            .ThenInclude(v => v.RepairActivityType)
+                .FirstOrDefaultAsync(u => u.UserName == user.Identity.Name)
+                ?? throw new EntityNotFoundException("User not found.");
+
+            //return await userManager.GetUserAsync(user)
+            //    ?? throw new EntityNotFoundException($"User not found.");
         }
 
         public async Task<AppUser> GetByEmail(string email)
@@ -80,6 +93,16 @@ namespace SmartGarage.Services
         public async Task<bool> UserWithEmailExists(string email)
         {
             return await userManager.FindByEmailAsync(email) != null;
+        }
+
+        public async Task<AppUser> Update(AppUser appUser)
+        {
+            _ = await userManager.UpdateAsync(appUser);
+
+            var updatedUser = await userManager.FindByIdAsync(appUser.Id)
+                ?? throw new EntityNotFoundException("User not found.");
+
+            return updatedUser;
         }
 
         private string GenerateRandomPassword()

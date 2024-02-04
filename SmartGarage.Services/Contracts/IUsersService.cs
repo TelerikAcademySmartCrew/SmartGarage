@@ -9,6 +9,7 @@ namespace SmartGarage.Services.Contracts
         Task<IdentityResult> Create(AppUser appUser);
         Task<AppUser> GetUserAsync(ClaimsPrincipal user);
         Task<AppUser> GetByEmail(string email);
+        Task<AppUser> Update(AppUser appUser);
         Task<bool> UserWithEmailExists(string email);
     }
 }

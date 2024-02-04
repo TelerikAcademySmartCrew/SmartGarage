@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartGarage.Data.Models.ViewModels
+namespace SmartGarage.Utilities.Models.ViewModels
 {
     public class RegisterViewModel
     {

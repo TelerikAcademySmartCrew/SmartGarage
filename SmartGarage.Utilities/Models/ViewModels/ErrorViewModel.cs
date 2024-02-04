@@ -1,4 +1,4 @@
-namespace SmartGarage.Data.Models.ViewModels
+namespace SmartGarage.Utilities.Models.ViewModels
 {
     public class ErrorViewModel
     {

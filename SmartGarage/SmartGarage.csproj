@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Data.Models\SmartGarage.Data.Models.csproj" />
     <ProjectReference Include="..\SmartGarage.Common\SmartGarage.Common.csproj" />
     <ProjectReference Include="..\SmartGarage.Data\SmartGarage.Data.csproj" />
     <ProjectReference Include="..\SmartGarage.Services\SmartGarage.Services.csproj" />

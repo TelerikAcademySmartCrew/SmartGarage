@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SmartGarage.Data.Models.ViewModels
+﻿namespace SmartGarage.Utilities.Models.ViewModels
 {
     public class UserUpdateViewModel
     {

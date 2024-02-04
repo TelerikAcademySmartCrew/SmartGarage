@@ -9,6 +9,8 @@ using SmartGarage.Data.Seeding;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
+using SmartGarage.Utilities.Mappers;
+using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;
 
 namespace SmartGarage
@@ -30,6 +32,8 @@ namespace SmartGarage
            .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddScoped<IVehicleMapper, VehicleMapper>();
 
             // Configure Emails
             var emailConfig = builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>();

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data;
-using SmartGarage.Data.Models;
-using SmartGarage.Data.Models.ViewModels;
-using SmartGarage.Services.Services.Contracts;
+using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities.Models;
+using SmartGarage.Utilities.Models.ViewModels;
 
 namespace SmartGarage.Controllers
 {
@@ -41,9 +41,9 @@ namespace SmartGarage.Controllers
             {
                 Brand = vehicle.Brand.Name,
                 Model = vehicle.Model.Name,
-                ProductionYear = vehicle.ProductionYear,
+                CreationYear = vehicle.ProductionYear,
                 VIN = vehicle.VIN,
-                LicensePlateNumber = vehicle.LicensePlateNumber,
+                LicensePlate = vehicle.LicensePlateNumber,
             }).ToList();
 
             model.Visits = user.Visits.Select(visit => new VisitViewModel
@@ -63,7 +63,7 @@ namespace SmartGarage.Controllers
         }
 
         [HttpGet]
-        public IActionResult DisplayVisit(int visitId)
+        public IActionResult DisplayVisit(Guid visitId)
         {
             try
             {
