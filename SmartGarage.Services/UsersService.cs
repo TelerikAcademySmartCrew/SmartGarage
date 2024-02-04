@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data;
-using SmartGarage.Services.Services.Contracts;
-using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
-using System.Security.Claims;
+using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities;
 
-namespace SmartGarage.WebAPI.Services
+namespace SmartGarage.Services
 {
     public class UsersService : IUsersService
     {

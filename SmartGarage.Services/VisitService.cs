@@ -13,19 +13,19 @@ namespace SmartGarage.Services
             this.visitRepository = visitRepository;
         }
         
-        public async Task<ICollection<Visit>> GetByUserIdAsync(string id)
+        public async Task<ICollection<Visit>> GetByUserIdAsync(string id, CancellationToken cancellationToken)
         {
-            return await this.visitRepository.GetByUserIdAsync(id);
+            return await this.visitRepository.GetByUserIdAsync(id, cancellationToken);
         }
 
-        public async Task<Visit> GetByIdAsync(Guid id)
+        public async Task<Visit> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await this.visitRepository.GetByIdAsync(id);
+            return await this.visitRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<Visit> CreateAsync(Visit visit)
+        public async Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken)
         {
-            return await this.visitRepository.CreateAsync(visit);
+            return await this.visitRepository.CreateAsync(visit, cancellationToken);
         }
     }
 }

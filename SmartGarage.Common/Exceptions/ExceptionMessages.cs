@@ -12,5 +12,10 @@
         {
             public const string InvalidYear = "Year should a number smaller or equal to the current year.";
         }
+
+        public static class Visit
+        {
+            public const string VisitNotFound = "Visit not found!";
+        }
     }
 }

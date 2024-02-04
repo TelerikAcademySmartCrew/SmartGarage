@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-
+using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
+using static SmartGarage.Common.Exceptions.ExceptionMessages.Visit;
 
 namespace SmartGarage.Data.Repositories
 {
@@ -14,23 +15,38 @@ namespace SmartGarage.Data.Repositories
             this.context = context;
         }
         
-        public async Task<ICollection<Visit>> GetByUserIdAsync(string id)
+        public async Task<ICollection<Visit>> GetByUserIdAsync(string id, CancellationToken cancellationToken)
         {
             return await this.context.Visits
                 .Where(x => x.UserId == id)
-                .ToListAsync();
+                .Include(v => v.Vehicle)
+                    .ThenInclude(v => v.Brand)
+                .Include(v => v.Vehicle)
+                    .ThenInclude(v => v.Model)
+                .Include(v => v.RepairActivities)
+                    .ThenInclude(v => v.RepairActivityType)
+                .Include(v => v.User)
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<Visit> GetByIdAsync(Guid id)
+        public async Task<Visit> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return await this.context.Visits
-                .FirstAsync(x => x.Id == id);
+                .Include(v => v.Vehicle)
+                    .ThenInclude(v => v.Brand)
+                .Include(v => v.Vehicle)
+                    .ThenInclude(v => v.Model)
+                .Include(v => v.RepairActivities)
+                    .ThenInclude(v => v.RepairActivityType)
+                .Include(v => v.User)
+                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
+                ?? throw new EntityNotFoundException(VisitNotFound);
         }
 
-        public async Task<Visit> CreateAsync(Visit visit)
+        public async Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken)
         {
-            await this.context.Visits.AddAsync(visit);
-            await this.context.SaveChangesAsync();
+            await this.context.Visits.AddAsync(visit, cancellationToken);
+            await this.context.SaveChangesAsync(cancellationToken);
             return visit;
         }
     }

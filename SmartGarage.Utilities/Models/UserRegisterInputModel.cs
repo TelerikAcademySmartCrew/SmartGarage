@@ -1,4 +1,4 @@
-namespace SmartGarage.Data.Models.DTOs;
+namespace SmartGarage.Utilities.Models;
 
 public class UserRegisterInputModel
 {
