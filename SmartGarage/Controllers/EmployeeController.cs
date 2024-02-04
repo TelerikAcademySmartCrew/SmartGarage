@@ -2,10 +2,9 @@
 
 namespace SmartGarage.Controllers
 {
-    public class HomeController : Controller
+    public class EmployeeController : Controller
     {
-
-        public IActionResult Privacy()
+        public IActionResult Index()
         {
             return View();
         }
