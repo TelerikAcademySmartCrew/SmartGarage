@@ -1,4 +1,4 @@
-﻿namespace SmartGarage.Models
+﻿namespace SmartGarage.Utilities.Models
 {
     public class VisitRepairActivityViewModel
     {

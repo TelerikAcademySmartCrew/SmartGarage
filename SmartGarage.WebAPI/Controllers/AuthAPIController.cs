@@ -6,6 +6,7 @@ using SmartGarage.Services;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
 using SmartGarage.Utilities.Mappers.Contracts;
+using SmartGarage.Utilities.Models;
 
 namespace SmartGarage.WebAPI.Controllers;
 

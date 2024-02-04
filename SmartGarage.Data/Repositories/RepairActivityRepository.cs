@@ -18,7 +18,9 @@ namespace SmartGarage.Data.Repositories
 
 		public async Task<ICollection<RepairActivity>> GetAllAsync(RepairActivityQueryParameters queryParameters)
 		{
-            var repairActivitiesToReturn = this.context.RepairActivities.AsQueryable();
+            var repairActivitiesToReturn = this.context.RepairActivities
+                .Include(ra => ra.RepairActivityType)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(queryParameters.Name))
             {
@@ -73,17 +75,19 @@ namespace SmartGarage.Data.Repositories
         {
             return await this.context.RepairActivities
                 .Where(ra => ra.VisitId == id)
+                .Include(ra => ra.RepairActivityType)
                 .ToListAsync();
         }
 
         public async Task<ICollection<RepairActivity>> GetByNameAsync(string name)
         {
-            var serviceType = await this.context.RepairActivityTypes
+            var repairActivityType = await this.context.RepairActivityTypes
                 .FirstOrDefaultAsync(s => s.Name == name)
                 ?? throw new EntityNotFoundException(TypeNotFound);
 
             return await this.context.RepairActivities
-                .Where(s => s.RepairActivityTypeId == serviceType.Id)
+                .Where(s => s.RepairActivityTypeId == repairActivityType.Id)
+                .Include(ra => ra.RepairActivityType)
                 .ToListAsync();
         }
 
@@ -91,6 +95,7 @@ namespace SmartGarage.Data.Repositories
         {
             return await this.context.RepairActivities
                 .Where(ra => ra.Price >= startingPrice && ra.Price <= endingPrice)
+                .Include(ra => ra.RepairActivityType)
                 .ToListAsync();
         }
 

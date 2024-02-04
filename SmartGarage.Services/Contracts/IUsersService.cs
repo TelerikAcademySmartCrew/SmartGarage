@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using SmartGarage.Data.Models;
-using System.Security.Claims;
 
-namespace SmartGarage.Services.Services.Contracts
+namespace SmartGarage.Services.Contracts
 {
     public interface IUsersService
     {

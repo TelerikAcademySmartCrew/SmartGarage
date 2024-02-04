@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Seeding;
-using SmartGarage.Services.Services.Contracts;
+using SmartGarage.Services;
+using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Utilities.Models;
-using SmartGarage.WebAPI.Services;
 
 namespace SmartGarage
 {
