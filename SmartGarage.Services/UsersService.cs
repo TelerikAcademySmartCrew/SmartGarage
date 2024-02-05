@@ -14,24 +14,27 @@ namespace SmartGarage.Services
     {
         private readonly UserManager<AppUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly SignInManager<AppUser> signInManager;
         private readonly ApplicationDbContext applicationDbContext;
         private readonly EmailService emailService;
         private readonly IConfiguration configuration;
 
         public UsersService(UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager,
+            SignInManager<AppUser> signInManager,
             ApplicationDbContext applicationDbContext,
             EmailService emailService,
             IConfiguration configuration)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this.signInManager = signInManager;
             this.applicationDbContext = applicationDbContext;
             this.emailService = emailService;
             this.configuration = configuration;
         }
 
-        public async Task<IdentityResult> Create(AppUser appUser)
+        public async Task<IdentityResult> CreateUser(AppUser appUser)
         {
             try
             {
@@ -59,6 +62,41 @@ namespace SmartGarage.Services
                 }
 
                 return userResult;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<IdentityResult> CreateEmployee(AppUser appUser)
+        {
+            try
+            {
+                // TODO : use the pass generator when ready
+
+                // Generate a random password
+                string randomPassword = "@User123";
+                //string randomPassword = GenerateRandomPassword2();
+
+                if (await UserWithEmailExists(appUser.Email) == false)
+                {
+                    var userResult = await userManager.CreateAsync(appUser, randomPassword);
+
+                    var newUser = await GetByEmail(appUser.Email);
+
+                    await signInManager.SignInAsync(newUser, isPersistent: false);
+
+                    if (userResult.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(appUser, "Employee");
+                        await applicationDbContext.SaveChangesAsync();
+                    }
+
+                    return userResult;
+                }
+
+                throw new DuplicateEntityFoundException($"Email {appUser.Email} is already registered.");
             }
             catch (Exception ex)
             {

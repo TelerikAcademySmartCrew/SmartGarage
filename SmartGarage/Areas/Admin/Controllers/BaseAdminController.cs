@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using static SmartGarage.Common.GeneralApplicationConstants.Admin;
 
 namespace SmartGarage.Areas.Admin.Controllers

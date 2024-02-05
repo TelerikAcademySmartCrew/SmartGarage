@@ -6,7 +6,8 @@ namespace SmartGarage.Services.Contracts
 {
     public interface IUsersService
     {
-        Task<IdentityResult> Create(AppUser appUser);
+        Task<IdentityResult> CreateUser(AppUser appUser);
+        Task<IdentityResult> CreateEmployee(AppUser appUser);
         Task<AppUser> GetUserAsync(ClaimsPrincipal user);
         Task<AppUser> GetByEmail(string email);
         Task<AppUser> Update(AppUser appUser);

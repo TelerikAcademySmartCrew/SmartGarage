@@ -4,9 +4,14 @@
 
 :root {
     --light-color: #dedede;
+    --dark-color: #333333;
+
     --light-gray-color: #bababa;
-    --menu-element-gray-color: #;
     --blue-color: #3094CC;
+
+    --dark-text-color: #171717;
+
+    --menu-element-gray-color: #6c757d;
     --form-control-background-color: #b6ff00;
     --border-color: #b6ff00;
     --form-control-border-color: #3094CC;
@@ -143,9 +148,22 @@ input.log-in-form-control {
 
 /* Employee */
 
-.eployee-menu-element {
+.employee-menu-element {
+    color: bisque;
     background-color: var(--menu-element-gray-color);
+    border-radius: 10px;
+    padding: 30px;
+    font-size: 1.2em;
+    text-decoration: none;
+    box-shadow: rgba(43, 43, 43, 0.15) 2px 2px 2px;
+    transition: box-shadow 0.5s ease, background-color 0.5s ease, color 0.5s ease;
 }
+
+    .employee-menu-element:hover {
+        color: bisque;
+        background-color: var(--blue-color);
+        box-shadow: rgba(43, 43, 43, 0.3) 3px 3px 5px; /* Adjust values for hover effect */
+    }
 
 /* Scrollbars */
 

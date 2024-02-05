@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SmartGarage.Common;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
@@ -8,6 +9,7 @@ using SmartGarage.Services.Contracts;
 
 namespace SmartGarage.Controllers
 {
+    [Authorize]
     public class AuthController : Controller
     {
         private readonly SignInManager<AppUser> signInManager;
@@ -27,15 +29,25 @@ namespace SmartGarage.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        [AllowAnonymous]
+        public async Task<IActionResult> Login()
         {
+            //await Task.Delay(1000);
+
+            if (User.Identity.IsAuthenticated)
+            {
+                // User is already authenticated, no need to show the login page again
+                return await RedirectToCorrectActionBasedOnRole(User.Identity.Name);
+            }
+
             LoginViewModel model = new LoginViewModel();
 
             return View(model);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginData)
         {
             if (!ModelState.IsValid)
@@ -58,49 +70,70 @@ namespace SmartGarage.Controllers
 
             try
             {
+                // Does this line sets User.Identity.IsAuthenticated to true is the result.Succeeded == true ?
                 var result = await signInManager.PasswordSignInAsync(loginData.Email, loginData.Password, false, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
-                    var user = await userManager.FindByEmailAsync(loginData.Email);
-
-                    // Successfully authenticated
-                    //if (User.IsInRole("Customer"))
-                    //{
-                        return RedirectToAction("DisplayAll", "Visits");
-                    //}
-                    //else if (User.IsInRole("Employee"))
-                    //{
-                    //    return RedirectToAction("Index", "Employee");
-                    //}
-                    //else if (User.IsInRole("Admin"))
-                    //{
-
-                    //}
+                    //return View("Login");
+                    return await RedirectToCorrectActionBasedOnRole(loginData.Email);
                 }
 
-                ModelState.AddModelError("Password", "Invalid credentials");
+                ModelState.AddModelError("Password", "Invalid credentials 1");
                 return View(loginData);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Email", "Invalid credentials.");
+                ModelState.AddModelError("Email", "Invalid credentials 2");
                 return View(loginData);
             }
+        }
+
+        [Authorize]
+        private async Task<IActionResult> RedirectToCorrectActionBasedOnRole(string email)
+        {
+            var _user = User;
+            var _identity = User.Identity;
+            var _name = User.Identity.Name;
+
+            //// Ensure roles are loaded for the current user
+            var user = await userManager.FindByEmailAsync(email);
+            var roles = await userManager.GetRolesAsync(user);
+
+            //if (User.IsInRole("Customer"))
+            if (roles.Contains("Customer"))
+            {
+                return RedirectToAction("DisplayAll", "Visits");
+            }
+            
+            //if (User.IsInRole("Employee"))
+            if (roles.Contains("Employee"))
+            {
+                return RedirectToAction("Index", "Employee");
+            }
+
+            //if (User.IsInRole("Admin"))
+            if (roles.Contains("Admin"))
+            {
+                return RedirectToAction("Index", "Home", new { area = "Admin" });
+            }
+
+            // Default redirect if no matching role is found
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            if (User != null)
+            if (User.Identity.IsAuthenticated)
             {
-                // TODO : validate if this is correct way to logout
-                var user = usersService.GetUserAsync(User);
-                await userManager.RemoveLoginAsync(user.Result, "", "");
+                await signInManager.SignOutAsync();
+                return Redirect("Login");
             }
 
-            return View("Login");
+            return View("Error");
         }
+
 
         [HttpGet]
         public IActionResult Register()
@@ -134,7 +167,7 @@ namespace SmartGarage.Controllers
                     JoinDate = DateTime.UtcNow,
                 };
 
-                var result = await usersService.Create(newUser);
+                var result = await usersService.CreateUser(newUser);
 
                 if (result.Succeeded)
                 {

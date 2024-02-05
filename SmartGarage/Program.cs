@@ -53,6 +53,7 @@ namespace SmartGarage
 
                 SeedData.Initialize(userManager, roleManager).Wait();
             }
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {

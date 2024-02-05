@@ -1,0 +1,27 @@
+﻿@model string
+
+@{
+    var userName = Model;
+}
+
+<!-- client nav partial view -->
+<div class="d=flex align-items-center rounded-3" style="background-color:#3094CC; height:50px; width:100%;">
+
+    <div class="container">
+        <div class="d-flex flex-row justify-content-between">
+            <div>
+                <div id="smart-garage-watermark">SMART GARAGE</div>
+            </div>
+            <div class="d-flex flex-row justify-content-around gap-4 align-items-center">
+                <div class="dropdown">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        @userName
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a asp-controller="Auth" asp-action="Logout" asp-area="" id="dropdownLogout" name="Logout" class="dropdown-item">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

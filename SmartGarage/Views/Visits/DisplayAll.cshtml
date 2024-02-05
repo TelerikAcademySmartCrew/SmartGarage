@@ -15,24 +15,20 @@
         <div class="scrollable-div d-flex gap-3 row mt-5 mx-auto p-2" style="max-height: 600px;">
 
             @{
-                for (int i = 0; i < 10; i++)
+                if (Model.Visits != null && Model.Visits.Count > 0)
                 {
-
-                    if (Model.Visits != null && Model.Visits.Count > 0)
+                    @foreach (var visit in Model.Visits)
                     {
-                        @foreach (var visit in Model.Visits)
-                        {
-                            <a asp-controller="Visits" asp-action="DisplayVisit" asp-route-visitId="@visit.Id" style="text-decoration:none">
-                                <partial name="Visits/_VisitElementPartial" model="@visit" />
-                            </a>
-                        }
+                        <a asp-controller="Visits" asp-action="DisplayVisit" asp-route-visitId="@visit.Id" style="text-decoration:none">
+                            <partial name="Visits/_VisitElementPartial" model="@visit" />
+                        </a>
                     }
-                    else
-                    {
-                        <div class="card p-3">
-                            YOU DON'T ANY HAVE VISITS YET.
-                        </div>
-                    }
+                }
+                else
+                {
+                    <div class="card p-3">
+                        YOU DON'T ANY HAVE VISITS YET.
+                    </div>
                 }
             }
         </div>
