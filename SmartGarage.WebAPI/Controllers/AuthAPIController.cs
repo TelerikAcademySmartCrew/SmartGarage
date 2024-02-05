@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.InputModels;
+using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Services;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;
@@ -32,9 +33,9 @@ public class AuthAPIController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserRegisterInputModel userRegisterInputModel)
+    public async Task<IActionResult> Register([FromBody] UserRegisterRequestDto userRegisterRequestDto)
     {
-        var user = this.userMapper.MaterializeInputModel(userRegisterInputModel);
+        var user = this.userMapper.MaterializeRequestDto(userRegisterRequestDto);
         var password = this.passwordGenerator.Generate();
         var createdUserResult = await this.userManager.CreateAsync(user, password);
 
