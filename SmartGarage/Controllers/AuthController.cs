@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
+using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Utilities.Models.ViewModels;
 
 namespace SmartGarage.Controllers
 {

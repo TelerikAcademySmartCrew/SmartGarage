@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 
 using SmartGarage.Common.Exceptions;
+using SmartGarage.Common.Models;
+using SmartGarage.Common.Models.InputModels;
 using SmartGarage.Data.Models;
-using SmartGarage.Data.Models.DTOs;
+using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;

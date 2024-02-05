@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using SmartGarage.Data.Models;
 
-namespace SmartGarage.Utilities.Models
+namespace SmartGarage.Common.Models.InputModels
 {
     public class VisitInputModel
     {

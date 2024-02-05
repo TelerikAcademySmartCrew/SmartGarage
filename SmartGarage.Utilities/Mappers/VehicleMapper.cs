@@ -1,5 +1,6 @@
-﻿using SmartGarage.Data.Models;
-using SmartGarage.Data.Models.DTOs;
+﻿using SmartGarage.Common.Models;
+using SmartGarage.Common.Models.InputModels;
+using SmartGarage.Data.Models;
 using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;
 

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Moq;
 using SmartGarage.Data.Models;
-using SmartGarage.Data.Models.DTOs;
+using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;

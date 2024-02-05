@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.QueryParameters;
 
 namespace SmartGarage.Services;
 

@@ -1,4 +1,4 @@
-﻿namespace SmartGarage.Data.Models.DTOs;
+﻿namespace SmartGarage.Data.Models.QueryParameters;
 
 public class VehicleQueryParameters
 {

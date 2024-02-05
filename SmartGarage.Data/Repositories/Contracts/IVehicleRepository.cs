@@ -1,5 +1,5 @@
-﻿using SmartGarage.Data.Models.DTOs;
-using SmartGarage.Data.Models;
+﻿using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.QueryParameters;
 using Vehicle = SmartGarage.Data.Models.Vehicle;
 
 namespace SmartGarage.Data.Repositories.Contracts

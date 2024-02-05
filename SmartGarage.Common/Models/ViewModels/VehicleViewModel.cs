@@ -1,4 +1,4 @@
-﻿namespace SmartGarage.Utilities.Models;
+﻿namespace SmartGarage.Common.Models;
 
 public class VehicleViewModel
 {

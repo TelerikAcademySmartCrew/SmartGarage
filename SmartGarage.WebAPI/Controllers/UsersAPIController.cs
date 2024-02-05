@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SmartGarage.Data.Models.DTOs;
+using SmartGarage.Common.Models;
+using SmartGarage.Common.Models.InputModels;
 using SmartGarage.Services;
 using SmartGarage.Utilities;
 using SmartGarage.Data.Models;

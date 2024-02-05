@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
-using SmartGarage.Data.Models.DTOs;
+using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.RepairActivity;
 

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartGarage.Common.Exceptions;
+using SmartGarage.Common.Models;
+using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities.Models;
-using SmartGarage.Utilities.Models.ViewModels;
 
 namespace SmartGarage.Controllers
 {

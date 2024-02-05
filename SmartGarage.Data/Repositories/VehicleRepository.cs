@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartGarage.Common.Exceptions;
-using SmartGarage.Data.Models.DTOs;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.QueryParameters;
 
 namespace SmartGarage.Data.Repositories
 {

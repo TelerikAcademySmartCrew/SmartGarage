@@ -1,4 +1,4 @@
-﻿namespace SmartGarage.Utilities.Models.ViewModels
+﻿namespace SmartGarage.Common.Models
 {
     public class Location
     {

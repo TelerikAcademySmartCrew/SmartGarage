@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SmartGarage.Utilities.Models;
+namespace SmartGarage.Common.Models.InputModels;
 
 public class VehicleInputModel
 {
