@@ -46,6 +46,13 @@ namespace SmartGarage.Data.Repositories
         public async Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken)
         {
             await this.context.Visits.AddAsync(visit, cancellationToken);
+
+            foreach (var repairActivity in visit.RepairActivities)
+            {
+                repairActivity.VisitId = visit.Id;
+            }
+
+            await this.context.RepairActivities.AddRangeAsync(visit.RepairActivities);
             await this.context.SaveChangesAsync(cancellationToken);
             return visit;
         }

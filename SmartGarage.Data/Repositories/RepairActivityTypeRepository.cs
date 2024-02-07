@@ -31,11 +31,9 @@ namespace SmartGarage.Data.Repositories
 
 		public async Task<RepairActivityType> CreateAsync(RepairActivityType repairActivityType)
 		{
-			var isExistent = await this.RepairActivityTypeExists(repairActivityType.Name);
-
-			if (isExistent)
+			if (await this.RepairActivityTypeExists(repairActivityType.Name))
 			{
-				throw new EntityAlreadyExistsException(AlreadyExists);
+				throw new EntityAlreadyExistsException(TypeAlreadyExists);
 			}
 
 			await this.context.RepairActivityTypes.AddAsync(repairActivityType);
@@ -55,6 +53,11 @@ namespace SmartGarage.Data.Repositories
 
 		public async Task DeleteAsync(string name)
 		{
+			if (!await this.RepairActivityTypeExists(name))
+			{
+				throw new EntityNotFoundException(TypeNotFound);
+			}
+
 			var rat = await this.context.RepairActivityTypes
 				.FirstAsync(rat => rat.Name == name);
 
