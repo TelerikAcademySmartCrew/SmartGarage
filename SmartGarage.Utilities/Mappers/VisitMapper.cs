@@ -1,7 +1,7 @@
+using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Common.Models.ViewModels;
-using SmartGarage.Data.Models;
 using SmartGarage.Utilities.Mappers.Contracts;
-using SmartGarage.Utilities.Models;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Utilities.Mappers;
 
@@ -27,6 +27,22 @@ public class VisitMapper : IVisitMapper
                 })
                 .ToList(),
             TotalPrice = visit.RepairActivities.Sum(x => x.Price)
+        };
+    }
+
+    public Visit MaterializeRequestDto(VisitRequestDto visit, AppUser user, Vehicle vehicle)
+    {
+        return new Visit
+        {
+            UserId = user.Id,
+            VehicleId = vehicle.Id,
+            RepairActivities = visit.RepairActivities
+                .Select(x => new RepairActivity
+                {
+                    RepairActivityType = new RepairActivityType { Name = x.RepairActivityType.Name },
+                    Price = x.Price
+                })
+                .ToList()
         };
     }
 }

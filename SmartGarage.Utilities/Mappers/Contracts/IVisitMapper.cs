@@ -1,6 +1,6 @@
+using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
-using SmartGarage.Utilities.Models;
 
 namespace SmartGarage.Utilities.Mappers.Contracts
 {
@@ -9,5 +9,7 @@ namespace SmartGarage.Utilities.Mappers.Contracts
         List<VisitViewModel> ToViewModel(IEnumerable<Visit> visits);
 
         VisitViewModel ToViewModel(Visit visit);
+
+        Visit MaterializeRequestDto(VisitRequestDto visit, AppUser user, Vehicle vehicle);
     }    
 }
