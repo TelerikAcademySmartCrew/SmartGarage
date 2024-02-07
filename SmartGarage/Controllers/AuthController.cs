@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SmartGarage.Common;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
@@ -75,8 +74,7 @@ namespace SmartGarage.Controllers
 
                 if (result.Succeeded)
                 {
-                    //return View("Login");
-                    return await RedirectToCorrectActionBasedOnRole(loginData.Email);
+                    return RedirectToAction("Login");
                 }
 
                 ModelState.AddModelError("Password", "Invalid credentials 1");
@@ -92,28 +90,17 @@ namespace SmartGarage.Controllers
         [Authorize]
         private async Task<IActionResult> RedirectToCorrectActionBasedOnRole(string email)
         {
-            var _user = User;
-            var _identity = User.Identity;
-            var _name = User.Identity.Name;
-
-            //// Ensure roles are loaded for the current user
-            var user = await userManager.FindByEmailAsync(email);
-            var roles = await userManager.GetRolesAsync(user);
-
-            //if (User.IsInRole("Customer"))
-            if (roles.Contains("Customer"))
+            if (User.IsInRole("Customer"))
             {
                 return RedirectToAction("DisplayAll", "Visits");
             }
-            
-            //if (User.IsInRole("Employee"))
-            if (roles.Contains("Employee"))
+
+            if (User.IsInRole("Employee"))
             {
-                return RedirectToAction("Index", "Employee");
+                return RedirectToAction("Index", "Home", new { area = "Employee" });
             }
 
-            //if (User.IsInRole("Admin"))
-            if (roles.Contains("Admin"))
+            if (User.IsInRole("Admin"))
             {
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             }

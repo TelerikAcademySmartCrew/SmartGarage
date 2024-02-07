@@ -1,0 +1,13 @@
+﻿@{
+    var userName = ViewData["CurrentUser"];
+}
+
+<!-- customer index page -->
+<div class="d-flex flex-column justify-content-start" style="height:100%;">
+
+    <!-- customer nav bar -->
+    <partial name="_EmployeeNavBarPartial" model="@userName" />
+
+    <div class="bg-light">
+    </div>
+</div>

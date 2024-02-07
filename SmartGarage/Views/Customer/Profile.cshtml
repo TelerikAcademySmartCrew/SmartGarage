@@ -1,10 +1,10 @@
 ﻿@model UserViewModel
 
-<!-- client index page -->
+<!-- customer index page -->
 <div class="d-flex flex-column justify-content-start" style="height:100%;">
 
-    <!-- client nav bar -->
-    <partial name="/Views/Shared/_ClientNavBarPartial.cshtml" model="Model.UserName" />
+    <!-- customer nav bar -->
+    <partial name="/Views/Shared/_CustomerNavBarPartial.cshtml" model="Model.UserName" />
 
     <div class="bg-light">
     </div>
@@ -16,7 +16,7 @@
             <h4 class="opacity-50 p-2">
                 Update profile
             </h4>
-            <form asp-controller="Client" asp-action="UpdateUserProfile" class="d-flex flex-column m-0" method="post">
+            <form asp-controller="Customer" asp-action="UpdateUserProfile" class="d-flex flex-column m-0" method="post">
                 <div class="d-flex flex-column">
                     <label asp-for="@Model.UserName" class="form-label p-2 m-auto">Email</label>
                     <input name="UserName" readonly value="@Model.UserName" type="text" class="form-control">

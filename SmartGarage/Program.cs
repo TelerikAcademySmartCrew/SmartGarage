@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Repositories.Contracts;
+using SmartGarage.Data.Repositories;
 using SmartGarage.Data.Seeding;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
@@ -33,6 +35,9 @@ namespace SmartGarage
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddScoped<ApplicationDbContext>();
+            builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+            builder.Services.AddScoped<IVehicleService, VehicleService>();
             builder.Services.AddScoped<IVehicleMapper, VehicleMapper>();
 
             // Configure Emails

@@ -5,12 +5,9 @@
 :root {
     --light-color: #dedede;
     --dark-color: #333333;
-
     --light-gray-color: #bababa;
     --blue-color: #3094CC;
-
     --dark-text-color: #171717;
-
     --menu-element-gray-color: #6c757d;
     --form-control-background-color: #b6ff00;
     --border-color: #b6ff00;
@@ -39,6 +36,12 @@ body {
     align-items: center;
     justify-content: center;
     background-color: #C7C7C7;
+}
+
+/* Validations */
+
+form span {
+    color: #7B0828;
 }
 
 input.log-in-form-control {
@@ -119,7 +122,7 @@ input.log-in-form-control {
     opacity: 0.5;
 }
 
-.client-nav-bar-link {
+.customer-nav-bar-link {
     text-decoration: none;
     color: antiquewhite;
 }
@@ -146,7 +149,7 @@ input.log-in-form-control {
     }
 }
 
-/* Employee */
+/* Employee Home Screen Menu Element */
 
 .employee-menu-element {
     color: bisque;
@@ -207,3 +210,31 @@ input.log-in-form-control {
     .scrollable-div::-webkit-scrollbar-track-piece:end {
         background-color: transparent;
     }
+
+
+
+/* Dynamic list container */
+
+.dynamicList {
+    position: absolute;
+    max-width: 200px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ced4da;
+    background-color: bisque;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+}
+
+    .dynamicList a {
+        display: block;
+        padding: 8px 10px;
+        color: #000;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+        .dynamicList a:hover {
+            background-color: #e9ecef;
+        }
