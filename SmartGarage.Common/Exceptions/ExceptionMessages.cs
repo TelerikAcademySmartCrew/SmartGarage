@@ -5,7 +5,7 @@
         public static class RepairActivity
         {
             public const string TypeNotFound = "Repair activity type not found!";
-            public const string AlreadyExists = "Repair activity type already exists!";
+            public const string TypeAlreadyExists = "Repair activity type already exists!";
         }
 
         public static class Vehicle
@@ -16,6 +16,23 @@
         public static class Visit
         {
             public const string VisitNotFound = "Visit not found!";
+        }
+
+        public static class User
+        {
+            public const string UserNotFound = "User not found!";
+        }
+
+        public static class VehicleBrand
+        {
+            public const string BrandNotFound = "Brand not found!";
+            public const string BrandAlreadyExists = "Brand already exists!";
+        }
+
+        public static class VehicleModel
+        {
+            public const string ModelNotFound = "Model not found!";
+            public const string ModelAlreadyExists = "Model already exists!";
         }
     }
 }
