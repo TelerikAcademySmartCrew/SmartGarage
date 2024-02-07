@@ -10,13 +10,13 @@ using SmartGarage.Utilities.Models;
 
 namespace SmartGarage.Controllers
 {
-    public class ClientController : Controller
+    public class CustomerController : Controller
     {
         private readonly IUsersService usersService;
         private readonly SignInManager<AppUser> signInManager;
         private readonly IVehicleMapper vehicleMapper;
 
-        public ClientController(IUsersService usersService, SignInManager<AppUser> signInManager, IVehicleMapper vehicleMapper)
+        public CustomerController(IUsersService usersService, SignInManager<AppUser> signInManager, IVehicleMapper vehicleMapper)
         {
             this.usersService = usersService;
             this.signInManager = signInManager;
@@ -122,7 +122,7 @@ namespace SmartGarage.Controllers
 
                 await usersService.Update(user);
 
-                return RedirectToAction("Profile", "Client");
+                return RedirectToAction("Profile", "Customer");
             }
             catch (EntityNotFoundException ex)
             {

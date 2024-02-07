@@ -1,0 +1,43 @@
+﻿@{
+    var userName = ViewData["CurrentUser"];
+}
+
+<!-- customer index page -->
+<div class="d-flex flex-column justify-content-start" style="height:100%;">
+
+    <!-- customer nav bar -->
+    <partial name="_EmployeeNavBarPartial" model="@userName" />
+
+    <div class="bg-light">
+    </div>
+
+    <div class="container d-flex align-items-center justify-content-center m-auto" style="width:50%; height:60%;">
+        <div class="d-flex row gap-3" style="width:100%; height:100%;">
+            <!-- Your content goes here -->
+            <div class="d-flex gap-3 row flex-fill">
+                <a asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class="employee-menu-element col">
+                    REGISTER USER
+                </a>
+                <a asp-area="Employee" asp-controller="Vehicles" asp-action="RegisterVehicle" class="employee-menu-element col">
+                    REGISTER VEHICLE
+                </a>
+            </div>
+            <div class="d-flex gap-3 row flex-fill">
+                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="employee-menu-element col">
+                    DISPLAY ALL VISITS
+                </a>
+                <a asp-area="Employee" asp-controller="Customers" asp-action="ManageCustomers" class="employee-menu-element col">
+                    DISPLAY ALL CUSTOMERS
+                </a>
+                <a asp-area="Employee" asp-controller="Vehicles" asp-action="ManageVehicles" class="employee-menu-element col">
+                    DISPLAY ALL VEHICLES
+                </a>
+            </div>
+            <div class="d-flex gap-3 row flex-fill">
+                <a asp-area="Employee" asp-controller="Visits" asp-action="ShowActiveVisits" class="employee-menu-element col">
+                    DISPLAY ACTIVE VISITS
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
