@@ -4,10 +4,12 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
 using SmartGarage.Services.Contracts;
+using static SmartGarage.Common.GeneralApplicationConstants.Admin;
 
 namespace SmartGarage.Areas.Admin.Controllers
 {
-    //[Authorize]
+    [Area(AdminAreaName)]
+    [Authorize(Roles = AdminRoleName)]
     public class HomeController : BaseAdminController
     {
         private readonly IUsersService usersService;
@@ -65,17 +67,17 @@ namespace SmartGarage.Areas.Admin.Controllers
             }
             catch (DuplicateEntityFoundException ex)
             {
-                ModelState.AddModelError("Username", ex.Message);
-                return View();
+                ModelState.AddModelError("Email", ex.Message);
+                return View(registertionData);
             }
             catch (EntityNotFoundException ex)
             {
-                ModelState.AddModelError("Username", ex.Message);
+                ModelState.AddModelError("Email", ex.Message);
                 return View();
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Username", ex.Message);
+                ModelState.AddModelError("Email", ex.Message);
                 return View();
             }
         }

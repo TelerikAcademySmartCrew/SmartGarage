@@ -8,7 +8,6 @@ using SmartGarage.Services.Contracts;
 
 namespace SmartGarage.Controllers
 {
-    [Authorize]
     public class AuthController : Controller
     {
         private readonly SignInManager<AppUser> signInManager;
@@ -46,7 +45,7 @@ namespace SmartGarage.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel loginData)
         {
             if (!ModelState.IsValid)
@@ -110,6 +109,7 @@ namespace SmartGarage.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             if (User.Identity.IsAuthenticated)
@@ -123,6 +123,7 @@ namespace SmartGarage.Controllers
 
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -130,6 +131,7 @@ namespace SmartGarage.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel registertionData)
         {
             try
@@ -150,7 +152,7 @@ namespace SmartGarage.Controllers
                 {
                     UserName = registertionData.Email,
                     Email = registertionData.Email,
-                    EmailConfirmed = false,
+                    EmailConfirmed = true,
                     JoinDate = DateTime.UtcNow,
                 };
 
@@ -210,7 +212,6 @@ namespace SmartGarage.Controllers
         }
 
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmEmail(string userId, string confirmToken)
         {
             // NOTE : need to review validation

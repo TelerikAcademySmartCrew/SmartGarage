@@ -2,7 +2,7 @@
 function displayMatchingNames(namesArray, inputTagId, matchingNamesContainerId) {
     // Get the input value
     var inputValue = $(inputTagId).val().toLowerCase();
-
+    
     // Filter names based on the input value
     var matchingNames = namesArray.filter(function (name) {
         return name.toLowerCase().includes(inputValue);
@@ -15,7 +15,8 @@ function displayMatchingNames(namesArray, inputTagId, matchingNamesContainerId) 
     var inputField = $(inputTagId);
     var inputPosition = inputField.position();
 
-    if (matchingNames.length > 0) {
+    if (matchingNames.length >= 0) {
+
         matchingNamesContainer.css({
             "position": "absolute",
             "top": inputPosition.top + inputField.outerHeight(),
@@ -33,7 +34,15 @@ function displayMatchingNames(namesArray, inputTagId, matchingNamesContainerId) 
     }
 }
 
+var onNameClickedCallback;
+
+function subscribeToNameClickedCallback(callback) {
+    onNameClickedCallback = callback;
+}
+
 function onMatchingNameEntryClicked(name, inputTagName, matchingNamesContainerId) {
     $(inputTagName).val(name);
     $(matchingNamesContainerId).hide();
+    // callback
+    onNameClickedCallback(name);
 }

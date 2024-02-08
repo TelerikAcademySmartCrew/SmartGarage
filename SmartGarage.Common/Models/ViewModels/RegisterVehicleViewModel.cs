@@ -4,6 +4,11 @@ namespace SmartGarage.Common.Models.ViewModels
 {
     public class RegisterVehicleViewModel
     {
+        [Required, MaxLength(40)]
+        public string RegisterBrand { get; set; } = string.Empty;
+        [Required, MaxLength(40)]
+        public string RegisterModel { get; set; } = string.Empty;
+        
         [Required]
         public string VIN { get; set; } = string.Empty;
         [Required]
@@ -13,10 +18,5 @@ namespace SmartGarage.Common.Models.ViewModels
         [Required]
         public string CustomerEmail { get; set; } = string.Empty;
         public ICollection<RegisterVehicleBrandViewModel> Brands { get; set; } = new List<RegisterVehicleBrandViewModel>();
-        
-        [Required, MaxLength(15)]
-        public string RegisterBrand { get; set; }
-        [Required, MaxLength(15)]
-        public string RegisterModel { get; set; }
     }
 }

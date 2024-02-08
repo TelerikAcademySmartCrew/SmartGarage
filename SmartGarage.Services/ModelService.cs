@@ -9,12 +9,10 @@ namespace SmartGarage.Services
     public class ModelService : IModelService
     {
         private readonly IModelRepository modelRepository;
-        private readonly IBrandService brandService;
 
-        public ModelService(IModelRepository modelRepository, IBrandService brandService)
+        public ModelService(IModelRepository modelRepository)
         {
             this.modelRepository = modelRepository;
-            this.brandService = brandService;
         }
 
         public async Task<ICollection<VehicleModel>> GetAllAsync()
@@ -34,13 +32,6 @@ namespace SmartGarage.Services
 
         public async Task<VehicleModel> CreateAsync(VehicleModel model)
         {
-            var brands = await this.brandService.GetAllAsync();
-
-            if (!brands.Any(x => x.Name == model.Brand.Name))
-            {
-                throw new EntityNotFoundException(BrandNotFound);
-            }
-
             return await this.modelRepository.CreateAsync(model);
         }
     }

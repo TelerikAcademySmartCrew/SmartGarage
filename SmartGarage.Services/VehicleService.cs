@@ -3,6 +3,7 @@ using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
+using SmartGarage.Common.Exceptions;
 
 namespace SmartGarage.Services;
 
@@ -20,7 +21,8 @@ public class VehicleService : IVehicleService
 
     public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, string email, CancellationToken cancellationToken)
     {
-        var user = await this.userManager.FindByEmailAsync(email);
+        var user = await this.userManager.FindByEmailAsync(email)
+            ?? throw new EntityNotFoundException($"User not found.");
         vehicle.UserId = user.Id;
         return await vehicleRepository.CreateVehicleAsync(vehicle, user, cancellationToken);
     }

@@ -36,72 +36,56 @@ namespace SmartGarage.Services
 
         public async Task<IdentityResult> CreateUser(AppUser appUser)
         {
-            try
+            // TODO : use the pass generator when ready
+
+            // Generate a random password
+            string randomPassword = "@User123";
+            //string randomPassword = GenerateRandomPassword2();
+
+            string subject = "Welcome to SmartGarage. Please use the possword sent with this email to login.";
+
+            string body = $"Hello {appUser.Email}.\n\nYour account has been created." +
+                $"Please you the following password: {randomPassword} to login." +
+                $"You will be able to fill out your user profile data upon login";
+
+            var userResult = await userManager.CreateAsync(appUser, randomPassword);
+
+            if (!userResult.Succeeded)
             {
-                // TODO : use the pass generator when ready
-
-                // Generate a random password
-                string randomPassword = "@User123";
-                //string randomPassword = GenerateRandomPassword2();
-
-                string subject = "Welcome to SmartGarage. Please use the possword sent with this email to login.";
-
-                string body = $"Hello {appUser.Email}.\n\nYour account has been created." +
-                    $"Please you the following password: {randomPassword} to login." +
-                    $"You will be able to fill out your user profile data upon login";
-
-                var userResult = await userManager.CreateAsync(appUser, randomPassword);
-
-                if (userResult.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(appUser, "Customer");
-                    await applicationDbContext.SaveChangesAsync();
-
-                    // NOTE : toggle comment if you want to send emails
-                    //await emailService.SendEmailAsync(appUser.Email, subject, body);
-                }
-
-                return userResult;
+                throw new DuplicateEntityFoundException($"User already exists");
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+
+            await userManager.AddToRoleAsync(appUser, "Customer");
+            await applicationDbContext.SaveChangesAsync();
+
+            // NOTE : toggle comment if you want to send emails
+            //await emailService.SendEmailAsync(appUser.Email, subject, body);
+
+            return userResult;
         }
 
         public async Task<IdentityResult> CreateEmployee(AppUser appUser)
         {
-            try
+            // TODO : use the pass generator when ready
+
+            // Generate a random password
+            string randomPassword = "@User123";
+            //string randomPassword = GenerateRandomPassword2();
+
+            if (await UserWithEmailExists(appUser.Email))
             {
-                // TODO : use the pass generator when ready
-
-                // Generate a random password
-                string randomPassword = "@User123";
-                //string randomPassword = GenerateRandomPassword2();
-
-                if (await UserWithEmailExists(appUser.Email) == false)
-                {
-                    var userResult = await userManager.CreateAsync(appUser, randomPassword);
-
-                    var newUser = await GetByEmail(appUser.Email);
-
-                    await signInManager.SignInAsync(newUser, isPersistent: false);
-
-                    if (userResult.Succeeded)
-                    {
-                        await userManager.AddToRoleAsync(appUser, "Employee");
-                        await applicationDbContext.SaveChangesAsync();
-                    }
-
-                    return userResult;
-                }
-
-                throw new DuplicateEntityFoundException($"Email {appUser.Email} is already registered.");
+                throw new DuplicateEntityFoundException($"Email is already registered.");
             }
-            catch (Exception ex)
+
+            var userResult = await userManager.CreateAsync(appUser, randomPassword);
+
+            if (userResult.Succeeded)
             {
-                throw new Exception(ex.Message);
+                await userManager.AddToRoleAsync(appUser, "Employee");
+                await applicationDbContext.SaveChangesAsync();
             }
+
+            return userResult;
         }
 
         public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
@@ -117,9 +101,6 @@ namespace SmartGarage.Services
                             .ThenInclude(v => v.RepairActivityType)
                 .FirstOrDefaultAsync(u => u.UserName == user.Identity.Name)
                 ?? throw new EntityNotFoundException("User not found.");
-
-            //return await userManager.GetUserAsync(user)
-            //    ?? throw new EntityNotFoundException($"User not found.");
         }
 
         public async Task<AppUser> GetByEmail(string email)

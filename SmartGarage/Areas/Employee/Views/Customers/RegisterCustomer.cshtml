@@ -1,13 +1,55 @@
-﻿@{
+﻿@model RegisterViewModel
+
+@{
     var userName = ViewData["CurrentUser"];
+    var customerRegisteredMessage = ViewData["CustomerRegisteredMessage"];
 }
 
 <!-- customer index page -->
-<div class="d-flex flex-column justify-content-start" style="height:100%;">
+<div class="d-flex flex-column align-items-center" style="height:100%;">
 
     <!-- customer nav bar -->
-    <partial name="_EmployeeNavBarPartial" model="@userName" />
+    <partial name="_EmployeeNavBarPartial" model="@userName" area-name= />
 
-    <div class="bg-light">
+
+    <!-- Brands and models dynamic container -->
+    <div id="matchingNames" class="dynamicList "></div>
+
+    <div class="d-flex flex-column mx-auto my-auto bg-light rounded-3" style="width:50%;">
+
+        @if (customerRegisteredMessage == null)
+        {
+            <div class="d-flex flex-row mt-2 align-content-center  align-items-center flex-row bg-light rounded-3">
+                <h5 class="p-4 text-muted">
+                    REGISTER CUSTOMER
+                </h5>
+            </div>
+            <form asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class="d-flex flex-column gap-3 p-5" method="post" style="width:100%;">
+                <input asp-for="@Model.Email" class="log-in-form-control" type="email" placeholder="Email" aria-label="Email" required>
+                <span asp-validation-for="@Model.Email" class="form-error" style="color: #7B0828; height:24px;"></span>
+
+                <div class="d-flex justify-content-start gap-3 mt-4">
+                    <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-secondary ">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="d-flex flex-row mt-2 align-content-center  align-items-center flex-row bg-light rounded-3">
+                <h5 class="p-4 text-muted">
+                    CUSTOMER REGISTERED
+                </h5>
+                <span class="mb-2 rounded-circle bg-success text-center text-light" style="width:24px; height:24px;">&#10003;</span>
+            </div>
+            <div asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class="d-flex flex-column gap-3 p-5" method="post" style="width:100%;">
+                <input asp-for="@Model.Email" class="log-in-form-control" type="email" readonly placeholder="Email" aria-label="Email" required>
+                <div style="height:24px;"></div> <!-- Layout helper -->
+                
+                <div class="d-flex justify-content-start gap-3 mt-4">
+                    <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-primary ">OK</a>
+                </div>
+            </div>
+        }
     </div>
 </div>
