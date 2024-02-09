@@ -31,7 +31,6 @@ namespace SmartGarage.Controllers
         public async Task<IActionResult> Login()
         {
             //await Task.Delay(1000);
-
             if (User.Identity.IsAuthenticated)
             {
                 // User is already authenticated, no need to show the login page again
