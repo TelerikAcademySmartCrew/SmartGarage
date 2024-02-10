@@ -30,8 +30,6 @@ namespace SmartGarage.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
-            //await Task.Delay(1000);
-
             if (User.Identity.IsAuthenticated)
             {
                 // User is already authenticated, no need to show the login page again
@@ -104,8 +102,9 @@ namespace SmartGarage.Controllers
                 return RedirectToAction("Index", "Home", new { area = "Admin" });
             }
 
-            // Default redirect if no matching role is found
-            return RedirectToAction("Index", "Home");
+            //await Task.Delay(1000);
+            await signInManager.SignOutAsync();
+            return View("Login");
         }
 
         [HttpGet]
@@ -131,7 +130,7 @@ namespace SmartGarage.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel registertionData)
         {
             try

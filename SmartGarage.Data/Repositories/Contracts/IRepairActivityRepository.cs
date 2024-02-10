@@ -16,5 +16,7 @@ namespace SmartGarage.Data.Repositories.Contracts
 		Task<ICollection<RepairActivity>> GetByPriceRangeAsync(int startingPrice, int endingPrice);
 
 		Task DeleteAsync(RepairActivity repairActivity);
-	}
+	
+        Task<RepairActivity> GetById(Guid id);
+    }
 }

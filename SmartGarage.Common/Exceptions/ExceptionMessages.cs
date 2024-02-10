@@ -11,6 +11,7 @@
         public static class Vehicle
         {
             public const string InvalidYear = "Year should a number smaller or equal to the current year.";
+            public const string VehicleNotFound = "Vehicle not found.";
         }
 
         public static class Visit

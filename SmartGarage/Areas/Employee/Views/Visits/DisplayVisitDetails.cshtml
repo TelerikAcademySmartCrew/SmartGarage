@@ -1,0 +1,61 @@
+﻿@model VisitViewModel
+
+@{
+    var userName = ViewData["CurrentUser"];
+    var visitRepairTypes = Model.RepairActivityTypes;
+}
+
+<!-- employee index page -->
+<div class="d-flex flex-column justify-content-start" style="height:100%;">
+
+    <!-- employee nav bar -->
+    <partial name="_EmployeeNavBarPartial" model="@userName" />
+
+    <div class="container my-5 pb-5" style="height:100%">
+
+        <div class="d-flex flex-row justify-content-between bg-secondary text-light rounded-top bg-opacity-75 text-secondary px-4 py-3">
+            <div class="d-flex flex-column">
+                VISIT DETAILS
+            </div>
+            <div class="btn btn-primary d-flex flex-column">
+                STATUS
+            </div>
+        </div>
+
+        <div class="d-flex row" style="height:100%">
+
+            @{
+                <div class="d-flex flex-row justify-content-between">
+                    <div class="d-flex gap-4 text-end" style="width:80%">
+                        <select id="dropdown-options" class="d-flex flex-fill btn btn-secondary dropdown-toggle my-1 m-auto" style="width:80%;">
+                            @foreach (var item in visitRepairTypes)
+                            {
+                                <option value="@item.Id" class="m-4">
+                                    @item.Name
+                                </option>
+                            }
+                        </select>
+                        <button id="submitBtn" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            }
+
+            <div class="scrollable-div row mx-auto" style="height: calc(100% - 80px);">
+                <partial name="Visits/_VisitDetailsEditablePartial" model="@Model" class="d-flex overflow-auto" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#submitBtn').on('click', function () {
+            console.log('activity add buttonc click');
+            var selectedValue = $('#dropdown-options').val();
+            var visitId = '@Model.Id';
+            window.location.href = '/Employee/Visits/AddRepairActivity?visitId=' + visitId + '&visitRepairActivityType=' + selectedValue;
+        });
+    });
+</script>

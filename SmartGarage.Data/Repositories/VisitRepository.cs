@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Common.Enumerations;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Visit;
@@ -17,7 +18,19 @@ namespace SmartGarage.Data.Repositories
         {
             this.context = context;
         }
-        
+
+        public async Task<ICollection<Visit>> GetAll(VisitsQueryParameters visitsQueryParameters, CancellationToken cancellationToken)
+        {
+            return await context.Visits.Select(visit => visit)
+                .Include(v => v.Vehicle)
+                    .ThenInclude(v => v.Brand)
+                .Include(v => v.Vehicle)
+                    .ThenInclude(v => v.Model)
+                .Include(v => v.RepairActivities)
+                    .ThenInclude(v => v.RepairActivityType)
+                .Include(v => v.User).ToListAsync();
+        }
+
         public async Task<ICollection<Visit>> GetByUserIdAsync(string id, CancellationToken cancellationToken)
         {
             return await this.context.Visits

@@ -113,6 +113,12 @@ namespace SmartGarage.Data.Repositories
         {
             repairActivity.IsDeleted = true;
             await this.context.SaveChangesAsync();
+        }		
+
+        public async Task<RepairActivity> GetById(Guid id)
+        {
+            return await this.context.RepairActivities.FirstOrDefaultAsync(s => s.Id == id)
+                ?? throw new EntityNotFoundException($"Activity not found");
         }
-    }
+	}
 }

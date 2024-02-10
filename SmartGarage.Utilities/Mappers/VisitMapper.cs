@@ -16,12 +16,15 @@ public class VisitMapper : IVisitMapper
     {
         return new VisitViewModel
         {
+            Id = visit.Id,
             DateCreated = visit.Date,
+            UserName = visit.User.UserName,
             VehicleBrand = visit.Vehicle.Brand.Name,
             VehicleModel = visit.Vehicle.Model.Name,
             RepairActivities = visit.RepairActivities
                 .Select(ra => new VisitRepairActivityViewModel
                 {
+                    Id = ra.Id.ToString(),
                     Name = ra.RepairActivityType.Name,
                     Price = ra.Price
                 })
