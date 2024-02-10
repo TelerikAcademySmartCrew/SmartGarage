@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 using static SmartGarage.Common.GeneralApplicationConstants.Admin;
 
@@ -13,10 +14,12 @@ namespace SmartGarage.Areas.Admin.Controllers
     public class HomeController : BaseAdminController
     {
         private readonly IUsersService usersService;
+        private readonly IRepairActivityTypeService repairActivityTypeService;
 
-        public HomeController(IUsersService usersService)
+        public HomeController(IUsersService usersService, IRepairActivityTypeService repairActivityTypeService)
         {
             this.usersService = usersService;
+            this.repairActivityTypeService = repairActivityTypeService;
         }
 
         public IActionResult Index()
@@ -79,6 +82,44 @@ namespace SmartGarage.Areas.Admin.Controllers
             {
                 ModelState.AddModelError("Email", ex.Message);
                 return View();
+            }
+        }
+
+        [HttpGet]
+        public IActionResult CreateActivityType()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateActivityType(RepairActivityTypeViewModel repairActivityViewModel)
+        {
+            try
+            {
+                var repairActivityType = new RepairActivityType
+                {
+                    Id = Guid.NewGuid(),
+                    Name = repairActivityViewModel.Name
+                };
+
+                var newRepairActivityType = await this.repairActivityTypeService.CreateAsync(repairActivityType);
+
+                return View("Index", "Home");
+            }
+            catch (EntityAlreadyExistsException ex)
+            {
+                ModelState.AddModelError("Name", ex.Message);
+                return View(repairActivityViewModel);
+            }
+            catch (DuplicateEntityFoundException ex)
+            {
+                ModelState.AddModelError("Name", ex.Message);
+                return View(repairActivityViewModel);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Name", ex.Message);
+                return View(repairActivityViewModel);
             }
         }
     }

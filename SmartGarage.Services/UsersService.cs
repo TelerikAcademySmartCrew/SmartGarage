@@ -48,6 +48,9 @@ namespace SmartGarage.Services
                 $"Please you the following password: {randomPassword} to login." +
                 $"You will be able to fill out your user profile data upon login";
 
+            // NOTE : toggle comment if you want to send emails
+            await emailService.SendEmailAsync(appUser.Email, subject, body);
+
             var userResult = await userManager.CreateAsync(appUser, randomPassword);
 
             if (!userResult.Succeeded)
@@ -57,9 +60,6 @@ namespace SmartGarage.Services
 
             await userManager.AddToRoleAsync(appUser, "Customer");
             await applicationDbContext.SaveChangesAsync();
-
-            // NOTE : toggle comment if you want to send emails
-            //await emailService.SendEmailAsync(appUser.Email, subject, body);
 
             return userResult;
         }

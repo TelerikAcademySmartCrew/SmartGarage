@@ -42,7 +42,7 @@ namespace SmartGarage.Areas.Employee.Controllers
         [HttpGet]
         public IActionResult RegisterVehicle()
         {
-            var model = BrandsAndModels();
+            var model = GetBrandsAndModels();
 
             InitializeUserName();
 
@@ -55,7 +55,7 @@ namespace SmartGarage.Areas.Employee.Controllers
             if (!this.ModelState.IsValid)
             {
                 ModelState.AddModelError("CustomerEmail", "User not found");
-                var model = BrandsAndModels();
+                var model = GetBrandsAndModels();
                 return View(model);
             }
 
@@ -139,12 +139,12 @@ namespace SmartGarage.Areas.Employee.Controllers
             catch (EntityNotFoundException ex)
             {
                 ModelState.AddModelError("CustomerEmail", "User not found");
-                var model = BrandsAndModels();
+                var model = GetBrandsAndModels();
                 return View(model);
             }
         }
 
-        private RegisterVehicleViewModel BrandsAndModels()
+        private RegisterVehicleViewModel GetBrandsAndModels()
         {
             var brands = this.applicationDbContext.VehicleBrands.Select(b => b).Include(b => b.Models).ToList();
 

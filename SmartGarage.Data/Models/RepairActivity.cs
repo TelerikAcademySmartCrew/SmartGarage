@@ -22,6 +22,6 @@ namespace SmartGarage.Data.Models
 		public Guid VisitId { get; set; }
 
         [ForeignKey(nameof(VisitId))]
-        public Visit Visit { get; set; } = null!;        
+        public Visit Visit { get; set; } = null!;
     }
 }
