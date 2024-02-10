@@ -20,6 +20,6 @@ namespace SmartGarage.Data.Models
 
         public bool IsDeleted { get; set; }
 
-        public string DateCreated { get; set; } = DateTime.Now.ToString("dd/MM/yyyy");
+        public DateTime DateCreated { get; set; } = DateTime.Now;
     }
 }

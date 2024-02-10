@@ -153,9 +153,7 @@ namespace SmartGarage.Areas.Employee.Controllers
                     Visit = visit
                 };
 
-                await this.repairActivityService.AddAsync(new List<RepairActivity>(){
-                    newRepairActivity
-                });
+                await this.repairActivityService.AddAsync(newRepairActivity);
 
                 visit.RepairActivities.Add(newRepairActivity);
 
