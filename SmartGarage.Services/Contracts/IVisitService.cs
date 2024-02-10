@@ -12,5 +12,7 @@ namespace SmartGarage.Services.Contracts
         Task<Visit> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken);
+
+        Task<Visit> UpdateStatusAsync(Visit visit, CancellationToken cancellationToken);
     }
 }

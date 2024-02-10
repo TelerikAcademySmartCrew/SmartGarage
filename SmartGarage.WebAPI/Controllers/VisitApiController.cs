@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -64,6 +65,7 @@ public class VisitApiController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = "EmployeeRequired")]
     public async Task<IActionResult> Create([FromBody] VisitRequestDto visitRequestDto, CancellationToken cancellationToken)
     {
         try
@@ -74,7 +76,8 @@ public class VisitApiController : ControllerBase
             var vehicleList = await this.vehicleService.GetAllAsync(new VehicleQueryParameters { LicensePlate = visitRequestDto.LicensePlateNumber }, cancellationToken);
             var vehicle = vehicleList[0];
 
-            var visit = this.visitMapper.MaterializeRequestDto(visitRequestDto, user, vehicle);
+            var visit = this.visitMapper.MaterializeRequestDto(visitRequestDto, user.Id, vehicle.Id);            
+
             await this.visitService.CreateAsync(visit, cancellationToken);
             
             return Ok(visit);

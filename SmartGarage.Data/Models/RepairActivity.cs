@@ -23,5 +23,7 @@ namespace SmartGarage.Data.Models
 
         [ForeignKey(nameof(VisitId))]
         public Visit Visit { get; set; } = null!;
+
+        public bool IsDeleted { get; set; }
     }
 }

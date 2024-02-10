@@ -1,6 +1,7 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+using SmartGarage.Common.Enumerations;
 
 namespace SmartGarage.Data.Models
 {
@@ -24,6 +25,13 @@ namespace SmartGarage.Data.Models
 		[ForeignKey(nameof(VehicleId))]
         public Vehicle Vehicle { get; set; } = null!;
 
-		public ICollection<RepairActivity> RepairActivities { get; set; } = new List<RepairActivity>();
+		[Required]
+		public Status Status { get; set; } = Status.Pending;
+
+        public int Rating { get; set; }
+		
+        public int DiscountPercentage { get; set; }
+
+        public ICollection<RepairActivity> RepairActivities { get; set; } = new List<RepairActivity>();
 	}
 }

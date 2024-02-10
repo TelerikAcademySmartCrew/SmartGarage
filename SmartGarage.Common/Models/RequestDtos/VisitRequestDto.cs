@@ -10,6 +10,8 @@ namespace SmartGarage.Common.Models.RequestDtos
         [Required] 
         public string LicensePlateNumber { get; set; }
 
+        public int Rating { get; set; } 
+
         public ICollection<RepairActivityRequestDto> RepairActivities { get; set; } = new List<RepairActivityRequestDto>();
     }
 }

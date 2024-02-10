@@ -24,6 +24,7 @@ namespace SmartGarage.Data.Repositories
         public async Task<VehicleBrand> GetByIdAsync(Guid id)
         {
             return await this.context.VehicleBrands
+                .Include(x => x.Models)
                 .FirstOrDefaultAsync(x => x.Id == id)
                 ?? throw new EntityNotFoundException(BrandNotFound);
         }

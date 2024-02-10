@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
@@ -20,6 +21,7 @@ namespace SmartGarage.Data.Repositories
 		{
             var repairActivitiesToReturn = this.context.RepairActivities
                 .Include(ra => ra.RepairActivityType)
+                .Where(x => !x.IsDeleted)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(queryParameters.Name))
@@ -91,7 +93,7 @@ namespace SmartGarage.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice)
+        public async Task<ICollection<RepairActivity>> GetByPriceRangeAsync(int startingPrice, int endingPrice)
         {
             return await this.context.RepairActivities
                 .Where(ra => ra.Price >= startingPrice && ra.Price <= endingPrice)
@@ -99,12 +101,18 @@ namespace SmartGarage.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<RepairActivity>> AddAsync(ICollection<RepairActivity> repairActivities)
+        public async Task<RepairActivity> AddAsync(RepairActivity repairActivity)
         {
-            this.context.RepairActivities.AddRange(repairActivities);
-
+            await this.context.RepairActivities.AddAsync(repairActivity);            
+            // maybe add it to the list in the visit
             await this.context.SaveChangesAsync();
-            return repairActivities;
+            return repairActivity;
+        }
+
+        public async Task DeleteAsync(RepairActivity repairActivity)
+        {
+            repairActivity.IsDeleted = true;
+            await this.context.SaveChangesAsync();
         }		
 
         public async Task<RepairActivity> GetById(Guid id)

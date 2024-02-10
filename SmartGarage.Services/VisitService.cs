@@ -31,7 +31,27 @@ namespace SmartGarage.Services
 
         public async Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken)
         {
+            var userVisits = visit.User.Visits.Count + 1;
+
+            if (userVisits >= 27)
+            {
+                visit.DiscountPercentage = 20;
+            }
+            else if (userVisits >= 18)
+            {
+                visit.DiscountPercentage = 15;
+            }
+            else if (userVisits >= 9)
+            {
+                visit.DiscountPercentage = 10;
+            }
+
             return await this.visitRepository.CreateAsync(visit, cancellationToken);
+        }
+
+        public async Task<Visit> UpdateStatusAsync(Visit visit, CancellationToken cancellationToken)
+        {
+            return await this.visitRepository.UpdateStatusAsync(visit, cancellationToken);
         }
     }
 }

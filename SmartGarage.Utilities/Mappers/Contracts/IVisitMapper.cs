@@ -10,6 +10,6 @@ namespace SmartGarage.Utilities.Mappers.Contracts
 
         VisitViewModel ToViewModel(Visit visit);
 
-        Visit MaterializeRequestDto(VisitRequestDto visit, AppUser user, Vehicle vehicle);
+        Visit MaterializeRequestDto(VisitRequestDto visit, string userId, Guid vehicleId);
     }    
 }
