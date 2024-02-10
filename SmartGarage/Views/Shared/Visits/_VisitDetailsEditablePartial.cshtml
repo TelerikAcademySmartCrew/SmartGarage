@@ -1,0 +1,115 @@
+﻿@model VisitViewModel
+
+@{
+    double totalPrice = Model.RepairActivities.Sum(x => x.Price);
+}
+
+@*
+<a asp-controller="Visits" asp-action="AddRepairActivity" asp-route-visitId="@Model.Id" class="btn btn-primary d-flex flex-column m-auto">
+    ADD ACTIVITY
+</a>
+ *@
+
+<div class="d-flex justify-content-between flex-column bg-light bg-opacity-50 shadow p-3">
+
+    <div class="d-flex flex-column justify-content-start ">
+
+        <div class="d-flex flex-row p-3 justify-content-between">
+            <dv>
+                @Model.UserName
+            </dv>
+            <dv>
+                @Model.VehicleBrand @Model.VehicleModel
+            </dv>
+            <div class="col-2 text-end">
+                @Model.DateCreated.ToShortDateString()
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="d-flex flex-column justify-content-start mt-2" style="overflow-y: hidden;">
+
+            <div class="d-flex flex-column justify-content-start my-auto px-3 py-3 gap-3" style="overflow-y: auto;">
+                @{
+                    int iterator = 1;
+
+                    <!-- Model.RepairActivities -->
+                    for (int i = 0; i < Model.RepairActivities.Count; i++)
+                    {
+                        var item = Model.RepairActivities[i];
+
+                        <div class="d-flex flex-row justify-content-between">
+                            <div class="d-flex gap-4 text-end" style="width:80%">
+                                <p style="min-width:20px;">@iterator.</p>
+                                <a class="btn btn-primary" asp-area="Employee" asp-controller="Visits" asp-action="DeleteRepairActivity"
+                                   asp-route-visitId="@Model.Id" asp-route-visitRepairActivityId="@item.Id">
+                                    X
+                                </a>
+                                <p style="min-width:20px;">@item.Name.</p>
+                            </div>
+                            <div class="d-flex row me-2">
+                                <input id="price-field" class="d-flex form-control" value="@item.Price" style="width:100px;" />
+                                <p style="width:20px;"> лв.</p>
+                            </div>
+                        </div>
+
+                        // Dropdown
+                        // <div class="d-flex flex-row justify-content-between">
+                        //     <div class="d-flex gap-4 text-end" style="width:80%">
+                        //         <p style="min-width:20px;">@iterator.</p>
+                        //         <select id="dropdown-options" class="d-flex flex-fill btn btn-secondary dropdown-toggle my-1 m-auto" style="width:80%;">
+                        //             <option value="VIN" class="m-4">VIN</option>
+                        //             <option value="LicensePlateNumber" class="m-4">LICENSE PLATE</option>
+                        //         </select>
+                        //     </div>
+                        //     <input class="d-flex form-control" value="@item.Price лв." style="width:100px;" />
+                        // </div>
+                        iterator++;
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column justify-content-between px-3">
+        <hr />
+        <div class="row">
+            <div class="d-flex col gap-4 text-end">
+                <p>Total Price</p>
+            </div>
+            <p id="total-price" class="col text-end mx-5">@totalPrice лв.</p>
+        </div>
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<<script>
+     $(document).ready(function () {
+         // Set initial total price
+         calTotalPrice();
+
+         // Add event listener to input fields
+         $('[id^="price-field"]').on('input', function () {
+             // Recalculate total price when input changes
+             calTotalPrice();
+         });
+     });
+
+     var calTotalPrice = function () {
+         var totalPrice = 0;
+
+         // Loop through all input fields with IDs starting with 'price-field-'
+         $('[id^="price-field"]').each(function () {
+             // Extract the numeric value from the input field
+             var fieldValue = parseFloat($(this).val()) || 0;
+
+             // Add the numeric value to the total price
+             totalPrice += fieldValue;
+         });
+
+         // Update the #total-price element
+         $('#total-price').text(totalPrice.toFixed(2) + ' лв.'); // Format to two decimal places
+     }
+</script>

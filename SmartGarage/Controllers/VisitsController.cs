@@ -29,38 +29,45 @@ namespace SmartGarage.Controllers
         [HttpGet]
         public async Task<IActionResult> DisplayAll()
         {
-            UserViewModel model = new UserViewModel();
-
-            var user = await usersService.GetUserAsync(User);
-
-            model.UserName = user.UserName;
-            model.FirstName = user.FirstName;
-            model.LastName = user.LastName;
-            model.PhoneNumber = user.PhoneNumber;
-
-            model.Vehicles = user.Vehicles.Select(vehicle => new VehicleViewModel
+            try
             {
-                Brand = vehicle.Brand.Name,
-                Model = vehicle.Model.Name,
-                CreationYear = vehicle.ProductionYear,
-                VIN = vehicle.VIN,
-                LicensePlate = vehicle.LicensePlateNumber,
-            }).ToList();
+                UserViewModel model = new UserViewModel();
 
-            model.Visits = user.Visits.Select(visit => new VisitViewModel
-            {
-                Id = visit.Id,
-                DateCreated = visit.Date,
-                VehicleBrand = visit.Vehicle.Brand.Name,
-                VehicleModel = visit.Vehicle.Model.Name,
-                RepairActivities = visit.RepairActivities.Select(a => new VisitRepairActivityViewModel
+                var user = await usersService.GetUserAsync(User);
+
+                model.UserName = user.UserName;
+                model.FirstName = user.FirstName;
+                model.LastName = user.LastName;
+                model.PhoneNumber = user.PhoneNumber;
+
+                model.Vehicles = user.Vehicles.Select(vehicle => new VehicleViewModel
                 {
-                    Name = a.RepairActivityType.Name,
-                    Price = a.Price,
-                }).ToList(),
-            }).ToList();
+                    Brand = vehicle.Brand.Name,
+                    Model = vehicle.Model.Name,
+                    CreationYear = vehicle.ProductionYear,
+                    VIN = vehicle.VIN,
+                    LicensePlate = vehicle.LicensePlateNumber,
+                }).ToList();
 
-            return View(model);
+                model.Visits = user.Visits.Select(visit => new VisitViewModel
+                {
+                    Id = visit.Id,
+                    DateCreated = visit.Date,
+                    VehicleBrand = visit.Vehicle.Brand.Name,
+                    VehicleModel = visit.Vehicle.Model.Name,
+                    RepairActivities = visit.RepairActivities.Select(a => new VisitRepairActivityViewModel
+                    {
+                        Name = a.RepairActivityType.Name,
+                        Price = a.Price,
+                    }).ToList(),
+                }).ToList();
+
+                return View(model);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return RedirectToAction("Login", "Auth");
+            }
         }
 
         [HttpGet]

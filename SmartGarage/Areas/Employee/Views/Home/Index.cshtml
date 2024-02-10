@@ -16,25 +16,28 @@
             <!-- Your content goes here -->
             <div class="d-flex gap-3 row flex-fill">
                 <a asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class="employee-menu-element col">
-                    REGISTER USER
+                    REGISTER CUSTOMER
                 </a>
                 <a asp-area="Employee" asp-controller="Vehicles" asp-action="RegisterVehicle" class="employee-menu-element col">
                     REGISTER VEHICLE
                 </a>
             </div>
             <div class="d-flex gap-3 row flex-fill">
-                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="employee-menu-element col">
-                    DISPLAY ALL VISITS
-                </a>
                 <a asp-area="Employee" asp-controller="Customers" asp-action="ManageCustomers" class="employee-menu-element col">
-                    DISPLAY ALL CUSTOMERS
+                    MANAGE CUSTOMERS
                 </a>
                 <a asp-area="Employee" asp-controller="Vehicles" asp-action="ManageVehicles" class="employee-menu-element col">
-                    DISPLAY ALL VEHICLES
+                    MANAGE VEHICLES
+                </a>
+                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="employee-menu-element col">
+                    MANAGE VISITS
                 </a>
             </div>
             <div class="d-flex gap-3 row flex-fill">
-                <a asp-area="Employee" asp-controller="Visits" asp-action="ShowActiveVisits" class="employee-menu-element col">
+                <a asp-area="Employee" asp-controller="Visits" asp-action="CreateVisit" class="employee-menu-element col-2 flex-fill">
+                    CREATE VISIT
+                </a>
+                <a asp-area="Employee" asp-controller="Visits" asp-action="ShowActiveVisits" class="employee-menu-element col-4 flex-fill">
                     DISPLAY ACTIVE VISITS
                 </a>
             </div>
