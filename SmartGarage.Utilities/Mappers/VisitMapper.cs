@@ -30,12 +30,13 @@ public class VisitMapper : IVisitMapper
         };
     }
 
-    public Visit MaterializeRequestDto(VisitRequestDto visit, AppUser user, Vehicle vehicle)
+    public Visit MaterializeRequestDto(VisitRequestDto visit, string userId, Guid vehicleId)
     {
         return new Visit
         {
-            UserId = user.Id,
-            VehicleId = vehicle.Id,
+            UserId = userId,
+            VehicleId = vehicleId,
+            Rating = visit.Rating,
             RepairActivities = visit.RepairActivities
                 .Select(x => new RepairActivity
                 {

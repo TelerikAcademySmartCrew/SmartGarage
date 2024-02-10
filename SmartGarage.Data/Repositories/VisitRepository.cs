@@ -1,8 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
+using SmartGarage.Common.Enumerations;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Visit;
+using static SmartGarage.Common.Exceptions.ExceptionMessages.Status;
 
 namespace SmartGarage.Data.Repositories
 {
@@ -54,6 +57,18 @@ namespace SmartGarage.Data.Repositories
 
             await this.context.RepairActivities.AddRangeAsync(visit.RepairActivities);
             await this.context.SaveChangesAsync(cancellationToken);
+            return visit;
+        }
+
+        public async Task<Visit> UpdateStatusAsync(Visit visit, CancellationToken cancellationToken)
+        {
+            if (visit.Status == Status.Paid)
+            {
+                throw new InvalidOperationException(CannotUpdateStatus);
+            }
+
+            visit.Status++;
+            await this.context.SaveChangesAsync();
             return visit;
         }
     }

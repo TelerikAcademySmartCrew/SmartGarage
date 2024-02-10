@@ -23,14 +23,19 @@ namespace SmartGarage.Services
 			return await this.repairActivityRepository.GetByNameAsync(name);
 		}
 
-		public async Task<ICollection<RepairActivity>> AddAsync(ICollection<RepairActivity> repairActivities)
+		public async Task<RepairActivity> AddAsync(RepairActivity repairActivity)
 		{
-			return await this.repairActivityRepository.AddAsync(repairActivities);
+			return await this.repairActivityRepository.AddAsync(repairActivity);
 		}
 
 		public async Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice)
 		{
-			return await this.repairActivityRepository.GetByPriceRange(startingPrice, endingPrice);
+			return await this.repairActivityRepository.GetByPriceRangeAsync(startingPrice, endingPrice);
 		}
-	}
+
+        public async Task DeleteAsync(RepairActivity repairActivity)
+        {
+            await this.repairActivityRepository.DeleteAsync(repairActivity);
+        }
+    }
 }

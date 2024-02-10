@@ -34,5 +34,15 @@
             public const string ModelNotFound = "Model not found!";
             public const string ModelAlreadyExists = "Model already exists!";
         }
+
+        public static class Status
+        {
+            public const string CannotUpdateStatus = "Status cannot be updated any further!";
+        }
+
+        public static class Enquiry
+        {
+            public const string EnquiryNotFound = "Enquiry not found!";
+        }
     }
 }
