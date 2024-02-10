@@ -16,7 +16,6 @@ namespace SmartGarage.Data.Repositories
             this.applicationDbContext = applicationDbContext;
         }
 
-
         public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, AppUser currentUser, CancellationToken cancellationToken)
         {
             applicationDbContext.Vehicles.Add(vehicle);
@@ -48,6 +47,27 @@ namespace SmartGarage.Data.Repositories
                 .Include(v => v.User)
                 .Where(v => !v.IsDeleted)
                 .FirstOrDefaultAsync(v => v.Id == vehicleId, cancellationToken)
+                ?? throw new EntityNotFoundException(VehicleNotFoundMessage);
+        }
+
+        public async Task<Vehicle> GetVehicleByLicensePlateAsync(string licensePlate, CancellationToken cancellationToken)
+        {
+            return await applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .Include(v => v.User)
+                .Where(v => !v.IsDeleted)
+                .FirstOrDefaultAsync(v => v.LicensePlateNumber == licensePlate, cancellationToken)
+                ?? throw new EntityNotFoundException(VehicleNotFoundMessage);
+        }
+        public async Task<Vehicle> GetVehicleByVinAsync(string vin, CancellationToken cancellationToken)
+        {
+            return await applicationDbContext.Vehicles
+                .Include(v => v.Brand)
+                .Include(v => v.Model)
+                .Include(v => v.User)
+                .Where(v => !v.IsDeleted)
+                .FirstOrDefaultAsync(v => v.VIN == vin, cancellationToken)
                 ?? throw new EntityNotFoundException(VehicleNotFoundMessage);
         }
 

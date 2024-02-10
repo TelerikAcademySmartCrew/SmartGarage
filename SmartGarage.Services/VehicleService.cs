@@ -19,6 +19,11 @@ public class VehicleService : IVehicleService
         this.userManager = userManager;
     }
 
+    public async Task<Vehicle> GetVehicleByVinAsync(string vin, CancellationToken cancellationToken)
+    {
+        return await vehicleRepository.GetVehicleByVinAsync(vin, cancellationToken);
+    }
+
     public async Task<Vehicle> CreateVehicleAsync(Vehicle vehicle, string email, CancellationToken cancellationToken)
     {
         var user = await this.userManager.FindByEmailAsync(email)
@@ -35,6 +40,11 @@ public class VehicleService : IVehicleService
     public async Task<Vehicle> GetVehicleByIdAsync(Guid vehicleId, CancellationToken cancellationToken)
     {
         return await vehicleRepository.GetVehicleByIdAsync(vehicleId, cancellationToken);
+    }
+
+    public async Task<Vehicle> GetVehicleByLicensePlateAsync(string licensePlate, CancellationToken cancellationToken)
+    {
+        return await vehicleRepository.GetVehicleByLicensePlateAsync(licensePlate, cancellationToken);
     }
 
     public async Task<IList<Vehicle>> GetVehiclesByUserAsync(string userId, VehicleQueryParameters vehicleQueryParameters, CancellationToken cancellationToken)
