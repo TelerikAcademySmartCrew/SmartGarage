@@ -15,5 +15,6 @@ namespace SmartGarage.Data.Repositories.Contracts
 
 		Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice);
 
-	}
+        Task<RepairActivity> GetById(Guid id);
+    }
 }

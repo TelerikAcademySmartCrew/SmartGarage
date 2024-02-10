@@ -1,4 +1,5 @@
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 
@@ -13,6 +14,11 @@ namespace SmartGarage.Services
             this.visitRepository = visitRepository;
         }
         
+        public async Task<ICollection<Visit>> GetAll(VisitsQueryParameters visitsQueryParameters, CancellationToken cancellationToken)
+        {
+            return await visitRepository.GetAll(visitsQueryParameters, cancellationToken);
+        }
+
         public async Task<ICollection<Visit>> GetByUserIdAsync(string id, CancellationToken cancellationToken)
         {
             return await this.visitRepository.GetByUserIdAsync(id, cancellationToken);

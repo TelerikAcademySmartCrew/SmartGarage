@@ -1,0 +1,72 @@
+﻿@model VisitCreateViewModel
+
+@{
+    var userName = ViewData["CurrentUser"];
+}
+
+<!-- employee index page -->
+<div class="d-flex flex-column align-items-center" style="height:100%;">
+
+    <!-- employee nav bar -->
+    <partial name="_EmployeeNavBarPartial" model="@userName" area-name="" />
+
+    @* <div class="container flex-shrink-1 justify-content-center align-content-center m-auto gap-5 p-0 bg-light rounded-3" style="width:50%; max-height:50%;"> *@
+    <div class="ntainer flex-shrink-1 justify-content-center align-content-center m-auto bg-light rounded-3" style="width:50%;">
+
+        <div class="d-flex flex-row mt-2 align-content-center  align-items-center flex-row bg-light rounded-3">
+            <h5 class="p-4 text-muted">
+                CREATE VISIT
+            </h5>
+        </div>
+        <form asp-area="Employee" asp-controller="Visits" asp-action="CreateVisit" class="d-flex flex-column gap-3 p-5" method="post" style="width:100%;">
+            <label>PLEASE ENTER VIN OR LICENSE PLATE NUMBER</label>
+            <div class="row gap-4">
+                <div class="col">
+                    <input id="input-vin" name="VIN" asp-for="@Model.VIN" class="col log-in-form-control" type="text" placeholder="VIN" aria-label="VIN">
+                    <input id="input-license" name="LicensePlateNumber" asp-for="@Model.LicensePlateNumber" class="col log-in-form-control" type="text" placeholder="LPN" aria-label="License plate number">
+                </div>
+                <select id="dropdown-options" class="col-3 btn btn-secondary dropdown-toggle my-1">
+                    <option value="VIN" class="m-4">VIN</option>
+                    <option value="LicensePlateNumber" class="m-4">LICENSE PLATE</option>
+                </select>
+            </div>
+            @* <span asp-validation-for="@Model.VIN"></span> *@
+            @* <span asp-validation-for="@Model.VIN" asp-validation-for="@Model.LicensePlateNumber" class="text-danger"></span> *@
+            @* <span asp-validation-for="@Model.VIN" class="form-error" style="color: #7B0828; height:24px;"></span> *@
+            @* <div asp-validation-summary="All" class="text-danger"></div> *@
+
+            <div class="d-flex justify-content-start gap-3 mt-4">
+                <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-secondary ">Cancel</a>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    var inputVIN = $("#input-vin");
+    var inputLicense = $("#input-license");
+    var dropdownOptions = $("#dropdown-options");
+
+    // Add an event listener to the dropdown
+    dropdownOptions.on("change", function () {
+        // Clear both input fields
+        inputVIN.val("");
+        inputLicense.val("");
+
+        // Show or hide inputs based on selected option
+        if (dropdownOptions.val() === "VIN") {
+            inputVIN.removeAttr("hidden").attr("required", "required");
+            inputLicense.attr("hidden", "true").removeAttr("required");
+        } else if (dropdownOptions.val() === "LicensePlateNumber") {
+            inputVIN.attr("hidden", "true").removeAttr("required");
+            inputLicense.removeAttr("hidden").attr("required", "required");
+        }
+    });
+
+    // Set the dropdown value to "VIN" using jQuery
+    dropdownOptions.val("VIN").change();
+</script>
+

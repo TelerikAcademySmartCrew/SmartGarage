@@ -2,7 +2,10 @@
 //using System.Net.Mail;
 
 using MailKit.Security;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.Extensions.Configuration;
 using MimeKit;
+using Org.BouncyCastle.Utilities.Net;
 using SmartGarage.Utilities.Models;
 using System.Net;
 using System.Net.Mail;
@@ -63,58 +66,139 @@ namespace SmartGarage.Utilities
             //    }
             //}
 
+                string to = "vencious.games@gmail.com";
+                string from = "venci1983@gmail.com";
+                MailMessage message = new MailMessage(from, to);
+                message.Subject = "Using the new SMTP client.";
+                message.Body = @"Using this new feature, you can send an email message from an application very easily.";
+                SmtpClient client = new SmtpClient("smtp.gmail.com");
+                // Credentials are necessary if the server requires the client
+                // to authenticate before it will send email on the client's behalf.
+                client.EnableSsl = true;
+                //client.UseDefaultCredentials = false;
+                client.Credentials = new NetworkCredential(emailConfig.Username, emailConfig.Password);
+
+                try
+                {
+                    client.SendCompleted += Client_SendCompleted;
+                
+                    client.SendAsync(message, null);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
+                        ex.ToString());
+                }
+
             // ==================================================
 
             //var email = GenerateEmailMessage(new Message(toEmail, subject, body));
             //SmtpClient client = new SmtpClient();
             ////client.Host = emailConfig.From;
-            //client.UseDefaultCredentials = false;
+            ////client.UseDefaultCredentials = false;
             //client.Host = emailConfig.SmtpServer;
             //client.Credentials = new NetworkCredential(emailConfig.Username, emailConfig.Password);
             //client.Port = emailConfig.Port;
-            //await client.SendMailAsync(email);
+            //client.EnableSsl = true;
+            //await client.SendMailAsync(new MailMessage(emailConfig.Username, toEmail));
 
             // ==================================================
 
-            var email = GenerateEmail(new Message(toEmail, subject, body));
+            //// Create a MailMessage object
+            //using (MailMessage mail = new MailMessage(emailConfig.Username, toEmail))
+            //{
+            //    try
+            //    {
+            //        mail.Subject = "Test Email";
+            //        mail.IsBodyHtml = true;
+            //        // Create a SmtpClient object
+            //        SmtpClient smtpClient = new SmtpClient();
+            //        smtpClient.Host = emailConfig.SmtpServer;
+            //        smtpClient.UseDefaultCredentials = false;
+            //        smtpClient.Port = emailConfig.Port; // Port number for SMTP (587 for TLS/STARTTLS)
+            //        smtpClient.Credentials = new NetworkCredential(emailConfig.Username, emailConfig.Password);
+            //        smtpClient.EnableSsl = true; // Enable SSL/TLS encryption
 
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
-            var client = new MailKit.Net.Smtp.SmtpClient();
-            //client.CheckCertificateRevocation = false;
-            //client.AuthenticationMechanisms.Remove("XOAUTH2");
-            await client.ConnectAsync(emailConfig.SmtpServer, emailConfig.Port, SecureSocketOptions.StartTls);
-            await client.AuthenticateAsync(emailConfig.Username, emailConfig.Password);
+            //        // Send the email
+            //        smtpClient.Send(mail);
+            //        Console.WriteLine("Email sent successfully.");
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        Console.WriteLine($"Failed to send email: {ex.Message}");
+            //    }
+            //}
 
-            await client.SendAsync(email);
-            await client.DisconnectAsync(true);
+            // ==================================================
+
+            //var email = GenerateEmail(new Message(toEmail, subject, body));
+
+            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13;
+            //var client = new MailKit.Net.Smtp.SmtpClient();
+            ////client.CheckCertificateRevocation = false;
+            ////client.AuthenticationMechanisms.Remove("XOAUTH2");
+            //await client.ConnectAsync(emailConfig.SmtpServer, emailConfig.Port, SecureSocketOptions.StartTls);
+            //await client.AuthenticateAsync(emailConfig.Username, emailConfig.Password);
+
+            //await client.SendAsync(email);
+            //await client.DisconnectAsync(true);
         }
 
-        private MailMessage GenerateEmailMessage(Message message)
+        private void Client_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
-            var emailMessage = new MailMessage();
-
-            emailMessage.From = new MailAddress(emailConfig.From, "mail");
-            emailMessage.To.Add(new MailAddress("vencious.games@gmail.com", "mail"));
-            emailMessage.Subject = message.Subject;
-            emailMessage.Body = message.Body;
-            emailMessage.IsBodyHtml = false;
-
-            return emailMessage;
+            
         }
 
-        private MimeMessage GenerateEmail(Message message)
+        public void SendEmail(string toAddress, string subject, string body)
         {
-            var emailMessage = new MimeMessage();
-            emailMessage.From.Add(MailboxAddress.Parse(emailConfig.From));
-            emailMessage.To.Add(MailboxAddress.Parse(message.To.Address));
-            emailMessage.Subject = message.Subject;
-            emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text)
+            // Create an instance of the SmtpClient class
+            using (SmtpClient smtpClient = new SmtpClient())
             {
-                Text = message.Body
-            };
+                // Use the settings from web.config
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = new NetworkCredential("venci1983@gmail.com", "kqhx fhbc lowr fljc");
+                smtpClient.Host = "smtp.gmail.com";
+                smtpClient.Port = 587;
+                smtpClient.EnableSsl = true;
 
-            return emailMessage;
+                // Create a MailMessage object
+                MailMessage mailMessage = new MailMessage();
+                mailMessage.From = new MailAddress("venci1983@gmail.com");
+                mailMessage.To.Add(toAddress);
+                mailMessage.Subject = subject;
+                mailMessage.Body = body;
+
+                // Send the email
+                smtpClient.Send(mailMessage);
+            }
         }
+
+        //private MailMessage GenerateEmailMessage(Message message)
+        //{
+        //    var emailMessage = new MailMessage();
+
+        //    emailMessage.From = new MailAddress(emailConfig.From, "mail");
+        //    emailMessage.To.Add(new MailAddress("vencious.games@gmail.com", "mail"));
+        //    emailMessage.Subject = message.Subject;
+        //    emailMessage.Body = message.Body;
+        //    emailMessage.IsBodyHtml = false;
+
+        //    return emailMessage;
+        //}
+
+        //private MimeMessage GenerateEmail(Message message)
+        //{
+        //    var emailMessage = new MimeMessage();
+        //    emailMessage.From.Add(MailboxAddress.Parse(emailConfig.From));
+        //    emailMessage.To.Add(MailboxAddress.Parse(message.To.Address));
+        //    emailMessage.Subject = message.Subject;
+        //    emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Text)
+        //    {
+        //        Text = message.Body
+        //    };
+
+        //    return emailMessage;
+        //}
 
         //public static async Task SendEmailAsync(string toEmail, string subject, string body)
         //{

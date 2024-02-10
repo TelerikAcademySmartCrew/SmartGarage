@@ -43,14 +43,22 @@ namespace SmartGarage
             builder.Services.AddScoped<IBrandService, BrandService>();
             builder.Services.AddScoped<IModelRepository, ModelRepository>();
             builder.Services.AddScoped<IModelService, ModelService>();
+            builder.Services.AddScoped<IVisitService, VisitService>();
+            builder.Services.AddScoped<IVisitRepository, VisitRepository>();
+            builder.Services.AddScoped<IVisitMapper, VisitMapper>();
+            builder.Services.AddScoped<IRepairActivityService, RepairActivityService>();
+            builder.Services.AddScoped<IRepairActivityRepository, RepairActivityRepository>();
+            builder.Services.AddScoped<IRepairActivityTypeService, RepairActivityTypeService>();
+            builder.Services.AddScoped<IRepairActivityTypeRepository, RepairActivityTypeRepository>();
 
             // Configure Emails
             var emailConfig = builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>();
             builder.Services.AddSingleton(emailConfig);
             builder.Services.AddScoped<EmailService>();
 
-            // Configure DinkToPDF Generator
             builder.Services.AddScoped<IUsersService, UsersService>();
+
+            // Configure DinkToPDF Generator
             builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             
             var app = builder.Build();

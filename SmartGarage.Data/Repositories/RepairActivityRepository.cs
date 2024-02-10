@@ -106,5 +106,11 @@ namespace SmartGarage.Data.Repositories
             await this.context.SaveChangesAsync();
             return repairActivities;
         }		
+
+        public async Task<RepairActivity> GetById(Guid id)
+        {
+            return await this.context.RepairActivities.FirstOrDefaultAsync(s => s.Id == id)
+                ?? throw new EntityNotFoundException($"Activity not found");
+        }
 	}
 }

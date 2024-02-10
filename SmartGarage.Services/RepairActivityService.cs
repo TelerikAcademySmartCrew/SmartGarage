@@ -32,5 +32,10 @@ namespace SmartGarage.Services
 		{
 			return await this.repairActivityRepository.GetByPriceRange(startingPrice, endingPrice);
 		}
-	}
+
+        public async Task<RepairActivity> GetById(Guid id)
+        {
+            return await this.repairActivityRepository.GetById(id);
+        }
+    }
 }
