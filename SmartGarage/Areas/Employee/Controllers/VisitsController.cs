@@ -68,7 +68,8 @@ namespace SmartGarage.Areas.Employee.Controllers
 
                 var createdVisit = await visitService.CreateAsync(newVisit, cancellationToken);
 
-                return View("DisplayVisitDetails", new { id = createdVisit.Id });
+                //return View("DisplayVisitDetails", new { id = createdVisit.Id });
+                return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = newVisit.Id });
             }
             catch (EntityNotFoundException ex)
             {
@@ -129,25 +130,32 @@ namespace SmartGarage.Areas.Employee.Controllers
 
         [HttpGet]
         public async Task<IActionResult> AddRepairActivity(string visitId,
-            string visitRepairActivityType,
+            string repairActivityTypeId,
             CancellationToken cancellationToken)
         {
             try
             {
-                Guid id = Guid.Parse(visitId);
-                var visit = await this.visitService.GetByIdAsync(id, cancellationToken);
+                Guid _visitId = Guid.Parse(visitId);
+                Guid _repairActivityTypeId = Guid.Parse(repairActivityTypeId);
+                var visit = await this.visitService.GetByIdAsync(_visitId, cancellationToken);
+
+                if (visit.RepairActivities.Any(activity => activity.RepairActivityTypeId == _repairActivityTypeId))
+                {
+                    ModelState.AddModelError("Any", "Repair activity type already added.");
+
+                    return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                }
 
                 // TODO : check if there's already activity of type added
 
                 var allRepairActivityTypes = await this.repairActivityTypeService.GetAllAsync();
-                Guid repairActivityTypeId = Guid.Parse(visitRepairActivityType);
-                var repairActivityType = allRepairActivityTypes.FirstOrDefault(a => a.Id == repairActivityTypeId)
+                var repairActivityType = allRepairActivityTypes.FirstOrDefault(a => a.Id == _repairActivityTypeId)
                     ?? throw new EntityNotFoundException("Repair activity type not found");
 
                 var newRepairActivity = new RepairActivity
                 {
                     Id = Guid.NewGuid(),
-                    RepairActivityTypeId = repairActivityTypeId,
+                    RepairActivityTypeId = _repairActivityTypeId,
                     RepairActivityType = repairActivityType,
                     VisitId = visit.Id,
                     Visit = visit
