@@ -21,24 +21,26 @@
         <div class="d-flex flex-row gap-3" style="width:100%; height:50%;">
 
             <!-- Your content goes here -->
-            <div class="d-flex gap-3 row text-center flex-fill m-2">
-                <a asp-controller="Home" asp-action="RegisterEmployee" class="bg-light eployee-menu-element col pt-4" style="text-decoration:none">
+            <div class="d-flex col gap-3 row text-center flex-fill m-2">
+                <a asp-controller="Home" asp-action="ViewAllEmployees" class="bg-light eployee-menu-element col pt-4" style="text-decoration:none">
+                    <p>
+                        EMPLOYEES
+                    </p>
+                </a>
+            </div>
+            @* 
+            <div class="d-flex col gap-3 row text-center flex-fill m-2">
+                <a asp-controller="Home" asp-action="RegisterEmployee" class="bg-light eployee-menu-element  pt-4" style="text-decoration:none">
                     <p>
                         Register Employee
                     </p>
                 </a>
             </div>
-            <div class="d-flex gap-3 row text-center flex-fill m-2">
+ *@
+            <div class="d-flex col gap-3 row text-center flex-fill m-2">
                 <a asp-controller="Home" asp-action="CreateActivityType" class="bg-light eployee-menu-element col pt-4" style="text-decoration:none">
                     <p>
-                        Create activity type
-                    </p>
-                </a>
-            </div>
-            <div class="d-flex gap-3 row text-center flex-fill m-2">
-                <a asp-controller="Home" asp-action="ViewAllEmployees" class="bg-light eployee-menu-element col pt-4" style="text-decoration:none">
-                    <p>
-                        Manage Employees
+                        GARAGE REPAIR ACTIVITIES
                     </p>
                 </a>
             </div>

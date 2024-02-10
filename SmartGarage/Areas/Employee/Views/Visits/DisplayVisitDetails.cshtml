@@ -55,7 +55,7 @@
             console.log('activity add buttonc click');
             var selectedValue = $('#dropdown-options').val();
             var visitId = '@Model.Id';
-            window.location.href = '/Employee/Visits/AddRepairActivity?visitId=' + visitId + '&visitRepairActivityType=' + selectedValue;
+            window.location.href = '/Employee/Visits/AddRepairActivity?visitId=' + visitId + '&repairActivityTypeId=' + selectedValue;
         });
     });
 </script>

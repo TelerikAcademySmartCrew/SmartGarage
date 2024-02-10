@@ -46,6 +46,7 @@ namespace SmartGarage
             builder.Services.AddScoped<IVisitService, VisitService>();
             builder.Services.AddScoped<IVisitRepository, VisitRepository>();
             builder.Services.AddScoped<IVisitMapper, VisitMapper>();
+            builder.Services.AddScoped<IUserMapper, UserMapper>();
             builder.Services.AddScoped<IRepairActivityService, RepairActivityService>();
             builder.Services.AddScoped<IRepairActivityRepository, RepairActivityRepository>();
             builder.Services.AddScoped<IRepairActivityTypeService, RepairActivityTypeService>();

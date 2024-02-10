@@ -34,6 +34,11 @@ namespace SmartGarage.Services
             this.configuration = configuration;
         }
 
+        public async Task<IdentityResult> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IdentityResult> CreateUser(AppUser appUser)
         {
             // TODO : use the pass generator when ready

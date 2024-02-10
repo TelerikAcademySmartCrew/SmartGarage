@@ -1,20 +1,98 @@
-﻿@* @model UserViewModel *@
+﻿@model List<UserViewModel>
 
 @{
     ViewData["Title"] = "Home Page";
-    var UserViewModel = "Admin";
+    var adminName = "Admin";
 }
 
 <!-- admin nav bar -->
-<partial name="_AdminNavBarPartial" model="@UserViewModel" />
+<partial name="_AdminNavBarPartial" model="@adminName" />
 
-<div class="d-flex flex-column justify-content-start" style="width:100%; height:40%;">
+<div class="d-flex flex-column justify-content-start" style="width:100%; height:calc(100% - 120px);">
 
-    <div class="p-2 bg-light text-center">
-        <h2 class="display-4">Hello, Admin!</h2>
-        <p class="lead mt-1">
-            You can also see <b>all users and services</b> and <b>all employees</b> in the
-            system.
-        </p>
+    <div class="d-flex flex-column justify-items-between justify-content-end flex-fill bg-light py-2">
+
+        <div class="d-flex container justify-content-between">
+            <p class="lead my-2">
+                MANAGE <b>EMPLOYEES</b>
+            </p>
+
+            <a id="newButton" class="d-flex btn btn-primary align-items-center me-2">
+                <b>NEW</b>
+            </a>
+
+        </div>
     </div>
+
+    <div id="registerEmployeeForm" class="flex-column justify-content-start fade-in my-2" style="margin-top:100px;">
+        <form asp-area="Admin" asp-controller="Home" asp-action="RegisterEmployee" method="post" style="width:30%;" class="d-flex flex-column m-auto justify-content-center">
+            <span class="form-error" style="color: #7B0828"></span>
+            <input class="log-in-form-control" type="email" placeholder="Email" aria-label="Email">
+            <a href="#" class="d-flex text-secondary align-content-start m-auto" style="text-decoration:none; width:100%;">
+                You will receive an email with further instructions !
+            </a>
+            <div class="d-flex flex-row justify-content-end gap-3 mt-4">
+                <a id="backButton" type="button" class="btn my-1 primary-button text-black btn-outline-light bg-secondary opacity-50 flex-shrink-1"
+                   style="width: 8.0rem;">
+                    Cancel
+                </a>
+                <button type="submit" class="btn my-1 primary-button text-black btn-outline-light opacity-75 flex-grow-1">
+                    Register
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="gap-2 bg-secondary bg-opacity-10 text-center" style="height:100%;">
+
+        <div class="container" style="width:100%; height:100%;">
+            @{
+                foreach (var employee in Model)
+                {
+                    <div class="d-flex justify-content-between align-items-center rounded-3 flex-row bg-light my-2 p-4">
+                        <div>
+                            @employee.UserName
+                        </div>
+                        <div>
+                            @employee.FirstName
+                        </div>
+                        <div>
+                            @employee.LastName
+                        </div>
+                        <div>
+                            @employee.PhoneNumber
+                        </div>
+                        <button class="btn btn-danger">
+                            X
+                        </button>
+                    </div>
+                }
+            }
+        </div>
+
+    </div>
+
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Add d-none class to hide the form initially
+        $("#registerEmployeeForm").addClass("d-none");
+
+        // Show RegisterEmployee form with animation and hide NEW button
+        $("#newButton").click(function () {
+            console.log("NEW button clicked");
+            $("#registerEmployeeForm").removeClass("d-none").addClass("show");
+            $("#newButton").addClass("d-none");
+        });
+
+        // Hide RegisterEmployee form with animation and show NEW button
+        $("#backButton").click(function () {
+            console.log("<<< button clicked");
+            $("#registerEmployeeForm").removeClass("show").addClass("d-none");
+            $("#newButton").removeClass("d-none");
+        });
+    });
+</script>

@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
+using SmartGarage.Data;
 using SmartGarage.Data.Models;
-using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities.Mappers;
+using SmartGarage.Utilities.Mappers.Contracts;
 using static SmartGarage.Common.GeneralApplicationConstants.Admin;
 
 namespace SmartGarage.Areas.Admin.Controllers
@@ -15,11 +18,18 @@ namespace SmartGarage.Areas.Admin.Controllers
     {
         private readonly IUsersService usersService;
         private readonly IRepairActivityTypeService repairActivityTypeService;
+        private readonly UserManager<AppUser> userManager;
+        private readonly IUserMapper userMapper;
 
-        public HomeController(IUsersService usersService, IRepairActivityTypeService repairActivityTypeService)
+        public HomeController(IUsersService usersService,
+            IRepairActivityTypeService repairActivityTypeService,
+            UserManager<AppUser> userManager,
+            IUserMapper userMapper)
         {
             this.usersService = usersService;
             this.repairActivityTypeService = repairActivityTypeService;
+            this.userManager = userManager;
+            this.userMapper = userMapper;
         }
 
         public IActionResult Index()
@@ -27,9 +37,20 @@ namespace SmartGarage.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult ViewAllEmployees()
+        public async Task<IActionResult> ViewAllEmployees()
         {
-            return View();
+            try
+            {
+                var employees = await userManager.GetUsersInRoleAsync("Employee");
+
+                var employeesVM = userMapper.Map(employees);
+
+                return View(employeesVM);
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
         }
 
         [HttpGet]
