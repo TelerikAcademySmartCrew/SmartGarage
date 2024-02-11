@@ -1,0 +1,30 @@
+﻿@model VehicleViewModel
+
+@{
+
+}
+
+<div class="d-flex flex-column flex-fill bg-light bg-opacity-50 shadow m-auto p-3">
+
+    <div class="d-flex flex-column mx-2 justify-content-between">
+
+        <div class="d-flex justify-content-between">
+            <dv class="d-flex">
+                @Model.Brand @Model.Model
+            </dv>
+            <div class="d-flex">
+                @Model.VIN : VIN
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <div class="d-flex">
+                @Model.Username
+            </div>
+            <div class="d-flex">
+                @Model.LicensePlate : LPN
+            </div>
+        </div>
+
+    </div>
+</div>

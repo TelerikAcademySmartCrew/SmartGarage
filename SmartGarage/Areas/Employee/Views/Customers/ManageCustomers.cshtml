@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<UserViewModel>
+
+@{
     var userName = ViewData["CurrentUser"];
 }
 
@@ -8,6 +10,34 @@
     <!-- employee nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" />
 
-    <div class="bg-light">
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill">
+                    BACK
+                </a>
+                <p class="lead my-2">
+                    MANAGE <b>CUSTOMERS</b>
+                </p>
+            </div>
+        </div>
     </div>
+
+    <div class="d-flex container my-5">
+
+        <div class="d-flex container row gap-2 p-0 my-2">
+
+            @{
+                foreach (var item in Model)
+                {
+                    <div class="d-flex flex-fill">
+                        <partial name="/Views/Shared/Customer/_CustomerElementPartial.cshtml" model="@item" />
+                    </div>
+                }
+            }
+        </div>
+
+    </div>
+
 </div>

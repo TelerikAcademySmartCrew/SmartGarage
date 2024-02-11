@@ -3,10 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SmartGarage.Common.Exceptions;
+using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
+using SmartGarage.Utilities.Mappers;
+using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.Services
 {
@@ -34,9 +37,14 @@ namespace SmartGarage.Services
             this.configuration = configuration;
         }
 
-        public async Task<IdentityResult> GetAll()
+        public async Task<ICollection<AppUser>> GetAll()
         {
-            throw new NotImplementedException();
+            return await userManager.GetUsersInRoleAsync("Customer");
+        }
+
+        public async Task<ICollection<AppUser>> GetUsersInRoleAsync(string role)
+        {
+            return await userManager.GetUsersInRoleAsync(role);
         }
 
         public async Task<IdentityResult> CreateUser(AppUser appUser)
@@ -127,6 +135,13 @@ namespace SmartGarage.Services
                 ?? throw new EntityNotFoundException("User not found.");
 
             return updatedUser;
+        }
+        public async Task<bool> Delete(AppUser user)
+        {
+            _ = await userManager.DeleteAsync(user)
+                ?? throw new Exception("User not found");
+
+            return true;
         }
 
         private string GenerateRandomPassword()

@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartGarage.Common.Exceptions;
+using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.Areas.Employee.Controllers
 {
@@ -13,24 +16,32 @@ namespace SmartGarage.Areas.Employee.Controllers
         private readonly IVehicleService vehicleService;
         private readonly IBrandService brandService;
         private readonly IModelService modelService;
+        private readonly IVehicleMapper vehicleMapper;
         private readonly ApplicationDbContext applicationDbContext;
 
         public VehiclesController(IVehicleService vehicleService,
             IBrandService brandService,
             IModelService modelService,
+            IVehicleMapper vehicleMapper,
             ApplicationDbContext applicationDbContext)
         {
             this.vehicleService = vehicleService;
             this.brandService = brandService;
             this.modelService = modelService;
+            this.vehicleMapper = vehicleMapper;
             this.applicationDbContext = applicationDbContext;
         }
 
         [HttpGet]
-        public IActionResult ManageVehicles()
+        public async Task<IActionResult> ManageVehicles(CancellationToken cancellationToken)
         {
             InitializeUserName();
-            return View();
+            
+            var allVehicles = await vehicleService.GetAllAsync(new VehicleQueryParameters(), cancellationToken);
+
+            var vehiclesViewModel = vehicleMapper.ToViewModel(allVehicles);
+
+            return View(vehiclesViewModel);
         }
 
         [HttpGet]

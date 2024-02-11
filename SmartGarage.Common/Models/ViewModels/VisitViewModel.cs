@@ -3,6 +3,7 @@
 public class VisitViewModel
 {
     public Guid Id { get; set; }
+    public string Status { get; set; }
     public DateTime DateCreated { get; set; }
     public string UserName { get; set; }
     public string VehicleBrand { get; set; }

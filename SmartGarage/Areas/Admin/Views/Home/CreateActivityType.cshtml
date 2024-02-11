@@ -1,31 +1,52 @@
-﻿@model RepairActivityTypeViewModel
+﻿@model AdminManageRepairActivityTypes
 
 @{
     ViewData["Title"] = "Home Page";
-    var UserViewModel = "Admin";
+    var registerMessage = ViewData["PostCreateMessage"];
+    var adminName = "Admin";
 }
 
 <!-- admin nav bar -->
-<partial name="_AdminNavBarPartial" model="@UserViewModel" />
+<partial name="_AdminNavBarPartial" model="@adminName" />
 
-<div class="d-flex flex-column justify-content-start m-auto" style="height:80%; margin-top:100px;">
+<div class="d-flex flex-column justify-content-start" style="width:100%; height:calc(100% - 120px);">
 
-    <div class="p-2 bg-light text-center">
-        <h2 class="display-4">Hello, Admin!</h2>
-        <p class="lead mt-1">
-            Manage <b>activity types</b>.
-        </p>
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+
+        <div class="d-flex container justify-content-between">
+
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill">
+                    BACK
+                </a>
+                <p class="lead my-2">
+                    MANAGE <b>REPAIR ACTIVITY TYPES</b>
+                </p>
+            </div>
+
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a id="newButton" class="d-flex btn btn-primary rounded-pill align-items-center me-1">
+                    <label class="mx-2">NEW</label>
+                </a>
+            </div>
+        </div>
     </div>
 
-    <div class="d-flex flex-column justify-content-start fade-in" style="margin-top:100px;">
+    <div id="createActivityForm" class="flex-column justify-content-start fade-in my-2" style="margin-top:100px;">
         <form asp-area="Admin" asp-controller="Home" asp-action="CreateActivityType" method="post" style="width:30%;" class="d-flex flex-column m-auto justify-content-center">
-            <span asp-validation-for="@Model.Name" class="form-error" style="color: #7B0828"></span>
-            <input asp-for="@Model.Name" class="log-in-form-control" type="text" placeholder="Activity type name" aria-label="Name">
-            
+            <span id="reg-error-span" asp-validation-for="@Model.RepairActivityRegister.Name" class="form-error" style="color: #7B0828"></span>
+            <input id="reg-error-input" asp-for="@Model.RepairActivityRegister.Name" name="Name" class="log-in-form-control" type="text" placeholder="Activity type name" aria-label="repairActivityName">
+
+            @if (registerMessage != null)
+            {
+                <span id="reg-notify-message" class="d-flex align-items-start align-content-start" style="color:green; font-weight:bold">
+                </span>
+            }
+
             <div class="d-flex flex-row justify-content-end gap-3 mt-4">
-                <a asp-area="Admin" asp-controller="Home" asp-action="Index" type="button" class="btn my-1 primary-button text-black btn-outline-light bg-secondary opacity-50 flex-shrink-1"
+                <a id="backButton" type="button" class="btn my-1 primary-button text-black btn-outline-light bg-secondary opacity-50 flex-shrink-1"
                    style="width: 8.0rem;">
-                    <<<
+                    Cancel
                 </a>
                 <button type="submit" class="btn my-1 primary-button text-black btn-outline-light opacity-75 flex-grow-1">
                     Register
@@ -33,4 +54,78 @@
             </div>
         </form>
     </div>
+
+    <div class="gap-2 bg-secondary bg-opacity-10 text-center py-4" style="height:100%;">
+
+        <div class="container" style="width:100%; height:100%;">
+            <div class="container d-flex row row-cols-1 row-cols-md-2 row-cols-lg-3">
+                @{
+                    if (Model.RepairActivities == null || Model.RepairActivities.Count == 0)
+                    {
+                        <div class="d-flex container justify-content-center my-5">
+                            <p class="lead my-2">
+                                NO <b>REPAIR ACTIVITIES</b> REGISTERED
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var activity in Model.RepairActivities)
+                        {
+                            <div class="col mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">@activity.Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        // Show employee register form
+        $("#newButton").click(function () {
+            $("#createActivityForm").removeClass("d-none").addClass("show");
+
+            $("#reg-error-input").attr("required", true);
+
+            $("#newButton").addClass("d-none");
+        });
+
+        // Hide employee register form
+        $("#backButton").click(function () {
+
+            $("#createActivityForm").removeClass("show").addClass("d-none");
+            $("#reg-error-input").removeAttr("required");
+
+            $("#reg-notify-message").text("");
+            $("#reg-error-input").val("");
+            $("#reg-error-span").text("");
+
+            $("#newButton").removeClass("d-none");
+        });
+
+        var b = @Html.Raw(Json.Serialize(registerMessage));
+        var s = document.getElementById("reg-error-span").innerText;
+
+        if ((b != null && b != "") || (s != null && s != "")) {
+            $("#reg-notify-message").text(b);
+            $("#createActivityForm").removeClass("d-none").addClass("show");
+            $("#newButton").click();
+        }
+        else {
+            $("#createActivityForm").addClass("d-none");
+        }
+
+    });
+</script>

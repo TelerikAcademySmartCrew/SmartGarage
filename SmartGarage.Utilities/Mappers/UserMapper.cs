@@ -33,7 +33,7 @@ public class UserMapper : IUserMapper
         return newUserViewModel;
     }
 
-    public IList<UserViewModel> Map(IList<AppUser> users)
+    public ICollection<UserViewModel> Map(ICollection<AppUser> users)
     {
         var usersList = new List<UserViewModel>();
         foreach (var user in users)

@@ -5,6 +5,7 @@ using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.Areas.Employee.Controllers
 {
@@ -12,11 +13,13 @@ namespace SmartGarage.Areas.Employee.Controllers
     {
         private readonly IUsersService usersService;
         private readonly IVehicleService vehicleService;
+        private readonly IUserMapper userMapper;
 
-        public CustomersController(IUsersService usersService, IVehicleService vehicleService)
+        public CustomersController(IUsersService usersService, IVehicleService vehicleService, IUserMapper userMapper)
         {
             this.usersService = usersService;
             this.vehicleService = vehicleService;
+            this.userMapper = userMapper;
         }
 
         [HttpGet]
@@ -63,11 +66,15 @@ namespace SmartGarage.Areas.Employee.Controllers
         }
 
         [HttpGet]
-        public IActionResult ManageCustomers()
+        public async Task<IActionResult> ManageCustomers()
         {
-            base.InitializeUserName();
-            return View();
-        }
+            var allCustomers = await this.usersService.GetUsersInRoleAsync("Customer");
 
+            var customersModel = userMapper.Map(allCustomers);
+
+            base.InitializeUserName();
+
+            return View(customersModel);
+        }
     }
 }

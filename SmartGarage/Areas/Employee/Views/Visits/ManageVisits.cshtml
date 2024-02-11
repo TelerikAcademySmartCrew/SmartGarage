@@ -5,29 +5,34 @@
 }
 
 <!-- employee index page -->
-<div class="d-flex flex-column align-items-center" style="height:100%;">
+<div class="d-flex flex-column justify-content-start" style="height:100%;">
 
     <!-- employee nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" area-name="" />
 
-    <div class="container d-flex flex-column mx-auto p-4 gap-2 my-auto bg-opacity-25 bg-light rounded-3" style="width:100%; height:80%; overflow-y:auto;">
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill">
+                    BACK
+                </a>
+                <p class="lead my-2">
+                    MANAGE <b>VISITS</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container d-flex flex-column mx-auto gap-2 my-auto" style="width:100%; height:80%; overflow-y:auto;">
         @{
-            for (int i = 0; i < Model.Count; i++)
+            @foreach (var visit in Model)
             {
-                var visit = Model[i];
-
-                // @foreach (var visit in Model.Visits)
-                {
-                    <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.Id" style="text-decoration:none">
-                        <partial name="Visits/_VisitElementPartial" model="@visit" />
-                    </a>
-                }
-
-                // <div class="d-flex p-4 bg-primary">
-
-                //     <div>@(i + 1)</div>
-                // </div>
+                <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.Id" style="text-decoration:none">
+                    <partial name="Visits/_VisitElementPartial" model="@visit" />
+                </a>
             }
         }
     </div>
+
 </div>
