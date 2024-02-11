@@ -66,7 +66,7 @@ namespace SmartGarage.Areas.Employee.Controllers
                     VehicleId = vehicle.Id,
                 };
 
-                var createdVisit = await visitService.CreateAsync(newVisit, cancellationToken);
+                var createdVisit = await visitService.CreateAsync(newVisit, vehicle.Visits.Count, cancellationToken);
 
                 //return View("DisplayVisitDetails", new { id = createdVisit.Id });
                 return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = newVisit.Id });

@@ -17,6 +17,7 @@ public class VisitMapper : IVisitMapper
         return new VisitViewModel
         {
             Id = visit.Id,
+            Status = visit.Status.ToString(),
             DateCreated = visit.Date,
             UserName = visit.User.UserName,
             VehicleBrand = visit.Vehicle.Brand.Name,

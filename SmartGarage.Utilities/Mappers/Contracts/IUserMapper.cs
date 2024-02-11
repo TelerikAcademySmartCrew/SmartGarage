@@ -10,6 +10,6 @@ namespace SmartGarage.Utilities.Mappers.Contracts;
 public interface IUserMapper
 {
     AppUser MaterializeRequestDto(UserRegisterRequestDto userRegisterRequestDto);
-    IList<UserViewModel> Map(IList<AppUser> users);
+    ICollection<UserViewModel> Map(ICollection<AppUser> users);
     UserViewModel Map(AppUser user);
 }

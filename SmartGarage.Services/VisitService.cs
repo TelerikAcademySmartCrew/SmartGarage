@@ -29,9 +29,9 @@ namespace SmartGarage.Services
             return await this.visitRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken)
+        public async Task<Visit> CreateAsync(Visit visit, int vehicleVisitsCount, CancellationToken cancellationToken)
         {
-            var userVisits = visit.User.Visits.Count + 1;
+            var userVisits = vehicleVisitsCount + 1;
 
             if (userVisits >= 27)
             {

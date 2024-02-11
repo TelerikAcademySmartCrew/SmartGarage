@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SmartGarage.Common.Models.ViewModels
+﻿namespace SmartGarage.Common.Models.ViewModels
 {
-    internal class AdminManageEmployeesViewModel
+    public class AdminManageEmployeesViewModel
     {
+        public ICollection<UserViewModel> Employees { get; set; } = new List<UserViewModel>();
+        public RegisterViewModel RegisterData { get; set; } = new();
     }
 }

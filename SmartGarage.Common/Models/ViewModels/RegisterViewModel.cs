@@ -6,6 +6,6 @@ namespace SmartGarage.Common.Models.ViewModels
     {
         // TODO : add validation
         [Required]
-        public string? Email { get; set; } = null;
+        public string? Email { get; set; }
     }
 }

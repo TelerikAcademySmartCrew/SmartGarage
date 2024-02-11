@@ -1,4 +1,6 @@
-﻿@{
+﻿@model List<VehicleViewModel>
+
+@{
     var userName = ViewData["CurrentUser"];
 }
 
@@ -8,6 +10,30 @@
     <!-- employee nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" />
 
-    <div class="bg-light">
+
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill">
+                    BACK
+                </a>
+                <p class="lead my-2">
+                    MANAGE <b>VEHICLES</b>
+                </p>
+            </div>
+        </div>
     </div>
+
+    <div class="container d-flex flex-column mx-auto gap-2 my-auto" style="width:100%; height:80%; overflow-y:auto;">
+        @{
+            @foreach (var visit in Model)
+            {
+                <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.VIN" style="text-decoration:none">
+                    <partial name="Vehicle/_VehicleElementPartial" model="@visit" />
+                </a>
+            }
+        }
+    </div>
+
 </div>

@@ -10,6 +10,22 @@
     <!-- customer nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" area-name= />
 
+
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill">
+                    BACK
+                </a>
+                <p class="lead my-2">
+                    VEHICLE <b>REGISTER</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Brands and models dynamic container -->
     <div id="matchingNames" class="dynamicList "></div>
 

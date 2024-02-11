@@ -78,7 +78,7 @@ public class VisitApiController : ControllerBase
 
             var visit = this.visitMapper.MaterializeRequestDto(visitRequestDto, user.Id, vehicle.Id);            
 
-            await this.visitService.CreateAsync(visit, cancellationToken);
+            await this.visitService.CreateAsync(visit, vehicle.Visits.Count, cancellationToken);
             
             return Ok(visit);
         }

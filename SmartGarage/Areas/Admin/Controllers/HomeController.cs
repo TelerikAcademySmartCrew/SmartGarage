@@ -45,7 +45,9 @@ namespace SmartGarage.Areas.Admin.Controllers
 
                 var employeesVM = userMapper.Map(employees);
 
-                return View(employeesVM);
+                var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
+                adminManageEmployeesViewModel.Employees = employeesVM;
+                return View(adminManageEmployeesViewModel);
             }
             catch (Exception ex)
             {
@@ -54,93 +56,146 @@ namespace SmartGarage.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult RegisterEmployee()
+        public async Task<IActionResult> RegisterEmployee()
         {
-            return View();
+            var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
+
+            return View(adminManageEmployeesViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterEmployee(RegisterViewModel registertionData)
+        public async Task<IActionResult> RegisterEmployee([Bind(nameof(AdminManageEmployeesViewModel.RegisterData.Email))] RegisterViewModel registerData)
         {
+            var employees = await userManager.GetUsersInRoleAsync("Employee");
+            var employeesVM = userMapper.Map(employees);
+            var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
+            adminManageEmployeesViewModel.Employees = employeesVM;
+
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError("Email", "Error. Please try again.");
-                    return View();
+                    ModelState.AddModelError("RegisterData.Email", "Error. Please try again.");
+                    return View("ViewAllEmployees", adminManageEmployeesViewModel);
                 }
 
                 var newUser = new AppUser
                 {
-                    UserName = registertionData.Email,
-                    Email = registertionData.Email,
+                    UserName = registerData.Email,
+                    Email = registerData.Email,
                     EmailConfirmed = true,
                     JoinDate = DateTime.UtcNow,
                 };
 
                 var result = await usersService.CreateEmployee(newUser);
 
-                if (result.Succeeded)
+                if (!result.Succeeded)
                 {
-                    ViewData["PostRegisterMessage"] = "Registration successful! Please check your email";
-
-                    return View("Index");
+                    ModelState.AddModelError("RegisterData.Email", "Error. Please try again.");
+                    return View("ViewAllEmployees", adminManageEmployeesViewModel);
                 }
 
-                return View("Error");
+                adminManageEmployeesViewModel.Employees.Add(userMapper.Map(newUser));
+
+                ViewData["PostRegisterMessage"] = "Registration successful!";
+                return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (DuplicateEntityFoundException ex)
             {
-                ModelState.AddModelError("Email", ex.Message);
-                return View(registertionData);
+                ModelState.AddModelError("RegisterData.Email", ex.Message);
+                return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (EntityNotFoundException ex)
             {
-                ModelState.AddModelError("Email", ex.Message);
-                return View();
+                ModelState.AddModelError("RegisterData.Email", ex.Message);
+                return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Email", ex.Message);
-                return View();
+                ModelState.AddModelError("RegisterData.Email", ex.Message);
+                return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
         }
 
         [HttpGet]
-        public IActionResult CreateActivityType()
+        public async Task<IActionResult> RemoveEmployee(string userName)
         {
-            return View();
+            var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
+
+            try
+            {
+                var employee = await usersService.GetByEmail(userName);
+                _ = await usersService.Delete(employee);
+                return RedirectToAction("ViewAllEmployees");
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return RedirectToAction("ViewAllEmployees");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateActivityType()
+        {
+            var adminManageRepairActivityTypes = new AdminManageRepairActivityTypes();
+
+            var allActivityTypes = await repairActivityTypeService.GetAllAsync();
+
+            adminManageRepairActivityTypes.RepairActivities = allActivityTypes.Select(activity => new RepairActivityTypeViewModel
+            {
+                Name = activity.Name,
+            }).ToList();
+
+            return View(adminManageRepairActivityTypes);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateActivityType(RepairActivityTypeViewModel repairActivityViewModel)
+        public async Task<IActionResult> CreateActivityType([Bind(nameof(RepairActivityTypeViewModel.Name))] RepairActivityTypeViewModel repairActivityName)
         {
+            var adminManageRepairActivityTypes = new AdminManageRepairActivityTypes();
+            var allActivityTypes = await repairActivityTypeService.GetAllAsync();
+            adminManageRepairActivityTypes.RepairActivities = allActivityTypes.Select(activity => new RepairActivityTypeViewModel
+            {
+                Name = activity.Name,
+            }).ToList();
+
             try
             {
                 var repairActivityType = new RepairActivityType
                 {
                     Id = Guid.NewGuid(),
-                    Name = repairActivityViewModel.Name
+                    Name = repairActivityName.Name
                 };
 
                 var newRepairActivityType = await this.repairActivityTypeService.CreateAsync(repairActivityType);
 
-                return View("Index", "Home");
+                adminManageRepairActivityTypes.RepairActivityRegister = new RepairActivityTypeViewModel
+                {
+                    Name = newRepairActivityType.Name
+                };
+
+                adminManageRepairActivityTypes.RepairActivities.Add(new RepairActivityTypeViewModel
+                {
+                    Name = newRepairActivityType.Name
+                });
+
+                ViewData["PostCreateMessage"] = "Crete activity type successful!";
+                return View(adminManageRepairActivityTypes);
             }
             catch (EntityAlreadyExistsException ex)
             {
-                ModelState.AddModelError("Name", ex.Message);
-                return View(repairActivityViewModel);
+                ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
+                return View(adminManageRepairActivityTypes);
             }
             catch (DuplicateEntityFoundException ex)
             {
-                ModelState.AddModelError("Name", ex.Message);
-                return View(repairActivityViewModel);
+                ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
+                return View(adminManageRepairActivityTypes);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("Name", ex.Message);
-                return View(repairActivityViewModel);
+                ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
+                return View(adminManageRepairActivityTypes);
             }
         }
     }

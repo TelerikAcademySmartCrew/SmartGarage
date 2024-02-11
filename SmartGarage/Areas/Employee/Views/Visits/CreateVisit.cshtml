@@ -5,10 +5,25 @@
 }
 
 <!-- employee index page -->
-<div class="d-flex flex-column align-items-center" style="height:100%;">
+<div class="d-flex flex-column justify-content-start" style="height:100%;">
 
     <!-- employee nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" area-name="" />
+
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a asp-area="Employee" asp-controller="Home" asp-action="Index" class="btn btn-secondary rounded-pill">
+                    BACK
+                </a>
+                <p class="lead my-2">
+                    REGISTER <b>VISIT</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
 
     @* <div class="container flex-shrink-1 justify-content-center align-content-center m-auto gap-5 p-0 bg-light rounded-3" style="width:50%; max-height:50%;"> *@
     <div class="ntainer flex-shrink-1 justify-content-center align-content-center m-auto bg-light rounded-3" style="width:50%;">
