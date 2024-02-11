@@ -5,6 +5,7 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities;
 
 namespace SmartGarage.Controllers
 {
@@ -12,17 +13,14 @@ namespace SmartGarage.Controllers
     {
         private readonly SignInManager<AppUser> signInManager;
         private readonly UserManager<AppUser> userManager;
-        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IUsersService usersService;
 
         public AuthController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
-            IWebHostEnvironment webHostEnvironment,
             IUsersService usersService)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
-            this.webHostEnvironment = webHostEnvironment;
             this.usersService = usersService;
         }
 
@@ -159,46 +157,32 @@ namespace SmartGarage.Controllers
 
                 var result = await usersService.CreateUser(newUser);
 
-                if (result.Succeeded)
+                if (!result.Succeeded) return View("Error");
+                ViewData["PostRegisterMessage"] = "Registration successful! Please check your email";
+
+                await signInManager.SignInAsync(newUser, isPersistent: false);
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                var callbackUrl = Url.Action("Login", "Auth", new { userId = newUser.Id, code = token });
+
+
+                // NOTE : this might be needed later
+                // do not remove for now
                 {
-                    ViewData["PostRegisterMessage"] = "Registration successful! Please check your email";
+                    //// Instead of sending email, return the HTML content
+                    //return Content(body, "text/html");
 
-                    await signInManager.SignInAsync(newUser, isPersistent: false);
-                    var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                    var callbackUrl = Url.Action("Login", "Auth", new { userId = newUser.Id, code = token });
-
-                    string body = string.Empty;
-
-                    // Then use it to get the content root path
-                    string filePath = Path.Combine(webHostEnvironment.ContentRootPath, "Views/MailTemplate/AccountConfirmation.html");
-
-                    using (StreamReader reader = new StreamReader(filePath))
-                    {
-                        body = reader.ReadToEnd();
-                    }
-                    body = body.Replace("{ConfirmationLink}", callbackUrl);
-                    body = body.Replace("{UserName}", newUser.Email);
-
-                    // NOTE : this might be needed later
-                    // do not remove for now
-                    {
-                        //// Instead of sending email, return the HTML content
-                        //return Content(body, "text/html");
-
-                        //ViewData["PostRegisterMessage"] = "Registration successful! Please check your email";
-                        //LoginViewModel model = new LoginViewModel();
-                    }
-
-                    ConfirmEmailViewModel model = new ConfirmEmailViewModel()
-                    {
-                        UserName = newUser.Email,
-                        UserId = newUser.Id,
-                        EmailConfirmToken = token,
-                    };
-                    return View("ConfirmEmail", model);
+                    //ViewData["PostRegisterMessage"] = "Registration successful! Please check your email";
+                    //LoginViewModel model = new LoginViewModel();
                 }
 
-                return View("Error");
+                ConfirmEmailViewModel model = new ConfirmEmailViewModel()
+                {
+                    UserName = newUser.Email,
+                    UserId = newUser.Id,
+                    EmailConfirmToken = token,
+                };
+                return View("ConfirmEmail", model);
+
             }
             catch (EntityNotFoundException ex)
             {

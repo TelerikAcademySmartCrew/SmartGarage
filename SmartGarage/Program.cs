@@ -56,6 +56,7 @@ namespace SmartGarage
             var emailConfig = builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>();
             builder.Services.AddSingleton(emailConfig);
             builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<PasswordGenerator>();
 
             builder.Services.AddScoped<IUsersService, UsersService>();
 
