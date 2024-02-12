@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,13 +22,17 @@ namespace SmartGarage.Services
         private readonly ApplicationDbContext applicationDbContext;
         private readonly EmailService emailService;
         private readonly IConfiguration configuration;
+        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly PasswordGenerator passwordGenerator;
 
         public UsersService(UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<AppUser> signInManager,
             ApplicationDbContext applicationDbContext,
             EmailService emailService,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IWebHostEnvironment webHostEnvironment,
+            PasswordGenerator passwordGenerator)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
@@ -35,6 +40,8 @@ namespace SmartGarage.Services
             this.applicationDbContext = applicationDbContext;
             this.emailService = emailService;
             this.configuration = configuration;
+            this.webHostEnvironment = webHostEnvironment;
+            this.passwordGenerator = passwordGenerator;
         }
 
         public async Task<ICollection<AppUser>> GetAll()
@@ -52,25 +59,26 @@ namespace SmartGarage.Services
             // TODO : use the pass generator when ready
 
             // Generate a random password
-            string randomPassword = "@User123";
-            //string randomPassword = GenerateRandomPassword2();
-
-            string subject = "Welcome to SmartGarage. Please use the possword sent with this email to login.";
-
-            string body = $"Hello {appUser.Email}.\n\nYour account has been created." +
-                $"Please you the following password: {randomPassword} to login." +
-                $"You will be able to fill out your user profile data upon login";
+            string randomPassword = passwordGenerator.Generate();
 
             // NOTE : toggle comment if you want to send emails
-            await emailService.SendEmailAsync(appUser.Email, subject, body);
-
+            
             var userResult = await userManager.CreateAsync(appUser, randomPassword);
-
             if (!userResult.Succeeded)
             {
                 throw new DuplicateEntityFoundException($"User already exists");
             }
+            var filePath = Path.Combine(webHostEnvironment.ContentRootPath, "Views/MailTemplate/AccountConfirmation.html");
+            string body;
+            const string subject = "Welcome to Smart Garage!";
+            using (var reader = new StreamReader(filePath))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+            body = body.Replace("{Password}", randomPassword);
+            body = body.Replace("{UserName}", appUser.Email);
 
+            await emailService.SendEmailAsync(appUser.Email, subject, body);
             await userManager.AddToRoleAsync(appUser, "Customer");
             await applicationDbContext.SaveChangesAsync();
 
