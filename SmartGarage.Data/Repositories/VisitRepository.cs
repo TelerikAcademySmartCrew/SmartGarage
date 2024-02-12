@@ -21,14 +21,19 @@ namespace SmartGarage.Data.Repositories
 
         public async Task<ICollection<Visit>> GetAll(VisitsQueryParameters visitsQueryParameters, CancellationToken cancellationToken)
         {
-            return await context.Visits.Select(visit => visit)
+            var visits = context.Visits.Select(visit => visit)
                 .Include(v => v.Vehicle)
                     .ThenInclude(v => v.Brand)
                 .Include(v => v.Vehicle)
                     .ThenInclude(v => v.Model)
                 .Include(v => v.RepairActivities)
                     .ThenInclude(v => v.RepairActivityType)
-                .Include(v => v.User).ToListAsync();
+                .Include(v => v.User)
+                .AsQueryable();
+
+            visits = FilterVisitsByQuery(visitsQueryParameters, visits);
+
+            return await visits.ToListAsync(cancellationToken);
         }
 
         public async Task<ICollection<Visit>> GetByUserIdAsync(string id, CancellationToken cancellationToken)
@@ -84,5 +89,40 @@ namespace SmartGarage.Data.Repositories
             await this.context.SaveChangesAsync();
             return visit;
         }
+
+
+        private static IQueryable<Visit> FilterVisitsByQuery(VisitsQueryParameters visitsQueryParameters, IQueryable<Visit> visitsToReturn)
+        {
+            if (visitsQueryParameters.Date != null)
+            {
+                if (DateTime.TryParse(visitsQueryParameters.Date, out DateTime date))
+                {
+                    visitsToReturn = visitsToReturn.Where(v => v.Date.Date == date);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(visitsQueryParameters.Owner))
+            {
+                visitsToReturn = visitsToReturn.Where(v => v.User.UserName == visitsQueryParameters.Owner);
+            }
+
+            if (!string.IsNullOrEmpty(visitsQueryParameters.VIN))
+            {
+                visitsToReturn = visitsToReturn.Where(v => v.Vehicle.VIN == visitsQueryParameters.VIN);
+            }
+
+            if (!string.IsNullOrEmpty(visitsQueryParameters.LicensePlate))
+            {
+                visitsToReturn = visitsToReturn.Where(v => v.Vehicle.LicensePlateNumber == visitsQueryParameters.LicensePlate);
+            }
+
+            if (visitsQueryParameters.Status != null)
+            {
+                visitsToReturn = visitsToReturn.Where(v => v.Status == visitsQueryParameters.Status);
+            }
+
+            return visitsToReturn;
+        }
+
     }
 }

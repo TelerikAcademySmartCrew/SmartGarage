@@ -44,7 +44,22 @@ namespace SmartGarage.Services
 
         public async Task<ICollection<AppUser>> GetUsersInRoleAsync(string role)
         {
-            return await userManager.GetUsersInRoleAsync(role);
+            var usersInRole = await userManager.GetUsersInRoleAsync(role);
+
+            var userIds = usersInRole.Select(u => u.Id);
+
+            var users = await userManager.Users
+                .Where(u => userIds.Contains(u.Id))
+                .Include(u => u.Vehicles)
+                    .ThenInclude(v => v.Brand)
+                .Include(u => u.Vehicles)
+                    .ThenInclude(v => v.Model)
+                .Include(u => u.Vehicles)
+                    .ThenInclude(v => v.Visits)
+                        .ThenInclude(visit => visit.RepairActivities)
+                            .ThenInclude(v => v.RepairActivityType).ToListAsync();
+
+            return users;
         }
 
         public async Task<IdentityResult> CreateUser(AppUser appUser)

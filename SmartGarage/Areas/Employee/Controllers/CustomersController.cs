@@ -35,7 +35,7 @@ namespace SmartGarage.Areas.Employee.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("Email", "Invalid email.");
+                this.ModelState.AddModelError("Email", "Invalid email.");
                 return View(registertionData);
             }
 
@@ -51,7 +51,7 @@ namespace SmartGarage.Areas.Employee.Controllers
                     JoinDate = DateTime.UtcNow,
                 };
 
-                _ = await usersService.CreateUser(newCustomer);
+                _ = await this.usersService.CreateUser(newCustomer);
 
                 this.ViewData["CustomerRegisteredMessage"] = "Customer Registered";
 
@@ -60,7 +60,7 @@ namespace SmartGarage.Areas.Employee.Controllers
             catch (DuplicateEntityFoundException ex)
             {
                 //this.ViewData["CustomerRegisteredMessage"] = null;
-                ModelState.AddModelError("Email", ex.Message);
+                this.ModelState.AddModelError("Email", ex.Message);
                 return View(registertionData);
             }
         }
@@ -70,7 +70,7 @@ namespace SmartGarage.Areas.Employee.Controllers
         {
             var allCustomers = await this.usersService.GetUsersInRoleAsync("Customer");
 
-            var customersModel = userMapper.Map(allCustomers);
+            var customersModel = this.userMapper.Map(allCustomers);
 
             base.InitializeUserName();
 

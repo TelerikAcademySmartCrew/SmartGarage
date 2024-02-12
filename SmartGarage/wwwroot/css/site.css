@@ -44,6 +44,10 @@ form span {
     color: #7B0828;
 }
 
+form input::placeholder {
+    opacity: 0.6;
+}
+
 input.log-in-form-control {
     display: block;
     width: 100%;
@@ -152,6 +156,10 @@ input.log-in-form-control {
 /* Employee Home Screen Menu Element */
 
 .employee-menu-element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     color: bisque;
     background-color: var(--menu-element-gray-color);
     border-radius: 10px;
@@ -161,6 +169,7 @@ input.log-in-form-control {
     box-shadow: rgba(43, 43, 43, 0.15) 2px 2px 2px;
     transition: box-shadow 0.5s ease, background-color 0.5s ease, color 0.5s ease;
 }
+
 
     .employee-menu-element:hover {
         color: bisque;

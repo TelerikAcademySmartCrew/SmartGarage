@@ -1,11 +1,11 @@
-﻿@model List<VisitViewModel>
+﻿@model ManageVisitsViewModel
 
 @{
     var userName = ViewData["CurrentUser"];
 }
 
 <!-- employee index page -->
-<div class="d-flex flex-column justify-content-start" style="height:100%;">
+<div class="d-flex flex-column justify-content-start" style="height:95%;">
 
     <!-- employee nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" area-name="" />
@@ -24,9 +24,43 @@
         </div>
     </div>
 
+    <!-- Filter options -->
+    <div class="d-flex flex-row text-secondary container bg-light bg-opacity-25 justify-content-between rounded-bottom py-0 pb-0 gap-2">
+
+        <div class="d-flex m-auto gap-2">
+
+            <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" method="get" type="submit" class="d-flex col align-self-center btn btn-primary" style="height:36px;">ALL</a>
+            <button onclick="filterToday()" class="d-flex col align-self-center btn btn-primary" style="height:36px;">TODAY'S</button>
+            <button onclick="filterWithStatus('Active')" class="d-flex col align-self-center btn btn-primary" style="height:36px;">ACTIVE</button>
+
+        </div>
+
+        <div class="d-flex justify-content-start m-auto">
+
+            <form id="visits-filter-form" asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" method="get" class="d-flex flex-row flex-fill justify-content-end mx-4 py-2 my-auto gap-2">
+                <div class="col m-auto">
+                    <input id="input-date" asp-for="@Model.VisitsQueryParameters.Date" name="Date" placeholder="By date (mm/dd/yyyy)" type="text" class="card px-2 my-1 py-1" />
+                </div>
+                <div class="col m-auto">
+                    <input id="input-owner" asp-for="@Model.VisitsQueryParameters.Owner" name="Owner" placeholder="By Owner" type="text" class="card px-2 my-1 py-1" />
+                </div>
+                <div class="col">
+                    <input id="input-vin" asp-for="@Model.VisitsQueryParameters.VIN" name="VIN" placeholder="By Vehicle VIN" type="text" class="card px-2 my-1 py-1" />
+                </div>
+                <div class="col">
+                    <input id="input-lpn" asp-for="@Model.VisitsQueryParameters.LicensePlate" name="LicensePlate" placeholder="By Vehicle LPN" type="text" class="card px-2 my-1 py-1" />
+                </div>
+                <button onclick="clearForm('visits-filter-form')" type="button" class="btn btn-danger align-self-center" style="height:36px;">CLEAR</button>
+                <button type="submit" class="btn btn-primary align-self-center" style="height:36px;">FILTER </button>
+            </form>
+
+        </div>
+
+    </div>
+
     <div class="container d-flex flex-column mx-auto gap-2 my-auto" style="width:100%; height:80%; overflow-y:auto;">
         @{
-            @foreach (var visit in Model)
+            @foreach (var visit in Model.Visits)
             {
                 <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.Id" style="text-decoration:none">
                     <partial name="Visits/_VisitElementPartial" model="@visit" />
@@ -36,3 +70,25 @@
     </div>
 
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<script>
+
+    function filterToday() {
+
+        // Construct a URL with query parameters for "TODAY'S"
+        var todayUrl = '@Url.Action("ManageVisits", "Visits", new { area = "Employee", Date = DateTime.Now.ToString("yyyy-MM-dd") })';
+
+        // Navigate to the constructed URL
+        window.location.href = todayUrl;
+    }
+
+    function filterWithStatus(status) {
+
+        var url = '@Url.Action("ManageVisits", "Visits", new { area = "Employee", Status = "status" })';
+        url = url.replace('status', status);
+        window.location.href = url;
+    }
+
+</script>

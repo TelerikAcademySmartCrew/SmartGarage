@@ -33,15 +33,24 @@ namespace SmartGarage.Areas.Employee.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ManageVehicles(CancellationToken cancellationToken)
+        public async Task<IActionResult> ManageVehicles(VehicleQueryParameters queryParameters, CancellationToken cancellationToken)
         {
             InitializeUserName();
-            
-            var allVehicles = await vehicleService.GetAllAsync(new VehicleQueryParameters(), cancellationToken);
+
+            if (queryParameters == null)
+                queryParameters = new VehicleQueryParameters();
+
+            var allVehicles = await vehicleService.GetAllAsync(queryParameters, cancellationToken);
 
             var vehiclesViewModel = vehicleMapper.ToViewModel(allVehicles);
 
-            return View(vehiclesViewModel);
+            var manageVehiclesViewModel = new ManageVehiclesViewModel()
+            {
+                Vehicles = vehiclesViewModel,
+                VehicleQueryParameters = queryParameters
+            };
+
+            return View(manageVehiclesViewModel);
         }
 
         [HttpGet]
