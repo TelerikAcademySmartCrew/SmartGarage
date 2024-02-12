@@ -4,11 +4,35 @@
 
 }
 
-<div class="d-flex flex-column flex-fill bg-light bg-opacity-50 shadow m-auto p-3">
+<div class="d-flex flex-row justify-content-between flex-fill bg-light bg-opacity-50 shadow m-auto p-3">
 
-    <div class="d-flex mx-2 justify-content-between">
+    <div class="d-flex flex-column mx-2 justify-content-start">
+        <div>
+            @Model.FirstName @Model.LastName
+        </div>
         <dv>
             @Model.UserName
         </dv>
+        <div>
+            @Model.PhoneNumber
+        </div>
+    </div>
+    <div>
+        @{
+            <div class="d-flex flex-row gap-2">
+                @foreach (var vehicle in Model.Vehicles)
+                {
+                    <div class="d-flex flex-column bg-secondary rounded text-light p-3">
+                        <div>
+                            @vehicle.Brand @vehicle.Model
+                        </div>
+
+                        <div>
+                            Visits count : @Model.Visits.Count
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>

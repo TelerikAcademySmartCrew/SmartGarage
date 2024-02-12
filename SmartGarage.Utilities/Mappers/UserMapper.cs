@@ -10,6 +10,15 @@ namespace SmartGarage.Utilities.Mappers;
 
 public class UserMapper : IUserMapper
 {
+    private readonly IVehicleMapper vehicleMapper;
+    private readonly IVisitMapper visitMapper;
+
+    public UserMapper(IVehicleMapper vehicleMapper, IVisitMapper visitMapper)
+    {
+        this.vehicleMapper = vehicleMapper;
+        this.visitMapper = visitMapper;
+    }
+
     public AppUser MaterializeRequestDto(UserRegisterRequestDto userRegisterRequestDto)
     {
         AppUser user = new()
@@ -28,6 +37,8 @@ public class UserMapper : IUserMapper
             FirstName = user.FirstName,
             LastName = user.LastName,
             PhoneNumber = user.PhoneNumber,
+            Vehicles = vehicleMapper.ToViewModel(user.Vehicles),
+            Visits = visitMapper.ToViewModel(user.Visits),
         };
 
         return newUserViewModel;

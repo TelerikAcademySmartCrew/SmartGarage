@@ -4,3 +4,7 @@
 function custom_back() {
     history.back();
 }
+
+var clearForm = function (formId) {
+    $("#" + formId + " input[type=text]").val("");
+};

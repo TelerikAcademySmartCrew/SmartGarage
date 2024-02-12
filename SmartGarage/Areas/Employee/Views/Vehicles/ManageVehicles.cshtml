@@ -1,4 +1,4 @@
-﻿@model List<VehicleViewModel>
+﻿@model ManageVehiclesViewModel
 
 @{
     var userName = ViewData["CurrentUser"];
@@ -9,7 +9,6 @@
 
     <!-- employee nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" />
-
 
     <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
         <div class="d-flex container justify-content-between">
@@ -25,9 +24,22 @@
         </div>
     </div>
 
+    <!-- Filter options -->
+    <div class="d-flex flex-row text-secondary container bg-light bg-opacity-25 justify-content-around rounded-bottom py-0 pb-0">
+        <form id="vehicles-filter-form" asp-area="Employee" asp-controller="Vehicles" asp-action="ManageVehicles" method="get" class="d-flex flex-row flex-fill justify-content-between mx-4 py-2 my-auto gap-2">
+            <input asp-for="@Model.VehicleQueryParameters.Brand" name="Brand" placeholder="Brand" type="text" class="d-flex flex-fill card px-2 my-1 py-1" />
+            <input asp-for="@Model.VehicleQueryParameters.Model" name="Model" placeholder="Model" type="text" class="d-flex flex-fill card px-2 my-1 py-1" />
+            <input asp-for="@Model.VehicleQueryParameters.VIN" name="VIN" placeholder="VIN" type="text" class="d-flex flex-fill card px-2 my-1 py-1" />
+            <input asp-for="@Model.VehicleQueryParameters.LicensePlate" placeholder="License plate number" name="LicensePlate" type="text" class="d-flex flex-fill card px-2 my-1 py-1" />
+
+            <button onclick="clearForm('vehicles-filter-form')" type="button" class="btn btn-danger align-self-center" style="height:36px;">CLEAR</button>
+            <button type="submit" class="btn btn-primary align-self-center" style="height:36px;">FILTER </button>
+        </form>
+    </div>
+
     <div class="container d-flex flex-column mx-auto gap-2 my-auto" style="width:100%; height:80%; overflow-y:auto;">
         @{
-            @foreach (var visit in Model)
+            @foreach (var visit in Model.Vehicles)
             {
                 <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.VIN" style="text-decoration:none">
                     <partial name="Vehicle/_VehicleElementPartial" model="@visit" />

@@ -79,48 +79,23 @@ namespace SmartGarage.Areas.Employee.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ManageVisits([FromQuery] VisitsQueryParameters visitsQueryParameters, CancellationToken cancellationToken)
+        public async Task<IActionResult> ManageVisits(VisitsQueryParameters queryParameters, CancellationToken cancellationToken)
         {
             InitializeUserName();
 
             try
             {
-                if (visitsQueryParameters == null)
-                {
-                    visitsQueryParameters = new VisitsQueryParameters();
-                }
-
-                var allVisits = await visitService.GetAll(visitsQueryParameters, cancellationToken);
+                var allVisits = await this.visitService.GetAll(queryParameters, cancellationToken);
 
                 var visitsViewModel = this.visitMapper.ToViewModel(allVisits);
 
-                //foreach (var visit in allVisits)
-                //{
-                //    visitsViewModel.Add(new VisitViewModel
-                //    {
-                //        Id = visit.Id,
-                //        DateCreated = visit.Date,
-                //        UserName = visit.User.UserName,
-                //        VehicleBrand = visit.Vehicle.Brand.Name,
-                //        VehicleModel = visit.Vehicle.Model.Name,
-                //        TotalPrice = visit.RepairActivities.Sum(visit => visit.Price),
-                //        RepairActivities = new List<VisitRepairActivityViewModel>()
-                //        {
-                //            new VisitRepairActivityViewModel
-                //            {
-                //                Name = "Oil chagne",
-                //                Price = 30.0
-                //            },
-                //            new VisitRepairActivityViewModel
-                //            {
-                //                Name = "Air filter chagne",
-                //                Price = 20.0
-                //            }
-                //        }
-                //    });
-                //}
+                var visitsModel = new ManageVisitsViewModel
+                {
+                    Visits = visitsViewModel,
+                    VisitsQueryParameters = queryParameters
+                };
 
-                return View(visitsViewModel);
+                return View(visitsModel);
             }
             catch (Exception ex)
             {
