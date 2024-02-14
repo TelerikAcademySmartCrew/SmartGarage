@@ -18,6 +18,7 @@ public class VisitMapper : IVisitMapper
         {
             Id = visit.Id,
             Status = visit.Status.ToString(),
+            Rating = visit.Rating.ToString(),
             DateCreated = visit.Date,
             UserName = visit.User.UserName,
             VehicleBrand = visit.Vehicle.Brand.Name,
@@ -30,7 +31,8 @@ public class VisitMapper : IVisitMapper
                     Price = ra.Price
                 })
                 .ToList(),
-            TotalPrice = visit.RepairActivities.Sum(x => x.Price)
+            TotalPrice = visit.RepairActivities.Sum(x => x.Price),
+            Discount = visit.DiscountPercentage
         };
     }
 

@@ -64,7 +64,9 @@ namespace SmartGarage.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterEmployee([Bind(nameof(AdminManageEmployeesViewModel.RegisterData.Email))] RegisterViewModel registerData)
+        public async Task<IActionResult> RegisterEmployee(
+            //[Bind(nameof(AdminManageEmployeesViewModel.RegisterData))]
+            RegisterEmployeeViewModel registerData)
         {
             var employees = await userManager.GetUsersInRoleAsync("Employee");
             var employeesVM = userMapper.Map(employees);
@@ -75,7 +77,7 @@ namespace SmartGarage.Areas.Admin.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    ModelState.AddModelError("RegisterData.Email", "Error. Please try again.");
+                    ModelState.AddModelError("EmployeeRegisterData.Email", "Error. Please try again.");
                     return View("ViewAllEmployees", adminManageEmployeesViewModel);
                 }
 
@@ -83,6 +85,9 @@ namespace SmartGarage.Areas.Admin.Controllers
                 {
                     UserName = registerData.Email,
                     Email = registerData.Email,
+                    FirstName = registerData.FirstName,
+                    LastName = registerData.LastName,
+                    PhoneNumber = registerData.PhoneNumber,
                     EmailConfirmed = true,
                     JoinDate = DateTime.UtcNow,
                 };
@@ -91,7 +96,7 @@ namespace SmartGarage.Areas.Admin.Controllers
 
                 if (!result.Succeeded)
                 {
-                    ModelState.AddModelError("RegisterData.Email", "Error. Please try again.");
+                    ModelState.AddModelError("EmployeeRegisterData.Email", "Error. Please try again.");
                     return View("ViewAllEmployees", adminManageEmployeesViewModel);
                 }
 
@@ -102,17 +107,17 @@ namespace SmartGarage.Areas.Admin.Controllers
             }
             catch (DuplicateEntityFoundException ex)
             {
-                ModelState.AddModelError("RegisterData.Email", ex.Message);
+                ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
                 return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (EntityNotFoundException ex)
             {
-                ModelState.AddModelError("RegisterData.Email", ex.Message);
+                ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
                 return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("RegisterData.Email", ex.Message);
+                ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
                 return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
         }

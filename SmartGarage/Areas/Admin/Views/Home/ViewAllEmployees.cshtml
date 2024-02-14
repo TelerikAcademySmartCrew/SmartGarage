@@ -34,8 +34,18 @@
 
     <div id="registerEmployeeForm" class="flex-column justify-content-start fade-in my-2" style="margin-top:100px;">
         <form asp-area="Admin" asp-controller="Home" asp-action="RegisterEmployee" method="post" style="width:30%;" class="d-flex flex-column m-auto justify-content-center">
-            <span id="reg-error-span" asp-validation-for="RegisterData.Email" class="form-error" style="color: #7B0828"></span>
-            <input id="reg-error-input" asp-for="RegisterData.Email" name="RegisterData.Email" class="log-in-form-control" type="email" placeholder="Email" aria-label="Email">
+
+            <input id="reg-error-input-1" asp-for="RegisterData.Email" name="RegisterData.Email" class="log-in-form-control" type="email" placeholder="Email" aria-label="Email">
+            <span id="reg-error-span-1" asp-validation-for="RegisterData.Email" class="form-error" style="color: #7B0828"></span>
+
+            <input id="reg-error-input-2" asp-for="RegisterData.FirstName" name="RegisterData.FirstName" class="log-in-form-control" type="text" placeholder="First Name" aria-label="First Name">
+            <span id="reg-error-span-2" asp-validation-for="RegisterData.FirstName" class="form-error" style="color: #7B0828"></span>
+
+            <input id="reg-error-input-3" asp-for="RegisterData.LastName" name="RegisterData.LastName" class="log-in-form-control" type="text" placeholder="Last Name" aria-label="Last Name">
+            <span id="reg-error-span-3" asp-validation-for="RegisterData.LastName" class="form-error" style="color: #7B0828"></span>
+
+            <input id="reg-error-input-4" asp-for="RegisterData.PhoneNumber" name="RegisterData.PhoneNumber" class="log-in-form-control" type="tel" placeholder="Phone Number" aria-label="Phone Number">
+            <span id="reg-error-span-4" asp-validation-for="RegisterData.PhoneNumber" class="form-error" style="color: #7B0828"></span>
 
             @if (registerMessage != null)
             {
@@ -71,24 +81,25 @@
                 {
                     foreach (var employee in Model.Employees)
                     {
-                        <div class="d-flex justify-content-between align-items-center rounded-3 flex-row bg-light my-2 p-4">
-                            <h6>
-                                @employee.UserName
-                            </h6>
-                            <div>
-                                @employee.FirstName
-                            </div>
-                            <div>
-                                @employee.LastName
-                            </div>
-                            <div>
-                                @employee.PhoneNumber
+                        <div class="d-flex flex-row justify-content-between align-items-center rounded-3 flex-row bg-light m-1 p-4">
+                            <div class="d-flex flex-column justify-content-between align-items-center rounded-3 flex-row bg-light m-1 p-4">
+                                <h6>
+                                    @employee.UserName
+                                </h6>
+                                <div>
+                                    @employee.FirstName
+                                </div>
+                                <div>
+                                    @employee.LastName
+                                </div>
+                                <div>
+                                    @employee.PhoneNumber
+                                </div>
                             </div>
 
                             <a asp-area="Admin" asp-controller="Home" asp-action="RemoveEmployee" asp-route-userName="@employee.UserName" class="btn btn-danger">
                                 X
                             </a>
-
                         </div>
                     }
                 }
@@ -107,7 +118,10 @@
         $("#newButton").click(function () {
             $("#registerEmployeeForm").removeClass("d-none").addClass("show");
 
-            $("#reg-error-input").attr("required", true);
+            $("#reg-error-input-1").attr("required", true);
+            $("#reg-error-input-2").attr("required", true);
+            $("#reg-error-input-3").attr("required", true);
+            $("#reg-error-input-4").attr("required", true);
 
             $("#newButton").addClass("d-none");
         });
@@ -116,19 +130,36 @@
         $("#backButton").click(function () {
 
             $("#registerEmployeeForm").removeClass("show").addClass("d-none");
-            $("#reg-error-input").removeAttr("required");
+            $("#reg-error-input-1").removeAttr("required");
+            $("#reg-error-input-2").removeAttr("required");
+            $("#reg-error-input-3").removeAttr("required");
+            $("#reg-error-input-4").removeAttr("required");
 
             $("#reg-notify-message").text("");
-            $("#reg-error-input").val("");
-            $("#reg-error-span").text("");
+
+            $("#reg-error-input-1").val("");
+            $("#reg-error-input-2").val("");
+            $("#reg-error-input-3").val("");
+            $("#reg-error-input-4").val("");
+
+            $("#reg-error-span-1").text("");
+            $("#reg-error-span-2").text("");
+            $("#reg-error-span-3").text("");
+            $("#reg-error-span-4").text("");
+
+            clearForm();
 
             $("#newButton").removeClass("d-none");
         });
 
         var b = @Html.Raw(Json.Serialize(registerMessage));
-        var s = document.getElementById("reg-error-span").innerText;
+        var s1 = document.getElementById("reg-error-span-1").innerText;
+        var s2 = document.getElementById("reg-error-span-2").innerText;
+        var s3 = document.getElementById("reg-error-span-3").innerText;
+        var s4 = document.getElementById("reg-error-span-4").innerText;
 
-        if ((b != null && b != "") || (s != null && s != "")) {
+        if ((b != null && b != "") || (s1 != null && s1 != "")
+            || (s2 != null && s2 != "") || (s3 != null && s3 != "") || (s4 != null && s4 != "")) {
             $("#reg-notify-message").text(b);
             $("#registerEmployeeForm").removeClass("d-none").addClass("show");
             $("#newButton").click();

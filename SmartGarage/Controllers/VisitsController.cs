@@ -5,6 +5,7 @@ using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;
 
 namespace SmartGarage.Controllers
@@ -13,9 +14,13 @@ namespace SmartGarage.Controllers
     {
         //private readonly HttpClient httpClient;
         private readonly IUsersService usersService;
+        private readonly IVisitService visitService;
+        private readonly IVisitMapper visitMapper;
         private readonly ApplicationDbContext applicationDbContext;
 
         public VisitsController(IUsersService usersService,
+            IVisitService visitService,
+            IVisitMapper visitMapper,
             ApplicationDbContext applicationDbContext)
         {
             // This is how to connect to the REST API
@@ -23,6 +28,8 @@ namespace SmartGarage.Controllers
             //this.httpClient.BaseAddress = new Uri("https://localhost/api/"); // Replace with your API base URL
 
             this.usersService = usersService;
+            this.visitService = visitService;
+            this.visitMapper = visitMapper;
             this.applicationDbContext = applicationDbContext;
         }
 
@@ -71,34 +78,36 @@ namespace SmartGarage.Controllers
         }
 
         [HttpGet]
-        public IActionResult DisplayVisit(Guid visitId)
+        public async Task<IActionResult> DisplayVisit(Guid visitId, CancellationToken cancellationToken)
         {
             try
             {
-                var visit = applicationDbContext.Visits
-                    .Include(v => v.Vehicle)
-                        .ThenInclude(v => v.Brand)
-                    .Include(v => v.Vehicle)
-                        .ThenInclude(v => v.Model)
-                    .Include(v => v.RepairActivities)
-                        .ThenInclude(v => v.RepairActivityType)
-                    .Include(v => v.User)
-                    .FirstOrDefault(x => x.Id == visitId)
-                    ?? throw new EntityNotFoundException("Vist not found");
+                //var visit = applicationDbContext.Visits
+                //    .Include(v => v.Vehicle)
+                //        .ThenInclude(v => v.Brand)
+                //    .Include(v => v.Vehicle)
+                //        .ThenInclude(v => v.Model)
+                //    .Include(v => v.RepairActivities)
+                //        .ThenInclude(v => v.RepairActivityType)
+                //    .Include(v => v.User)
+                //    .FirstOrDefault(x => x.Id == visitId)
+                //    ?? throw new EntityNotFoundException("Vist not found");
 
-                VisitViewModel visitViewModel = new VisitViewModel
-                {
-                    Id = visit.Id,
-                    DateCreated = visit.Date,
-                    UserName = visit.User.UserName,
-                    VehicleBrand = visit.Vehicle.Brand.Name,
-                    VehicleModel = visit.Vehicle.Model.Name,
-                    RepairActivities = visit.RepairActivities.Select(a => new VisitRepairActivityViewModel
-                    {
-                        Name = a.RepairActivityType.Name,
-                        Price = a.Price,
-                    }).ToList(),
-                };
+                var visit = await visitService.GetByIdAsync(visitId, cancellationToken);
+
+                var visitViewModel = this.visitMapper.ToViewModel(visit);
+                //{
+                //    Id = visit.Id,
+                //    DateCreated = visit.Date,
+                //    UserName = visit.User.UserName,
+                //    VehicleBrand = visit.Vehicle.Brand.Name,
+                //    VehicleModel = visit.Vehicle.Model.Name,
+                //    RepairActivities = visit.RepairActivities.Select(a => new VisitRepairActivityViewModel
+                //    {
+                //        Name = a.RepairActivityType.Name,
+                //        Price = a.Price,
+                //    }).ToList(),
+                //};
 
                 return View(visitViewModel);
             }

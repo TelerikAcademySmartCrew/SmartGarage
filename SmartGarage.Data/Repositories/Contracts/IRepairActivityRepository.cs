@@ -3,20 +3,20 @@ using SmartGarage.Data.Models.QueryParameters;
 
 namespace SmartGarage.Data.Repositories.Contracts
 {
-	public interface IRepairActivityRepository
+    public interface IRepairActivityRepository
     {
-		Task<ICollection<RepairActivity>> GetAllAsync(RepairActivityQueryParameters queryParameters);
+        Task<ICollection<RepairActivity>> GetAllAsync(RepairActivityQueryParameters queryParameters, CancellationToken cancellationToken);
 
-        Task<ICollection<RepairActivity>> GetByVisitId(Guid id);
-
-        Task<ICollection<RepairActivity>> GetByNameAsync(string name);
-
-		Task<RepairActivity> AddAsync(RepairActivity repairActivity);
-
-		Task<ICollection<RepairActivity>> GetByPriceRangeAsync(int startingPrice, int endingPrice);
-
-		Task DeleteAsync(RepairActivity repairActivity);
-	
         Task<RepairActivity> GetById(Guid id);
+
+        Task<ICollection<RepairActivity>> GetByVisitId(Guid id, CancellationToken cancellationToken);
+
+        Task<ICollection<RepairActivity>> GetByNameAsync(string name, CancellationToken cancellationToken);
+
+        Task<RepairActivity> AddAsync(RepairActivity repairActivity, CancellationToken cancellationToken);
+
+        Task<ICollection<RepairActivity>> GetByPriceRangeAsync(int startingPrice, int endingPrice, CancellationToken cancellationToken);
+
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

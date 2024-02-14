@@ -39,6 +39,7 @@
                 <div class="col">
                     <input id="input-vin" name="VIN" asp-for="@Model.VIN" class="col log-in-form-control" type="text" placeholder="VIN" aria-label="VIN">
                     <input id="input-license" name="LicensePlateNumber" asp-for="@Model.LicensePlateNumber" class="col log-in-form-control" type="text" placeholder="LPN" aria-label="License plate number">
+                    <span asp-validation-for="VIN" asp-validation-for="LicensePlateNumber"></span>
                 </div>
                 <select id="dropdown-options" class="col-3 btn btn-secondary dropdown-toggle my-1">
                     <option value="VIN" class="m-4">VIN</option>

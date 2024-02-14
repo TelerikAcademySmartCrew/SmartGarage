@@ -26,7 +26,7 @@ namespace SmartGarage.Data.Repositories
                     .ThenInclude(v => v.Brand)
                 .Include(v => v.Vehicle)
                     .ThenInclude(v => v.Model)
-                .Include(v => v.RepairActivities)
+                .Include(v => v.RepairActivities.Where(r => !r.IsDeleted))
                     .ThenInclude(v => v.RepairActivityType)
                 .Include(v => v.User)
                 .AsQueryable();
@@ -40,28 +40,30 @@ namespace SmartGarage.Data.Repositories
         {
             return await this.context.Visits
                 .Where(x => x.UserId == id)
+                .Include(v => v.RepairActivities.Where(r => !r.IsDeleted))
+                    .ThenInclude(v => v.RepairActivityType)
                 .Include(v => v.Vehicle)
                     .ThenInclude(v => v.Brand)
                 .Include(v => v.Vehicle)
                     .ThenInclude(v => v.Model)
-                .Include(v => v.RepairActivities)
-                    .ThenInclude(v => v.RepairActivityType)
                 .Include(v => v.User)
                 .ToListAsync(cancellationToken);
         }
 
         public async Task<Visit> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await this.context.Visits
+            var visit = await this.context.Visits
+                .Include(v => v.RepairActivities.Where(r => !r.IsDeleted))
+                    .ThenInclude(v => v.RepairActivityType)
                 .Include(v => v.Vehicle)
                     .ThenInclude(v => v.Brand)
                 .Include(v => v.Vehicle)
                     .ThenInclude(v => v.Model)
-                .Include(v => v.RepairActivities)
-                    .ThenInclude(v => v.RepairActivityType)
                 .Include(v => v.User)
                 .FirstOrDefaultAsync(x => x.Id == id, cancellationToken)
                 ?? throw new EntityNotFoundException(VisitNotFound);
+
+            return visit;
         }
 
         public async Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken)
@@ -86,10 +88,9 @@ namespace SmartGarage.Data.Repositories
             }
 
             visit.Status++;
-            await this.context.SaveChangesAsync();
+            await this.context.SaveChangesAsync(cancellationToken);
             return visit;
         }
-
 
         private static IQueryable<Visit> FilterVisitsByQuery(VisitsQueryParameters visitsQueryParameters, IQueryable<Visit> visitsToReturn)
         {

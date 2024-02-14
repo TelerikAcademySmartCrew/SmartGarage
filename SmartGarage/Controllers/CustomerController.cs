@@ -4,6 +4,7 @@ using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
+using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;
@@ -12,33 +13,31 @@ namespace SmartGarage.Controllers
 {
     public class CustomerController : Controller
     {
-        private readonly IUsersService usersService;
         private readonly SignInManager<AppUser> signInManager;
+        private readonly IUsersService usersService;
+        private readonly IUserMapper userMapper;
         private readonly IVehicleMapper vehicleMapper;
+        private readonly IBrandService brandService;
+        private readonly IRepairActivityTypeService repairActivityTypeService;
 
-        public CustomerController(IUsersService usersService, SignInManager<AppUser> signInManager, IVehicleMapper vehicleMapper)
+        public CustomerController(SignInManager<AppUser> signInManager,
+            IUsersService usersService,
+            IUserMapper userMapper,
+            IVehicleMapper vehicleMapper,
+            IBrandService brandService,
+            IRepairActivityTypeService repairActivityTypeService)
         {
-            this.usersService = usersService;
             this.signInManager = signInManager;
+            this.usersService = usersService;
+            this.userMapper = userMapper;
             this.vehicleMapper = vehicleMapper;
+            this.brandService = brandService;
+            this.repairActivityTypeService = repairActivityTypeService;
         }
 
         [HttpGet]
         public async Task<IActionResult> SmartGarageInfo()
         {
-            //if (this.User.IsInRole("User"))
-            //{
-            //    return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
-            //}
-
-            //LocationsList model = new LocationsList();
-            //var locations = new List<Location>()
-            //{
-            //    new Location(1, "SmartGarage", "SmartGarage", 42.65033853376936, 23.379256507391496)
-            //};
-            //model.Locations = locations;
-            //model.ServiceLocation = locations[0];
-
             // TODO : 
             //if (User.IsInRole("User"))
             try
@@ -46,22 +45,29 @@ namespace SmartGarage.Controllers
                 GarageInfoViewModel model = new GarageInfoViewModel();
                 var user = await usersService.GetUserAsync(User);
 
-                var userModel = new UserViewModel()
-                {
-                    UserName = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    PhoneNumber = user.PhoneNumber,
-                };
+                var userModel = userMapper.Map(user);
 
                 model.userViewModel = userModel;
+                var activityServiceTypes = await repairActivityTypeService.GetAllAsync();
+                model.RepairActivityTypes = activityServiceTypes.Select(a => new RepairActivityTypeViewModel
+                {
+                    Name = a.Name,
+                }).ToList();
+
+                var allBrands = await brandService.GetAllAsync();
+                foreach (var brand in allBrands)
+                {
+                    model.VehicleBrandAndModels.Add(new VehicleBrandsAndModelsViewModel
+                    {
+                        Name = brand.Name,
+                        Models = brand.Models.Select(model => model.Name).ToList(),
+                    });
+                }
 
                 return View(model);
             }
-            catch (Exception ex)
+            catch (EntityNotFoundException ex)
             {
-                // If there are validation errors or login fails, redisplay the login form
-                //return View(loginData);
                 return NotFound("Not found");
             }
         }

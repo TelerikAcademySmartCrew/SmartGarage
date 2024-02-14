@@ -6,13 +6,23 @@
     <!-- client nav bar -->
     <partial name="/Views/Shared/_CustomerNavBarPartial.cshtml" model="@Model.UserName" />
 
-    <div class="container justify-content-center my-5 pb-5">
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+            <div class="d-flex flex-row align-items-center gap-3">
+                <p class="lead my-2">
+                    MY <b>VISITS</b>
+                </p>
+            </div>
+        </div>
+    </div>
 
+    <div class="container justify-content-center my-5 pb-5">
+@* 
         <div class="bg-secondary text-light rounded-top bg-opacity-75 text-secondary p-3">
             MY VISITS
         </div>
-
-        <div class="scrollable-div d-flex gap-3 row mt-5 mx-auto p-2" style="max-height: 600px;">
+ *@
+        <div class="scrollable-div d-flex gap-3 row mt-0 mx-auto p-2" style="max-height: 600px;">
 
             @{
                 if (Model.Visits != null && Model.Visits.Count > 0)

@@ -1,8 +1,12 @@
-﻿namespace SmartGarage.Common.Models.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace SmartGarage.Common.Models.ViewModels
 {
     public class VisitCreateViewModel
     {
-        public string VIN {  get; set; }
-        public string LicensePlateNumber {  get; set; }
+        [MaxLength(17)]
+        public string? VIN {  get; set; }
+        [MaxLength(16)]
+        public string? LicensePlateNumber {  get; set; }
     }
 }
