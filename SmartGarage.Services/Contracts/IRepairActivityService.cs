@@ -2,18 +2,18 @@
 
 namespace SmartGarage.Services.Contracts
 {
-	public interface IRepairActivityService
-	{
-		Task<ICollection<RepairActivity>> GetByVisitIdAsync(Guid id);
+    public interface IRepairActivityService
+    {
+        Task<ICollection<RepairActivity>> GetByVisitIdAsync(Guid id, CancellationToken cancellationToken);
 
-		Task<ICollection<RepairActivity>> GetByNameAsync(string name);
+        Task<ICollection<RepairActivity>> GetByNameAsync(string name, CancellationToken cancellationToken);
 
-		Task<RepairActivity> AddAsync(RepairActivity repairActivity);
+        Task<RepairActivity> GetById(Guid id);
 
-		Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice);
+        Task<RepairActivity> AddAsync(RepairActivity repairActivity, CancellationToken cancellationToken);
 
-		Task DeleteAsync(RepairActivity repairActivity);
-	
-    Task<RepairActivity> GetById(Guid id);
+        Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice, CancellationToken cancellationToken);
+
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     }
 }

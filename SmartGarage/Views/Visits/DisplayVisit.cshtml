@@ -7,16 +7,23 @@
     <!-- customer nav bar -->
     <partial name="/Views/Shared/_CustomerNavBarPartial.cshtml" model="@Model.UserName" />
 
-    <div class="container my-5 pb-5" style="height:100%">
-
-        <div class="bg-secondary text-light rounded-top bg-opacity-75 text-secondary p-3">
-            VISIT DETAILS
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+            <div class="d-flex flex-row align-items-center gap-3">
+                <a asp-area="" asp-controller="Visits" asp-action="DisplayAll" class="btn btn-secondary rounded-pill">
+                    BACK
+                </a>
+                <p class="lead my-2">
+                    VISIT <b>DETAILS</b>
+                </p>
+            </div>
         </div>
+    </div>
 
+    <div class="container pb-5" style="height:100%">
         <div class="d-flex row" style="height:100%">
-
-            <div class="scrollable-div row my-5 mx-auto p-2" style="height: calc(100% - 80px);">
-                <partial name="Visits/_VisitDetailsPartial" model="@Model" class="d-flex overflow-auto"/>
+            <div class="scrollable-div row my-5 mx-auto p-2" style="height: calc(100% - 200px);">
+                <partial name="Visits/_VisitDetailsPartial" model="@Model" class="d-flex overflow-auto" style="height:50%;"/>
             </div>
         </div>
     </div>

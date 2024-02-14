@@ -8,3 +8,19 @@ function custom_back() {
 var clearForm = function (formId) {
     $("#" + formId + " input[type=text]").val("");
 };
+
+
+// ====================================================================================================
+//
+// ====================================================================================================
+
+var callback;
+
+function subscribeToRepairActivityRemovedCallback(subscriber) {
+    callback = subscriber;
+}
+
+// Call this when the achor is clicked to invoke the callback
+function onRepairActivityRemoveButtonClicked(activityId) {
+    callback(activityId);
+}

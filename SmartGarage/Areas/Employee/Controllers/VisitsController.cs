@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SmartGarage.Common.Enumerations;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
+using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities.Mappers;
 using SmartGarage.Utilities.Mappers.Contracts;
@@ -50,6 +53,14 @@ namespace SmartGarage.Areas.Employee.Controllers
 
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    if (vehicleNumbers.VIN != null)
+                            ModelState.AddModelError("VIN", "Incorrect VIN");
+                    if (vehicleNumbers.LicensePlateNumber != null)
+                        ModelState.AddModelError("LicensePlateNumber", "Incorrect LPN");
+                }
+
                 var vehicleQueryParameters = new VehicleQueryParameters()
                 {
                     VIN = vehicleNumbers.VIN,
@@ -73,7 +84,10 @@ namespace SmartGarage.Areas.Employee.Controllers
             }
             catch (EntityNotFoundException ex)
             {
-                this.ModelState.AddModelError("All", ex.Message);
+                if (vehicleNumbers.VIN != null)
+                    ModelState.AddModelError("VIN", ex.Message);
+                if (vehicleNumbers.LicensePlateNumber != null)
+                    ModelState.AddModelError("LicensePlateNumber", ex.Message);
                 return View(vehicleNumbers);
             }
         }
@@ -116,9 +130,10 @@ namespace SmartGarage.Areas.Employee.Controllers
 
                 if (visit.RepairActivities.Any(activity => activity.RepairActivityTypeId == _repairActivityTypeId))
                 {
-                    ModelState.AddModelError("Any", "Repair activity type already added.");
+                    this.ModelState.AddModelError("Any", "Repair activity type already added.");
 
-                    return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                    //return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                    return View("~/Views/Shared/Visits/_VisitDetailsEditablePartial.cshtml", visit);
                 }
 
                 // TODO : check if there's already activity of type added
@@ -136,15 +151,14 @@ namespace SmartGarage.Areas.Employee.Controllers
                     Visit = visit
                 };
 
-                await this.repairActivityService.AddAsync(newRepairActivity);
-
-                visit.RepairActivities.Add(newRepairActivity);
+                await this.repairActivityService.AddAsync(newRepairActivity, cancellationToken);
 
                 this.applicationDbContext.SaveChanges();
 
-                var visitViewModel = visitMapper.ToViewModel(visit);
+                var visitViewModel = this.visitMapper.ToViewModel(visit);
 
-                return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                //return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                return PartialView("~/Views/Shared/Visits/_VisitDetailsEditablePartial.cshtml", visitViewModel);
             }
             catch (Exception ex)
             {
@@ -159,25 +173,26 @@ namespace SmartGarage.Areas.Employee.Controllers
         {
             try
             {
+                Guid _visitRepairActivityId = Guid.Parse(visitRepairActivityId);
+                //var repairActivity = await this.repairActivityService.GetById(_visitRepairActivityId, cancellationToken);
+
+                await this.repairActivityService.DeleteAsync(_visitRepairActivityId, cancellationToken);
+                
                 Guid _id = Guid.Parse(visitId);
                 var visit = await this.visitService.GetByIdAsync(_id, cancellationToken);
 
-                Guid _visitRepairActivityId = Guid.Parse(visitRepairActivityId);
-                var repairActivity = await this.repairActivityService.GetById(_visitRepairActivityId);
+                var visitViewModel = this.visitMapper.ToViewModel(visit);
 
-                visit.RepairActivities.Remove(repairActivity);
-
-                this.applicationDbContext.SaveChanges();
-
-                //var visitViewModel = visitMapper.ToViewModel(visit);
-
-                return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                return PartialView("~/Views/Shared/Visits/_VisitDetailsEditablePartial.cshtml", visitViewModel);
+                //return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
             }
-            catch (Exception ex)
+            catch (EntityNotFoundException ex)
             {
-                return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                //return RedirectToAction("DisplayVisitDetails", "Visits", new { area = "Employee", visitId = visitId });
+                return View("DisplayVisitDetails",new { area = "Employee", visitId = visitId });
             }
         }
+
         [HttpGet]
         public IActionResult ShowActiveVisits()
         {
@@ -217,6 +232,25 @@ namespace SmartGarage.Areas.Employee.Controllers
             {
                 return View("Error");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateVisitStatus(string visitId, CancellationToken cancellationToken)
+        {
+            Guid id = Guid.Parse(visitId);
+
+            var visit = await visitService.GetByIdAsync(id, cancellationToken);
+            await visitService.UpdateStatusAsync(visit, cancellationToken);
+            
+            return RedirectToAction("DisplayVisitDetails", new { area = "Employee", visitId = visitId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateVisit(VisitViewModel visitModel, CancellationToken cancellationToken)
+        {
+            var visit = await visitService.GetByIdAsync(visitModel.Id, cancellationToken);
+            // To update the visit data using visitsService
+            return RedirectToAction("DisplayVisitDetails", new { area = "Employee", visitId = visit.Id });
         }
     }
 }

@@ -13,31 +13,31 @@ namespace SmartGarage.Services
 			this.repairActivityRepository = repairActivityRepository;
 		}
 
-		public async Task<ICollection<RepairActivity>> GetByVisitIdAsync(Guid id)
+		public async Task<ICollection<RepairActivity>> GetByVisitIdAsync(Guid id, CancellationToken cancellationToken)
 		{
-			return await this.repairActivityRepository.GetByVisitId(id);
+			return await this.repairActivityRepository.GetByVisitId(id, cancellationToken);
 		}
 
-		public async Task<ICollection<RepairActivity>> GetByNameAsync(string name)
+		public async Task<ICollection<RepairActivity>> GetByNameAsync(string name, CancellationToken cancellationToken)
 		{
-			return await this.repairActivityRepository.GetByNameAsync(name);
+			return await this.repairActivityRepository.GetByNameAsync(name, cancellationToken);
 		}
 
-		public async Task<RepairActivity> AddAsync(RepairActivity repairActivity)
+		public async Task<RepairActivity> AddAsync(RepairActivity repairActivity, CancellationToken cancellationToken)
 		{
-			return await this.repairActivityRepository.AddAsync(repairActivity);
+			return await this.repairActivityRepository.AddAsync(repairActivity, cancellationToken);
 		}
 
-		public async Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice)
+		public async Task<ICollection<RepairActivity>> GetByPriceRange(int startingPrice, int endingPrice, CancellationToken cancellationToken)
 		{
-			return await this.repairActivityRepository.GetByPriceRangeAsync(startingPrice, endingPrice);
+			return await this.repairActivityRepository.GetByPriceRangeAsync(startingPrice, endingPrice, cancellationToken);
 		}
 
-
-        public async Task DeleteAsync(RepairActivity repairActivity)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
-            await this.repairActivityRepository.DeleteAsync(repairActivity);
+            await this.repairActivityRepository.DeleteAsync(id, cancellationToken);
         }
+
         public async Task<RepairActivity> GetById(Guid id)
         {
             return await this.repairActivityRepository.GetById(id);

@@ -5,8 +5,31 @@
     var visitRepairTypes = Model.RepairActivityTypes;
 }
 
+<!-- Confirm status update -->
+<div class="modal" id="updateStatus" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Advance status ?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Advance status ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a asp-controller="Visits" asp-action="UpdateVisitStatus" asp-route-visitId="@Model.Id" class="btn btn-primary d-flex flex-column">
+                    Set
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- employee index page -->
-<div class="d-flex flex-column justify-content-start" style="height:100%;">
+<div id="div-id" class="d-flex flex-column justify-content-start" style="height:100%;">
 
     <!-- employee nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" />
@@ -28,18 +51,20 @@
     <div class="container my-5 pb-5" style="height:100%">
 
         <div class="d-flex flex-row justify-content-between bg-secondary text-light rounded-top bg-opacity-75 text-secondary px-4 py-3">
-            <div class="d-flex flex-column">
-                VISIT DETAILS
-            </div>
-            <div class="btn btn-primary d-flex flex-column">
-                STATUS
-            </div>
-        </div>
 
-        <div class="d-flex row" style="height:100%">
+            @if (Model.Status == "Paid")
+            {
+                <label class="btn btn-primary d-flex flex-column">
+                    PAID
+                </label>
+            }
+            else
+            {
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateStatus">@Model.Status</button>
+            }
 
-            @{
-                <div class="d-flex flex-row justify-content-between">
+            <div class="d-flex flex-column flex-fill">
+                <div class="d-flex flex-row justify-content-end">
                     <div class="d-flex gap-4 text-end" style="width:80%">
                         <select id="dropdown-options" class="d-flex flex-fill btn btn-secondary dropdown-toggle my-1 m-auto" style="width:80%;">
                             @foreach (var item in visitRepairTypes)
@@ -49,13 +74,19 @@
                                 </option>
                             }
                         </select>
-                        <button id="submitBtn" class="btn btn-primary">Submit</button>
+                        <button id="submitBtn" class="btn btn-primary">Add</button>
                     </div>
                 </div>
-            }
 
-            <div class="scrollable-div row mx-auto" style="height: calc(100% - 80px);">
-                <partial name="Visits/_VisitDetailsEditablePartial" model="@Model" class="d-flex overflow-auto" />
+            </div>
+
+        </div>
+
+        <div class="d-flex row justify-content-start" style="height:100%">
+
+            <div id="partialViewContainer" class="scrollable-div row mx-auto" style="height: calc(100% - 50px);">
+                <!-- How to replace the content of this partial view with the updated information that comes as a result from theajax function below ? -->
+                <partial id="partial-view" name="Visits/_VisitDetailsEditablePartial" model="@Model" class="d-flex overflow-auto" />
             </div>
         </div>
     </div>
@@ -64,12 +95,69 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
+
     $(document).ready(function () {
+
+        // Subscribe to the callback inside the partial view with id "partial-view" from here and get notified when an anchor is clicked ?
+
+        // Callback declared in site.js
+        subscribeToRepairActivityRemovedCallback(function (activityId) {
+            console.log(activityId);
+            // Extract the necessary information from the clicked anchor
+            var visitId = '@Model.Id';
+            var visitRepairActivityId = activityId;
+
+            // Construct the action URL
+            var actionUrl = '/Employee/Visits/DeleteRepairActivity?visitId=' + visitId + '&visitRepairActivityId=' + visitRepairActivityId;
+
+            // Make an AJAX request to delete the repair activity
+            $.ajax({
+                url: actionUrl,
+                type: 'GET',
+                success: function (result) {
+                    // Update the content of the partial view container
+                    // $('#partialViewContainer').html("");
+                    $('#partialViewContainer').html(result);
+                    // console.log("Refresh");
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error('Error deleting repair activity:', error);
+                }
+            });
+        });
+
+        // $('#partial-view')[0].window.subscribeToNameClickedCallback(function (activityId) {
+        //     console.log(activityId);
+        // });
+
         $('#submitBtn').on('click', function () {
-            console.log('activity add buttonc click');
+            console.log('activity add button click');
+
             var selectedValue = $('#dropdown-options').val();
             var visitId = '@Model.Id';
-            window.location.href = '/Employee/Visits/AddRepairActivity?visitId=' + visitId + '&repairActivityTypeId=' + selectedValue;
+
+            // Construct the action URL
+            var actionUrl = '/Employee/Visits/AddRepairActivity?visitId=' + visitId + '&repairActivityTypeId=' + selectedValue;
+
+            $.ajax({
+                url: actionUrl,
+                type: 'GET',
+                success: function (result) {
+
+                    // $('#partialViewContainer').val("");
+
+                    // Append the new content to the existing partial view container
+                    $('#partialViewContainer').html(result);
+
+                    // console.log($('#partialViewContainer').html());
+                },
+                error: function (error) {
+                    console.error('Error loading partial view:', error);
+                }
+            });
         });
     });
+
+
 </script>

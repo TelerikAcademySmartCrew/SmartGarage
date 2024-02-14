@@ -6,41 +6,50 @@
     <!-- customer nav bar -->
     <partial name="/Views/Shared/_CustomerNavBarPartial.cshtml" model="Model.UserName" />
 
-    <div class="bg-light">
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+            <div class="d-flex flex-row align-items-center gap-3">
+                <p class="lead my-2">
+                    MY <b>PROFILE</b>
+                </p>
+            </div>
+        </div>
     </div>
 
-    <div class="d-flex flex-row m-auto gap-5 justify-content-center" style="width:50%; min-height:50%;">
+    <div class="d-flex flex-row m-auto gap-5 justify-content-center" style="width:60%; min-height:60%;">
 
-        <div class="d-flex bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
+        <div class="d-flex justify-content-start bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
 
             <h4 class="opacity-50 p-2">
                 Update profile
             </h4>
             <form asp-controller="Customer" asp-action="UpdateUserProfile" class="d-flex flex-column m-0" method="post">
-                <div class="d-flex flex-column">
-                    <label asp-for="@Model.UserName" class="form-label p-2 m-auto">Email</label>
-                    <input name="UserName" readonly value="@Model.UserName" type="text" class="form-control">
-                </div>
-                <div class="">
-                    <label asp-for="@Model.FirstName" class="form-label p-2 m-auto">First Name</label>
-                    <input name="FirstName" value="@Model.FirstName" type="text" class="form-control">
-                </div>
-                <div class="">
-                    <label asp-for="@Model.LastName" class="form-label p-2 m-auto">Last Name</label>
-                    <input name="LastName" value="@Model.LastName" type="text" class="form-control" aria-describedby="emailHelp">
-                </div>
-                <div class="">
-                    <label asp-for="@Model.PhoneNumber" class="form-label p-2 m-auto">Phone Number</label>
-                    <input name="PhoneNumber" value="@Model.PhoneNumber" type="text" class="form-control" aria-describedby="emailHelp">
-                </div>
-                <div class="p-4">
-                    <button type="submit" class="btn btn-primary">Save</button>
+                <div class="d-flex flex-column justify-content-between p-2">
+                    <div class="d-flex flex-column">
+                        <label asp-for="@Model.UserName" class="form-label p-2 m-auto">Email</label>
+                        <input name="UserName" readonly value="@Model.UserName" type="text" class="form-control">
+                    </div>
+                    <div class="">
+                        <label asp-for="@Model.FirstName" class="form-label p-2 m-auto">First Name</label>
+                        <input name="FirstName" value="@Model.FirstName" type="text" class="form-control">
+                    </div>
+                    <div class="">
+                        <label asp-for="@Model.LastName" class="form-label p-2 m-auto">Last Name</label>
+                        <input name="LastName" value="@Model.LastName" type="text" class="form-control" aria-describedby="emailHelp">
+                    </div>
+                    <div class="">
+                        <label asp-for="@Model.PhoneNumber" class="form-label p-2 m-auto">Phone Number</label>
+                        <input name="PhoneNumber" value="@Model.PhoneNumber" type="text" class="form-control" aria-describedby="emailHelp">
+                    </div>
+                    <div class="p-4">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
             </form>
         </div>
 
         @* <div class="d-flex card border-primary rounded-3 flex-column p-4 m-auto" style="width:50%; height:100%;"> *@
-        <div class="d-flex bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
+        <div class="d-flex container bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
             <h4 class="text-center opacity-50 text-left p-2">
                 My cars
             </h4>
@@ -51,17 +60,18 @@
                         {
                             foreach (var vehicle in Model.Vehicles)
                             {
-                                <div class="card p-2">
-                                    <div>
+                                <div class="d-flex card flex-row py-2 px-4">
+                                    <div class="col  text-start">
                                         @vehicle.Brand - @vehicle.Model
                                     </div>
-                                    <hr />
-                                    <div>
-                                        VIN: @vehicle.VIN
-                                    </div>
-                                    <hr />
-                                    <div>
-                                        LicensePlate: @vehicle.LicensePlate
+                                    <div class="col  text-end">
+                                        <div>
+                                            VIN: @vehicle.VIN
+                                        </div>
+                                        <hr />
+                                        <div>
+                                            LicensePlate: @vehicle.LicensePlate
+                                        </div>
                                     </div>
                                 </div>
                             }
