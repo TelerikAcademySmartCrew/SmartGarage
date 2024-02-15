@@ -83,13 +83,16 @@ namespace SmartGarage.Services
             {
                 throw new DuplicateEntityFoundException($"User already exists");
             }
-            var filePath = Path.Combine(webHostEnvironment.ContentRootPath, "Views/MailTemplate/AccountConfirmation.html");
+            var filePath = Path.Combine(webHostEnvironment.ContentRootPath, "Views/MailTemplate/AccountConfirmation.html")
+                ?? throw new EntityNotFoundException("Email template not found.");
             string body;
             const string subject = "Welcome to Smart Garage!";
+
             using (var reader = new StreamReader(filePath))
             {
                 body = await reader.ReadToEndAsync();
             }
+
             body = body.Replace("{Password}", randomPassword);
             body = body.Replace("{UserName}", appUser.Email);
 

@@ -138,13 +138,13 @@ namespace SmartGarage.Controllers
                 if (!ModelState.IsValid)
                 {
                     ModelState.AddModelError("Email", "Error. Please try again.");
-                    return View();
+                    return View(registertionData);
                 }
 
                 if (await usersService.UserWithEmailExists(registertionData.Email))
                 {
                     ModelState.AddModelError("Email", "Email is alredy registered.");
-                    return View();
+                    return View(registertionData);
                 }
 
                 var newUser = new AppUser
@@ -157,12 +157,17 @@ namespace SmartGarage.Controllers
 
                 var result = await usersService.CreateUser(newUser);
 
-                if (!result.Succeeded) return View("Error");
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("Email", "Error. Please try again.");
+                    return View(registertionData);
+                }
+
                 ViewData["PostRegisterMessage"] = "Registration successful! Please check your email";
 
-                await signInManager.SignInAsync(newUser, isPersistent: false);
-                var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
-                var callbackUrl = Url.Action("Login", "Auth", new { userId = newUser.Id, code = token });
+                //await signInManager.SignInAsync(newUser, isPersistent: false);
+                //var token = await userManager.GenerateEmailConfirmationTokenAsync(newUser);
+                //var callbackUrl = Url.Action("Login", "Auth", new { userId = newUser.Id, code = token });
 
 
                 // NOTE : this might be needed later
@@ -175,13 +180,14 @@ namespace SmartGarage.Controllers
                     //LoginViewModel model = new LoginViewModel();
                 }
 
-                ConfirmEmailViewModel model = new ConfirmEmailViewModel()
-                {
-                    UserName = newUser.Email,
-                    UserId = newUser.Id,
-                    EmailConfirmToken = token,
-                };
-                return View("ConfirmEmail", model);
+                //ConfirmEmailViewModel model = new ConfirmEmailViewModel()
+                //{
+                //    UserName = newUser.Email,
+                //    UserId = newUser.Id,
+                //    EmailConfirmToken = token,
+                //};
+
+                return View(registertionData);
 
             }
             catch (EntityNotFoundException ex)

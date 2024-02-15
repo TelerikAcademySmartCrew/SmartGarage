@@ -23,30 +23,32 @@ namespace SmartGarage.Utilities
 
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
-                var from = emailConfig.Username;
-                var message = new MailMessage(from, toEmail);
-                message.Subject = subject;
-                message.IsBodyHtml = true;
-                
-                var htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
-                message.AlternateViews.Add(htmlView);
+            var from = emailConfig.Username;
+            var message = new MailMessage(from, toEmail);
+            message.Subject = subject;
+            message.IsBodyHtml = true;
 
-                message.Body = body;
-                var client = new SmtpClient(emailConfig.SmtpServer, emailConfig.Port);
-                client.EnableSsl = true;
-                client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(emailConfig.Username, emailConfig.Password);
+            var htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
+            message.AlternateViews.Add(htmlView);
+            message.Body = body;
 
-                try
-                {
-                    client.SendAsync(message, null);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
-                        ex.ToString());
-                }
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            var client = new SmtpClient(emailConfig.SmtpServer, emailConfig.Port);
+            client.EnableSsl = true;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential(emailConfig.Username, emailConfig.Password);
+
+            try
+            {
+                await client.SendMailAsync(message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception caught in CreateTestMessage2(): {0}",
+                    ex.ToString());
+            }
         }
-        
+
     }
 }
