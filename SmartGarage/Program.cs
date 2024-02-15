@@ -2,7 +2,7 @@ using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.Extensions.Options;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
