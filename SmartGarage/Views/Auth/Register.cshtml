@@ -5,6 +5,13 @@
     var message = ViewData["PostRegisterMessage"];
 }
 
+@* <div class="d-flex flex-column justify-content-center my-0 mx-auto text-center">
+    @if (message != null)
+    {
+        <p> @message </p>
+    }
+</div>
+ *@
 <div class="d-flex flex-column justify-content-start my-5" style="height:40%; margin-top:100px;">
 
     <div class="d-flex flex-column justify-content-center my-0 mx-auto text-center">
@@ -12,21 +19,27 @@
         <p id="smart-garage-logo-label" class="m-0" style="text-align:start;">management system</p>
     </div>
     <div class="d-flex flex-column justify-content-start fade-in" style="margin-top:100px;">
-        <div class="d-flex flex-column justify-content-center my-0 mx-auto text-center">
-            @if (message != null)
-            {
-                <p> @message </p>
-            }
-        </div>
+
         <form asp-controller="Auth" asp-action="Register" method="post" style="width:30%;" class="d-flex flex-column m-auto justify-content-center">
             <span asp-validation-for="@Model.Email" class="form-error" style="color: #7B0828"></span>
             <input asp-for="@Model.Email" class="log-in-form-control" type="email" placeholder="Email" aria-label="Email">
-            <a href="#" class="d-flex text-secondary align-content-start m-auto" style="text-decoration:none; width:100%;">
-                You will receive an email with further instructions !
-            </a>
+
+            @if (message != null)
+            {
+                <div id="registration-message" href="#" class="d-flex text-secondary align-content-start m-auto text-success" style="text-decoration:none; width:100%;">
+                    <b> @message </b>
+                </div>
+            }
+            else
+            {
+                <a id="registration-message" href="#" class="d-flex text-secondary align-content-start m-auto" style="text-decoration:none; width:100%;">
+                    You will receive an email with login information !
+                </a>
+            }
+
             <div class="d-flex flex-row justify-content-end gap-3 mt-4">
                 <a asp-controller="Auth" asp-action="Login" type="button" class="btn my-1 primary-button text-black btn-outline-light bg-secondary opacity-50 flex-shrink-1"
-                        style="width: 8.0rem;">
+                   style="width: 8.0rem;">
                     <<<
                 </a>
                 <button type="submit" class="btn my-1 primary-button text-black btn-outline-light opacity-75 flex-grow-1">
