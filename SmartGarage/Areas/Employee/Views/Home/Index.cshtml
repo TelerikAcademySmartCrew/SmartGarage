@@ -24,33 +24,39 @@
 
     <div class="container d-flex align-items-center justify-content-center align-items-center m-auto text-center" style="width:50%; height:50%;">
         <div class="d-flex row gap-3" style="width:100%; height:100%;">
-            <!-- Your content goes here -->
             <div class="d-flex gap-3 m-0 flex-fill">
-                <a asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class="employee-menu-element col">
-                    REGISTER CUSTOMER
+                <a asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class=" employee-menu-element col gap-2">
+                    <img class="position-relative opacity-50" src="~/images/add-user.png" style="width:64px; filter:sepia()" />
+                    <div>REGISTER CUSTOMER</div>
                 </a>
-                <a asp-area="Employee" asp-controller="Customers" asp-action="ManageCustomers" class="employee-menu-element col">
-                    CUSTOMERS
+                <a asp-area="Employee" asp-controller="Customers" asp-action="ManageCustomers" class="employee-menu-element col gap-2">
+                    <img class="position-relative opacity-50" src="~/images/users.png" style="width:100px; filter:sepia()" />
+                    <div>CUSTOMERS</div>
                 </a>
             </div>
             <div class="d-flex gap-3 m-0 flex-fill">
-                <a asp-area="Employee" asp-controller="Vehicles" asp-action="RegisterVehicle" class="employee-menu-element col">
-                    REGISTER VEHICLE
+                <a asp-area="Employee" asp-controller="Vehicles" asp-action="RegisterVehicle" class="employee-menu-element col gap-2 m-0">
+                    <img class="position-relative opacity-50" src="~/images/add-vehicle.png" style="width:50px; filter:sepia()" />
+                    <div>REGISTER VEHICLE</div>
                 </a>
-                <a asp-area="Employee" asp-controller="Vehicles" asp-action="ManageVehicles" class="employee-menu-element col">
-                    VEHICLES
+                <a asp-area="Employee" asp-controller="Vehicles" asp-action="ManageVehicles" class="employee-menu-element col gap-2">
+                    <img class="position-relative opacity-50" src="~/images/vehicles.png" style="width:100px; filter:sepia()" />
+                    <div>VEHICLES</div>
                 </a>
             </div>
             <div class="d-flex gap-3 pe-auto m-0 flex-fill">
-                <a asp-area="Employee" asp-controller="Visits" asp-action="CreateVisit" class="employee-menu-element col-4">
-                    CREATE VISIT
+                <a asp-area="Employee" asp-controller="Visits" asp-action="CreateVisit" class="employee-menu-element col-4 gap-2">
+                    <img class="position-relative opacity-50" src="~/images/add-visit.png" style="width:40px; filter:sepia()" />
+                    <div>CREATE VISIT</div>
                 </a>
-                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="employee-menu-element col-4">
-                    ALL VISITS
+                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="employee-menu-element col-4 gap-">
+                    <img class="position-relative opacity-50" src="~/images/visits.png" style="width:80px; filter:sepia()" />
+                    <div>ALL VISITS</div>
                 </a>
 
-                <a onclick="filterWithStatus('Active')" class="employee-menu-element col-2 flex-fill">
-                    ACTIVE VISITS
+                <a onclick="filterWithStatus('Active')" class="employee-menu-element col-2 flex-fill gap-2">
+                    <img class="position-relative opacity-50" src="~/images/visits.png" style="width:80px; filter:sepia()" />
+                    <div>ACTIVE VISITS</div>
                 </a>
             </div>
         </div>

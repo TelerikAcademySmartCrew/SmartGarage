@@ -50,7 +50,7 @@
                 <div class="col">
                     <input id="input-lpn" asp-for="@Model.VisitsQueryParameters.LicensePlate" name="LicensePlate" placeholder="By Vehicle LPN" type="text" class="card px-2 my-1 py-1" />
                 </div>
-                <button onclick="clearForm('visits-filter-form')" type="button" class="btn btn-danger align-self-center" style="height:36px;">CLEAR</button>
+                <button onclick="filterWithStatus('')" type="button" class="btn btn-danger align-self-center" style="height:36px;">CLEAR</button>
                 <button type="submit" class="btn btn-primary align-self-center" style="height:36px;">FILTER </button>
             </form>
 
@@ -85,6 +85,8 @@
     }
 
     function filterWithStatus(status) {
+
+        clearForm('visits-filter-form');
 
         var url = '@Url.Action("ManageVisits", "Visits", new { area = "Employee", Status = "status" })';
         url = url.replace('status', status);

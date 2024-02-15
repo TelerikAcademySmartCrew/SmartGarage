@@ -9,8 +9,9 @@ public class VisitViewModel
     public string UserName { get; set; }
     public string VehicleBrand { get; set; }
     public string VehicleModel { get; set; }
+    public string VehicleYear { get; set; }
     public double TotalPrice { get; set; }
     public double Discount { get; set; }
-    public List<VisitRepairActivityViewModel> RepairActivities { get; set; } = new ();
-    public List<VisitRepairActivityCreateViewModel> RepairActivityTypes { get; set; } = new ();
+    public ICollection<VisitRepairActivityViewModel> RepairActivities { get; set; } = new List<VisitRepairActivityViewModel>();
+    public ICollection<VisitRepairActivityCreateViewModel> RepairActivityTypes { get; set; } = new List<VisitRepairActivityCreateViewModel>();
 }
