@@ -23,6 +23,7 @@ public class VisitMapper : IVisitMapper
             UserName = visit.User.UserName,
             VehicleBrand = visit.Vehicle.Brand.Name,
             VehicleModel = visit.Vehicle.Model.Name,
+            VehicleYear = visit.Vehicle.ProductionYear.ToString(),
             RepairActivities = visit.RepairActivities
                 .Select(ra => new VisitRepairActivityViewModel
                 {

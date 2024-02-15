@@ -32,8 +32,8 @@
             <input asp-for="@Model.VehicleQueryParameters.VIN" name="VIN" placeholder="VIN" type="text" class="d-flex flex-fill card px-2 my-1 py-1" />
             <input asp-for="@Model.VehicleQueryParameters.LicensePlate" placeholder="License plate number" name="LicensePlate" type="text" class="d-flex flex-fill card px-2 my-1 py-1" />
 
-            <button onclick="clearForm('vehicles-filter-form')" type="button" class="btn btn-danger align-self-center" style="height:36px;">CLEAR</button>
-            <button type="submit" class="btn btn-primary align-self-center" style="height:36px;">FILTER </button>
+            <button onclick="filterWithStatus()" type="button" class="btn btn-danger align-self-center" style="height:36px;">CLEAR</button>
+            <button id="btn-filter" type="submit" class="btn btn-primary align-self-center" style="height:36px;">FILTER </button>
         </form>
     </div>
 
@@ -49,3 +49,14 @@
     </div>
 
 </div>
+
+<script>
+
+    function filterWithStatus() {
+
+        clearForm('vehicles-filter-form');
+
+        $('#btn-filter').click();
+    }
+
+</script>

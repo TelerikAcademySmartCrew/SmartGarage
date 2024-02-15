@@ -3,9 +3,10 @@
 @{
     var userName = ViewData["CurrentUser"];
     var visitRepairTypes = Model.RepairActivityTypes;
+    var status = Model.Status;
 }
 
-<!-- Confirm status update -->
+<!-- Advance status modal -->
 <div class="modal" id="updateStatus" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -16,7 +17,18 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>Advance status ?</p>
+                @if (status == "Pending")
+                {
+                    <p>Set visit status as active.</p>
+                }
+                else if (status == "Active")
+                {
+                    <p>Set visit status as complete.</p>
+                }
+                else if (status == "Completed")
+                {
+                    <p>Set visit status as paid.</p>
+                }
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -52,24 +64,23 @@
 
         <div class="d-flex flex-row justify-content-between bg-secondary text-light rounded-top bg-opacity-75 text-secondary px-4 py-3">
 
-            @if (Model.Status == "Paid")
-            {
-                <label class="btn btn-primary d-flex flex-column">
-                    PAID
-                </label>
-            }
-            else
-            {
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateStatus">@Model.Status</button>
-            }
+            <!-- Show status and status advance button -->
+            <div class="d-flex col justify-content-start gap-2 m-auto">
+                <label class="d-flex btn-secondary align-items-center py-2 px-4">@status</label>
+                @if (@status != "Paid")
+                {
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateStatus">Advance</button>
+                }
+            </div>
 
-            <div class="d-flex flex-column flex-fill">
-                <div class="d-flex flex-row justify-content-end">
-                    <div class="d-flex gap-4 text-end" style="width:80%">
-                        <select id="dropdown-options" class="d-flex flex-fill btn btn-secondary dropdown-toggle my-1 m-auto" style="width:80%;">
+            @if (status == "Active")
+            {
+                <div class="d-flex flex-fill flex-column m-0">
+                    <div class="d-flex flex-row justify-content-end gap-2">
+                        <select id="dropdown-options" class="d-flex flex-fill btn btn-secondary dropdown-toggle" style="width:100%;">
                             @foreach (var item in visitRepairTypes)
                             {
-                                <option value="@item.Id" class="m-4">
+                                <option value="@item.Id">
                                     @item.Name
                                 </option>
                             }
@@ -77,9 +88,7 @@
                         <button id="submitBtn" class="btn btn-primary">Add</button>
                     </div>
                 </div>
-
-            </div>
-
+            }
         </div>
 
         <div class="d-flex row justify-content-start" style="height:100%">
@@ -97,6 +106,12 @@
 <script>
 
     $(document).ready(function () {
+
+        //
+        var repairTypesFull = @Html.Raw(Json.Serialize(Model.RepairActivityTypes));
+        var repairTypesUsed = @Html.Raw(Json.Serialize(Model.RepairActivities));
+
+        // console.log(repairTypesUsed);
 
         // Subscribe to the callback inside the partial view with id "partial-view" from here and get notified when an anchor is clicked ?
 
