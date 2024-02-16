@@ -84,11 +84,6 @@ namespace SmartGarage.Services
 
             // NOTE : toggle comment if you want to send emails
             
-            var userResult = await userManager.CreateAsync(appUser, randomPassword);
-            if (!userResult.Succeeded)
-            {
-                throw new DuplicateEntityFoundException($"User already exists");
-            }
             var filePath = Path.Combine(webHostEnvironment.ContentRootPath, "Views/MailTemplate/AccountConfirmation.html")
                 ?? throw new EntityNotFoundException("Email template not found.");
             string body;
@@ -102,6 +97,11 @@ namespace SmartGarage.Services
             body = body.Replace("{Password}", randomPassword);
             body = body.Replace("{UserName}", appUser.Email);
 
+            var userResult = await userManager.CreateAsync(appUser, randomPassword);
+            if (!userResult.Succeeded)
+            {
+                throw new DuplicateEntityFoundException($"User already exists");
+            }
             await userManager.AddToRoleAsync(appUser, "Customer");
             await applicationDbContext.SaveChangesAsync();
             // await emailService.SendEmailAsync(appUser.Email, subject, body);
