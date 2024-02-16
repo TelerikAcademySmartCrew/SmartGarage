@@ -96,8 +96,8 @@ namespace SmartGarage.Services
             body = body.Replace("{Password}", randomPassword);
             body = body.Replace("{UserName}", appUser.Email);
 
-            await emailService.SendEmailAsync(appUser.Email, subject, body);
             await userManager.AddToRoleAsync(appUser, "Customer");
+            await emailService.SendEmailAsync(appUser.Email, subject, body);
             await applicationDbContext.SaveChangesAsync();
 
             return userResult;
