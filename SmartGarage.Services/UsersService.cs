@@ -1,4 +1,6 @@
 ﻿using System.Security.Claims;
+using Azure;
+using Azure.Communication.Email;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +26,8 @@ namespace SmartGarage.Services
         private readonly IConfiguration configuration;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly PasswordGenerator passwordGenerator;
+        private readonly EmailClient emailClient;
+        private const string SenderEmail = "DoNotReply@e5b418ff-9ee5-4fdc-b08f-e8bcf7bfc02c.azurecomm.net";
 
         public UsersService(UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -32,7 +36,8 @@ namespace SmartGarage.Services
             EmailService emailService,
             IConfiguration configuration,
             IWebHostEnvironment webHostEnvironment,
-            PasswordGenerator passwordGenerator)
+            PasswordGenerator passwordGenerator,
+            EmailClient emailClient)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
@@ -42,6 +47,7 @@ namespace SmartGarage.Services
             this.configuration = configuration;
             this.webHostEnvironment = webHostEnvironment;
             this.passwordGenerator = passwordGenerator;
+            this.emailClient = emailClient;
         }
 
         public async Task<ICollection<AppUser>> GetAll()
@@ -98,7 +104,8 @@ namespace SmartGarage.Services
 
             await userManager.AddToRoleAsync(appUser, "Customer");
             await applicationDbContext.SaveChangesAsync();
-            await emailService.SendEmailAsync(appUser.Email, subject, body);
+            // await emailService.SendEmailAsync(appUser.Email, subject, body);
+            await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, appUser.Email, subject, body);
 
             return userResult;
         }

@@ -1,3 +1,4 @@
+using Azure.Communication.Email;
 using DinkToPdf;
 using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +29,10 @@ namespace SmartGarage
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            // Configure Emails
+            var emailConnectionString = builder.Configuration.GetConnectionString("EmailConnectionString");
+            builder.Services.AddScoped<EmailClient>(_ => new EmailClient(emailConnectionString));
 
             builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
            .AddRoles<IdentityRole>()
