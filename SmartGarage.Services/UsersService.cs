@@ -82,9 +82,11 @@ namespace SmartGarage.Services
             // Generate a random password
             string randomPassword = passwordGenerator.Generate();
 
-            // NOTE : toggle comment if you want to send emails
+            // Get the wwwroot path
+            var wwwrootPath = webHostEnvironment.WebRootPath;
+
             
-            var filePath = Path.Combine("SmartGarage/Views/MailTemplate/AccountConfirmation.html")
+            var filePath = Path.Combine(wwwrootPath, "Views/MailTemplate/AccountConfirmation.html")
                 ?? throw new EntityNotFoundException("Email template not found.");
             string body;
             const string subject = "Welcome to Smart Garage!";
