@@ -84,7 +84,7 @@ namespace SmartGarage.Services
 
             // NOTE : toggle comment if you want to send emails
             
-            var filePath = Path.Combine(webHostEnvironment.ContentRootPath, "Views/MailTemplate/AccountConfirmation.html")
+            var filePath = Path.Combine("SmartGarage/Views/MailTemplate/AccountConfirmation.html")
                 ?? throw new EntityNotFoundException("Email template not found.");
             string body;
             const string subject = "Welcome to Smart Garage!";
