@@ -86,7 +86,7 @@ namespace SmartGarage.Services
             var wwwrootPath = webHostEnvironment.WebRootPath;
 
             
-            var filePath = Path.Combine(wwwrootPath, "Views/MailTemplate/AccountConfirmation.html")
+            var filePath = Path.Combine(wwwrootPath, "AccountConfirmation.html")
                 ?? throw new EntityNotFoundException("Email template not found.");
             string body;
             const string subject = "Welcome to Smart Garage!";
