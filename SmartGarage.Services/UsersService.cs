@@ -101,7 +101,7 @@ namespace SmartGarage.Services
             }
             await userManager.AddToRoleAsync(appUser, "Customer");
             await applicationDbContext.SaveChangesAsync();
-            // await emailService.SendEmailAsync(appUser.Email, subject, body);
+
             await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, appUser.Email, subject, body);
 
             return userResult;
@@ -178,8 +178,10 @@ namespace SmartGarage.Services
                 throw new ArgumentNullException($"Password reset link in invalid");
             }
 
-            var filePath = Path.Combine(webHostEnvironment.WebRootPath, "PasswordResetConfirmation.html")
-            ?? throw new EntityNotFoundException("Reset password email template not found.");
+            // Get the wwwroot path
+            var wwwrootPath = webHostEnvironment.WebRootPath;
+            var filePath = Path.Combine(wwwrootPath, "PasswordResetConfirmation.html")
+                ?? throw new EntityNotFoundException("Reset password email template not found.");
 
             string body;
             const string subject = "Password reset requested!";
@@ -191,7 +193,7 @@ namespace SmartGarage.Services
 
             body = body.Replace("{ResetLink}", resetLink);
 
-            //await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, user.Email, subject, body);
+            _ = await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, user.Email, subject, body);
         }
 
         public async Task<IdentityResult> UpdateResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken)
