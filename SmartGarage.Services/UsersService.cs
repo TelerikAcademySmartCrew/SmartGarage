@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using Azure;
 using Azure.Communication.Email;
 using Microsoft.AspNetCore.Hosting;
@@ -108,11 +109,8 @@ namespace SmartGarage.Services
 
         public async Task<IdentityResult> CreateEmployee(AppUser appUser)
         {
-            // TODO : use the pass generator when ready
-
-            // Generate a random password
-            string randomPassword = "@User123";
-            //string randomPassword = GenerateRandomPassword2();
+            string randomPassword = "@Employee54";
+            //string randomPassword = passwordGenerator.Generate();
 
             if (await UserWithEmailExists(appUser.Email))
             {
@@ -173,7 +171,30 @@ namespace SmartGarage.Services
             return true;
         }
 
-        public async Task<IdentityResult> ResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken)
+        public async Task ResetPassword(AppUser user, string resetLink)
+        {
+            if (string.IsNullOrEmpty(resetLink))
+            {
+                throw new ArgumentNullException($"Password reset link in invalid");
+            }
+
+            var filePath = Path.Combine(webHostEnvironment.WebRootPath, "PasswordResetConfirmation.html")
+            ?? throw new EntityNotFoundException("Reset password email template not found.");
+
+            string body;
+            const string subject = "Password reset requested!";
+
+            using (var reader = new StreamReader(filePath))
+            {
+                body = await reader.ReadToEndAsync();
+            }
+
+            body = body.Replace("{ResetLink}", resetLink);
+
+            //await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, user.Email, subject, body);
+        }
+
+        public async Task<IdentityResult> UpdateResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken)
         {
             var result = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
 

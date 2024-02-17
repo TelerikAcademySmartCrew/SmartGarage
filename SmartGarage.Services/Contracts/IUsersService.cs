@@ -15,6 +15,7 @@ namespace SmartGarage.Services.Contracts
         Task<AppUser> Update(AppUser appUser);
         Task<bool> Delete(AppUser user);
         Task<bool> UserWithEmailExists(string email);
-        Task<IdentityResult> ResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken);
+        Task ResetPassword(AppUser userName, string resetLink);
+        Task<IdentityResult> UpdateResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken);
     }
 }
