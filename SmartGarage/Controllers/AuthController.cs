@@ -261,10 +261,7 @@ namespace SmartGarage.Controllers
 
                     await usersService.ResetPassword(user, resetLink);
 
-                    // Display instructions view
-                    ViewData["ResetLink"] = resetLink;
-                    return View("ResetPasswordInstructions");
-                    //return View("Login");
+                    return View("Login");
                 }
                 else
                 {
@@ -274,12 +271,13 @@ namespace SmartGarage.Controllers
             }
             catch (EntityNotFoundException ex)
             {
-                return View("ResetPassword");
+                ModelState.AddModelError("UserName", ex.Message);
+                return View();
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("UserName", ex.Message);
-                return View("ResetPassword");
+                return View();
             }
         }
 
