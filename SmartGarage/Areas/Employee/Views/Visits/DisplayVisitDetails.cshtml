@@ -66,10 +66,10 @@
 
             <!-- Show status and status advance button -->
             <div class="d-flex col justify-content-start gap-2 m-auto">
-                <label class="d-flex btn-secondary align-items-center py-2 px-4">@status</label>
+                <div class="d-flex bg-secondary rounded-pill align-items-center py-2 px-4">@status</div>
                 @if (@status != "Paid")
                 {
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateStatus">Advance</button>
+                    <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#updateStatus">Advance</button>
                 }
             </div>
 
@@ -110,10 +110,6 @@
         //
         var repairTypesFull = @Html.Raw(Json.Serialize(Model.RepairActivityTypes));
         var repairTypesUsed = @Html.Raw(Json.Serialize(Model.RepairActivities));
-
-        // console.log(repairTypesUsed);
-
-        // Subscribe to the callback inside the partial view with id "partial-view" from here and get notified when an anchor is clicked ?
 
         // Callback declared in site.js
         subscribeToRepairActivityRemovedCallback(function (activityId) {

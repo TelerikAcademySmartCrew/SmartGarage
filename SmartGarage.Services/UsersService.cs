@@ -6,13 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SmartGarage.Common.Exceptions;
-using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
-using SmartGarage.Utilities.Mappers;
-using SmartGarage.Utilities.Mappers.Contracts;
+using static SmartGarage.Common.Exceptions.ExceptionMessages;
 
 namespace SmartGarage.Services
 {
@@ -77,17 +75,13 @@ namespace SmartGarage.Services
 
         public async Task<IdentityResult> CreateUser(AppUser appUser)
         {
-            // TODO : use the pass generator when ready
-
-            // Generate a random password
             string randomPassword = passwordGenerator.Generate();
 
             // Get the wwwroot path
             var wwwrootPath = webHostEnvironment.WebRootPath;
-
-            
             var filePath = Path.Combine(wwwrootPath, "AccountConfirmation.html")
                 ?? throw new EntityNotFoundException("Email template not found.");
+
             string body;
             const string subject = "Welcome to Smart Garage!";
 
@@ -179,36 +173,16 @@ namespace SmartGarage.Services
             return true;
         }
 
-        private string GenerateRandomPassword()
+        public async Task<IdentityResult> ResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken)
         {
-            // Implement your logic to generate a random password here
-            // For example, you can use a library like "System.Security.Cryptography.RandomNumberGenerator"
-            // to generate a secure random password.
+            var result = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
 
-            // For simplicity, a basic example is provided below:
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var random = new Random();
-            var password = new string(Enumerable.Repeat(chars, 12) // Change 8 to the desired password length
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+            if (result.Succeeded)
+            {
+                applicationDbContext.SaveChanges();
+            }
 
-            return password;
-        }
-
-        // Function to generate a random password with at least one non-alphanumeric character
-        private string GenerateRandomPassword2()
-        {
-            const string alphanumericChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            const string specialChars = "@#$%&";
-
-            var random = new Random();
-
-            // Include at least one non-alphanumeric character
-            var password = new string(alphanumericChars[random.Next(alphanumericChars.Length)].ToString()) +
-                           new string(Enumerable.Repeat(alphanumericChars + specialChars, 11)
-                               .Select(s => s[random.Next(s.Length)])
-                               .ToArray());
-
-            return password; // + "!@#";
+            return result;
         }
     }
 }

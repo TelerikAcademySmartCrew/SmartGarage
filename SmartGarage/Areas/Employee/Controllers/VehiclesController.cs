@@ -144,7 +144,7 @@ namespace SmartGarage.Areas.Employee.Controllers
                 {
                     BrandId = brandId,
                     ModelId = modelId,
-                    ProductionYear = (int)vehileRegisterData.CreationYear,
+                    ProductionYear = vehileRegisterData.CreationYear,
                     VIN = vehileRegisterData.VIN,
                     LicensePlateNumber = vehileRegisterData.LicensePlate
                 };

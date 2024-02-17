@@ -2,58 +2,216 @@
 
 @{
     double totalPrice = Model.RepairActivities.Sum(x => x.Price);
+    double discount = 20; // Model.Discount;
+    var status = Model.Status;
 }
 
-<div class="d-flex flex-column bg-light bg-opacity-50 shadow mx-auto p-3">
+<div class="d-flex justify-content-between flex-column bg-light bg-opacity-50 shadow p-3" style="max-height:96%">
 
-    <div class="d-flex p-3 justify-content-between">
-        <dv>
-            @Model.VehicleBrand @Model.VehicleModel
-        </dv>
-        <div>
-            @Model.DateCreated.ToShortDateString()
+    <div class="d-flex flex-column justify-content-start ">
+
+        <div class="d-flex flex-row p-3 justify-content-between">
+            <div class="row">
+                <dv>
+                    <b>(@Model.VehicleYear) @Model.VehicleBrand @Model.VehicleModel</b>
+                </dv>
+                <dv>
+                    @Model.UserName
+                </dv>
+            </div>
+            <div class="col-2 text-end">
+                @Model.DateCreated.ToShortDateString()
+            </div>
         </div>
-    </div>
 
-    <div class="d-flex justify-content-between mt-4">
-        <dv>
-            Service type
-        </dv>
-        <div>
-            Price
-        </div>
-    </div>
+        <hr />
 
-    <hr />
+        <div class="d-flex flex-column justify-content-start mt-2" style="overflow-y: hidden;">
 
-    <div class="d-flex flex-column justify-content-start mt-2">
+            <!-- Repair Activities Container -->
+            <div id="" class="d-flex flex-column justify-content-start my-auto px-3 py-3 gap-3 repair-activities-container" style="overflow-y: auto;">
+                @{
+                    int iterator = 1;
 
-        @{
-            int iterator = 1;
-            <div class="d-flex flex-column justify-content-start gap-2">
-                @foreach (var item in Model.RepairActivities)
-                {
-                    <div class="d-flex justify-content-between flex-row">
-                        <div class="d-flex flex-row gap-4 text-end">
-                            <p style="min-width:20px;">@iterator.</p>
-                            <p>@item.Name</p>
+                    <!-- List Repair Activities -->
+                    @foreach (var repairActivity in Model.RepairActivities)
+                    {
+                        var item = repairActivity;
+
+                        <div id="" class="d-flex flex-row justify-content-between repair-activity-entry">
+                            <div class="d-flex gap-4 text-end" style="width:80%">
+                                <!-- Remove Repair Activities -->
+                                @if (status == "Active")
+                                {
+                                    <a onclick="onRepairActivityRemoveButtonClicked('@item.Id')"
+                                       class="d-flex align-self-center justify-content-center align-items-center btn btn-danger rounded-circle" style="width:32px; height:32px;"> X </a>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-self-center justify-content-center align-items-center bg-success text-light rounded-circle" style="width:32px; height:32px;">&#10003;</div>
+                                }
+
+                                <!-- Repair Activities Type -->
+                                <div id="" class="d-flex align-items-center repair-activity-id" style="min-width:20px;" data-id="@item.Id">@item.Name.</div>
+                            </div>
+                            <!-- Repair Activities Price -->
+                            <div class="d-flex bg-light pe-1 row rounded">
+                                @if (status == "Active")
+                                {
+                                    <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" autocomplete="off" value="@item.Price" style="width:100px;" />
+                                    <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
+                                }
+                                else
+                                {
+                                    <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" readonly autocomplete="off" value="@item.Price" style="width:100px;" />
+                                    <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
+                                }
+                            </div>
                         </div>
-                        <p>@item.Price лв.</p>
-                    </div>
-                    iterator++;
+
+                        iterator++;
+                    }
                 }
             </div>
-
-            <hr />
-
-            <div class="d-flex justify-content-between">
-                <div class="d-flex flex-row gap-4 text-end">
-                    <p style="min-width:20px;"></p>
-                    <p>Total Price</p>
-                </div>
-                <p>@totalPrice лв.</p>
-            </div>
-        }
+        </div>
     </div>
 
+    @{
+        if (status != "Pending") // || status == "Completed")
+        {
+            <div class="d-flex flex-column justify-content-between">
+
+                <div class="d-flex flex-column bg-secondary bg-opacity-50 rounded m-2 py-3 text-light">
+
+                    @if (discount != 0)
+                    {
+                        <div class="d-flex flex-row mx-5">
+                            <div class="d-flex col gap-4 text-end">
+                                <label class="d-flex m-0">Discount</label>
+                            </div>
+                            <div class="d-flex flex-column flex-stretch m-0">
+                                <p id="" class="badge bg-info px-4 py-2 row text-end">-@discount%</p>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="d-flex flex-row mx-5">
+                        <div class="d-flex col gap-4 text-end">
+                            <label class="d-flex m-0">Total Price</label>
+                        </div>
+                        <div class="d-flex flex-row gap-5 m-0">
+                            @if (discount != 0)
+                            {
+                                <s id="total-price-original" class="row text-end">@totalPrice лв.</s>
+                            }
+                            <label id="total-price" class="row text-end">@totalPrice лв.</label>
+                        </div>
+                    </div>
+                </div>
+
+                @if (status == "Active")
+                {
+                    <div class="d-flex row btn btn-primary mx-2">
+
+                        <div id="updateVisitButton" class="d-flex row btn btn-primary mx-2">
+                            <b>UPDATE VISIT</b>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        }
+    }
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        // Parse discount value to js
+        var discountValue = @Html.Raw(Json.Serialize(discount));
+
+        // Set initial total price
+        calTotalPrice();
+
+        // Add event listener to input fields
+        $('[id^="price-field"]').on('input', function () {
+            // Recalculate total price when input changes
+            calTotalPrice();
+        });
+
+        function calTotalPrice() {
+            var totalPrice = 0;
+
+            // Loop through all input fields with IDs starting with 'price-field-'
+            $('[id^="price-field"]').each(function () {
+                // Extract the numeric value from the input field
+                var fieldValue = parseFloat($(this).val()) || 0;
+
+                // Add the numeric value to the total price
+                totalPrice += fieldValue;
+            });
+
+            // Update the #total-price element
+            if (discountValue) {
+                $('#total-price-original').text(totalPrice.toFixed(2) + ' лв.');
+                $('#total-price').text((totalPrice * ((100.0 - discountValue) / 100)).toFixed(2) + ' лв.'); // Format to two decimal places
+            }
+            else {
+                $('#total-price').text(totalPrice.toFixed(2) + ' лв.'); // Format to two decimal places
+            }
+        }
+
+        // ----------------------------------------------------------------------------------------------------
+
+        // Add event listener to update button
+        $('#updateVisitButton').on('click', function () {
+            updateVisit();
+        });
+
+        function updateVisit() {
+            // Create an array to store the updated repair activities
+            var updatedRepairActivities = [];
+
+            // console.log($('repair-activities-container').children.length);
+
+            $('.repair-activities-container').children('.repair-activity-entry').each(function () {
+                var repairActivityId = $(this).find('.repair-activity-id').data('id');
+                var price = parseFloat($(this).find('.repair-activity-price').val()) || 0;
+
+                var updatedActivity = {
+                    Id: repairActivityId,
+                    Price: price
+                };
+
+                // Add the updated activity to the array
+                updatedRepairActivities.push(updatedActivity);
+
+            });
+
+            console.log(updatedRepairActivities);
+
+            // Send the updated repair activities to the server using AJAX
+            $.ajax({
+                url: '/Employee/Visits/UpdateVisit',
+                type: 'POST',
+                data: {
+                    visitId: '@Model.Id',
+                    repairActivities: updatedRepairActivities
+                },
+                success: function () {
+                    // Optionally, handle success actions
+                    // alert('Visit updated successfully');
+                    console.log("Updae successful");
+                    alert('Visit updated');
+                },
+                error: function () {
+                    // Optionally, handle error actions
+                    // alert('Error updating visit');
+                }
+            });
+        }
+    });
+
+</script>
