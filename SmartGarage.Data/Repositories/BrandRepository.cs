@@ -18,7 +18,9 @@ namespace SmartGarage.Data.Repositories
 
         public async Task<ICollection<VehicleBrand>> GetAllAsync()
         {
-            return await this.context.VehicleBrands.ToListAsync();
+            return await this.context.VehicleBrands
+                .Include(b => b.Models)
+                .ToListAsync();
         }
 
         public async Task<VehicleBrand> GetByIdAsync(Guid id)

@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.V4.Pages.Account.Manage.Internal;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.ViewModels;
@@ -8,6 +11,8 @@ using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;
+using System.Security.Claims;
+using static SmartGarage.Common.Exceptions.ExceptionMessages;
 
 namespace SmartGarage.Controllers
 {
@@ -15,6 +20,7 @@ namespace SmartGarage.Controllers
     {
         private readonly SignInManager<AppUser> signInManager;
         private readonly IUsersService usersService;
+        private readonly UserManager<AppUser> userManager;
         private readonly IUserMapper userMapper;
         private readonly IVehicleMapper vehicleMapper;
         private readonly IBrandService brandService;
@@ -22,6 +28,7 @@ namespace SmartGarage.Controllers
 
         public CustomerController(SignInManager<AppUser> signInManager,
             IUsersService usersService,
+            UserManager<AppUser> userManager,
             IUserMapper userMapper,
             IVehicleMapper vehicleMapper,
             IBrandService brandService,
@@ -29,6 +36,7 @@ namespace SmartGarage.Controllers
         {
             this.signInManager = signInManager;
             this.usersService = usersService;
+            this.userManager = userManager;
             this.userMapper = userMapper;
             this.vehicleMapper = vehicleMapper;
             this.brandService = brandService;
@@ -38,21 +46,22 @@ namespace SmartGarage.Controllers
         [HttpGet]
         public async Task<IActionResult> SmartGarageInfo()
         {
-            // TODO : 
-            //if (User.IsInRole("User"))
             try
             {
-                GarageInfoViewModel model = new GarageInfoViewModel();
                 var user = await usersService.GetUserAsync(User);
 
                 var userModel = userMapper.Map(user);
 
-                model.userViewModel = userModel;
                 var activityServiceTypes = await repairActivityTypeService.GetAllAsync();
-                model.RepairActivityTypes = activityServiceTypes.Select(a => new RepairActivityTypeViewModel
+
+                GarageInfoViewModel model = new GarageInfoViewModel
                 {
-                    Name = a.Name,
-                }).ToList();
+                    UserViewModel = userModel,
+                    RepairActivityTypes = activityServiceTypes.Select(a => new RepairActivityTypeViewModel
+                    {
+                        Name = a.Name,
+                    }).ToList()
+                };
 
                 var allBrands = await brandService.GetAllAsync();
                 foreach (var brand in allBrands)
@@ -141,5 +150,88 @@ namespace SmartGarage.Controllers
                 return View("Profile", viewModel);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword()
+        {
+            var changePasswordViewModel = new UserChangePasswordViewModel();
+            changePasswordViewModel.UserName = User.Identity.Name;
+
+            return View(changePasswordViewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(UserChangePasswordViewModel userChangePasswordData)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(userChangePasswordData);
+            }
+
+            try
+            {
+                var user = await usersService.GetByEmail(userChangePasswordData.UserName);
+
+                //var token = await userManager.GeneratePasswordResetTokenAsync(user);
+                //var result = await userManager.ResetPasswordAsync(user, token, userChangePasswordData.NewPassword);
+                //if (result.Succeeded)
+                //{
+                //    return Redirect("Profile");
+                //}
+                //else
+                //{
+                //    ModelState.AddModelError("NewPassword", result.Errors.First().Description);
+                //    ModelState.AddModelError("ConfirmPassword", result.Errors.First().Description);
+                //    return View(userChangePasswordData);
+                //}
+
+                var passwordCheckResult = await userManager.CheckPasswordAsync(user, userChangePasswordData.OldPassword);
+                if (!passwordCheckResult)
+                {
+                    ModelState.AddModelError("OldPassword", "Current password is incorrect.");
+                    return View(userChangePasswordData);
+                }
+
+                var result = await userManager.ChangePasswordAsync(user, userChangePasswordData.OldPassword, userChangePasswordData.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Profile");
+                }
+                else
+                {
+                    ModelState.AddModelError("OldPassword", result.Errors.First().Description);
+                    foreach (var error in result.Errors)
+                    {
+                        // Add errors to specific fields if needed
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View(userChangePasswordData);
+                }
+
+                //if (result.Succeeded)
+                //{
+                //    return Redirect("Profile");
+                //}
+                //else
+                //{
+                //    ModelState.AddModelError("NewPassword", result.Errors.First().Description);
+                //    ModelState.AddModelError("ConfirmPassword", result.Errors.First().Description);
+                //    return View(userChangePasswordData);
+                //}
+
+            }
+            catch (EntityNotFoundException ex)
+            {
+                ModelState.AddModelError("Username", ex.Message);
+                return View(userChangePasswordData);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("Username", ex.Message);
+                return View(userChangePasswordData);
+            }
+        }
+
     }
 }

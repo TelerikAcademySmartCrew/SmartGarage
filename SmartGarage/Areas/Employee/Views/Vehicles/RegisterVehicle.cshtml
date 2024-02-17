@@ -34,7 +34,7 @@
 
         <div class="d-flex flex-row mt-2 align-content-center  align-items-center flex-row bg-light rounded-3">
             <h5 class="p-4 text-muted">
-                REGISTER VEHICLE
+                ENTER VEHICLE DETAILS
             </h5> 
         </div>
 
@@ -53,17 +53,17 @@
             </div>
             <div class="d-flex flex-column form-group gap-1">
                 <label asp-for="@Model.CreationYear">Production Year</label>
-                <input id="productionInput" asp-for="@Model.CreationYear" type="text" class="form-control" placeholder="Enter year" required>
+                <input id="productionInput" asp-for="@Model.CreationYear" type="number" class="form-control" min="0" pattern="\d{4}" placeholder="Enter year" required>
                 <span asp-validation-for="@Model.CreationYear" style="height:14px;"></span>
             </div>
             <div class="d-flex flex-column form-group gap-1">
                 <label asp-for="@Model.VIN">VIN Number</label>
-                <input asp-for="@Model.VIN" type="text" class="form-control" placeholder="Enter vin" required>
+                <input asp-for="@Model.VIN" type="text" class="form-control" autocomplete="off" placeholder="Enter vin" maxlength="17" required>
                 <span asp-validation-for="@Model.VIN" style="height:14px;"></span>
             </div>
             <div class="d-flex flex-column form-group gap-1">
                 <label asp-for="@Model.LicensePlate">License Plate</label>
-                <input asp-for="@Model.LicensePlate" type="text" class="form-control" placeholder="Enter license plate number" required>
+                <input asp-for="@Model.LicensePlate" type="text" class="form-control" autocomplete="off" placeholder="Enter license plate number" required>
                 <span asp-validation-for="@Model.LicensePlate" style="height:14px;"></span>
             </div>
             <div class="d-flex flex-column form-group gap-1">

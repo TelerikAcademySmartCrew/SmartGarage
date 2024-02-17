@@ -34,11 +34,12 @@
         {
             <div class="d-flex flex-row mt-2 align-content-center  align-items-center flex-row bg-light rounded-3">
                 <h5 class="p-4 text-muted">
-                    REGISTER CUSTOMER
+                    ENTER CUSTOMER EMAIL
                 </h5>
             </div>
+
             <form asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class="d-flex flex-column gap-3 p-5" method="post" style="width:100%;">
-                <input asp-for="@Model.Email" class="log-in-form-control" type="email" placeholder="Email" aria-label="Email" required>
+                <input asp-for="@Model.Email" class="log-in-form-control" type="email" placeholder="Email" autocomplete="off" aria-label="Email" required>
                 <span asp-validation-for="@Model.Email" class="form-error" style="color: #7B0828; height:24px;"></span>
 
                 <div class="d-flex justify-content-start gap-3 mt-4">

@@ -62,7 +62,8 @@
         @{
             @foreach (var visit in Model.Visits)
             {
-                <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.Id" style="text-decoration:none">
+                <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.Id"
+                    class="text-secondary" style=" text-decoration:none">
                     <partial name="Visits/_VisitElementPartial" model="@visit" />
                 </a>
             }

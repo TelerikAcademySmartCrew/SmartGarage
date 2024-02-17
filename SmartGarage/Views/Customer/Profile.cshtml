@@ -16,12 +16,12 @@
         </div>
     </div>
 
-    <div class="d-flex flex-row m-auto gap-5 justify-content-center" style="width:60%; min-height:60%;">
+    <div class="d-flex flex-row m-auto gap-5 justify-content-center" style="width:60%; max-height:60%;">
 
         <div class="d-flex justify-content-start bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
 
             <h4 class="opacity-50 p-2">
-                Update profile
+                UPDATE PROFILE INFO
             </h4>
             <form asp-controller="Customer" asp-action="UpdateUserProfile" class="d-flex flex-column m-0" method="post">
                 <div class="d-flex flex-column justify-content-between p-2">
@@ -41,47 +41,49 @@
                         <label asp-for="@Model.PhoneNumber" class="form-label p-2 m-auto">Phone Number</label>
                         <input name="PhoneNumber" value="@Model.PhoneNumber" type="text" class="form-control" aria-describedby="emailHelp">
                     </div>
-                    <div class="p-4">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                    <div class="d-flex flex-column mt-4">
+                        <div class="p-4">
+                            <button type="submit" class="btn btn-primary">UPDATE</button>
+                        </div>
+                        <a asp-area="" asp-controller="Customer" asp-action="ChangePassword" type="button" class="">Change password</a>
                     </div>
                 </div>
             </form>
+
+
         </div>
 
-        @* <div class="d-flex card border-primary rounded-3 flex-column p-4 m-auto" style="width:50%; height:100%;"> *@
         <div class="d-flex container bg-light bg-opacity-50 border border-primary rounded-3 flex-column p-4 m-auto text-center" style="width:50%; height:100%;">
             <h4 class="text-center opacity-50 text-left p-2">
-                My cars
+                MY CARS
             </h4>
-            <div class="">
-                <div>
-                    @{
-                        if (Model.Vehicles != null && Model.Vehicles.Count > 0)
+            <div class="d-flex flex-column gap-2" style="overflow-y:auto;">
+                @{
+                    if (Model.Vehicles != null && Model.Vehicles.Count > 0)
+                    {
+                        foreach (var vehicle in Model.Vehicles)
                         {
-                            foreach (var vehicle in Model.Vehicles)
-                            {
-                                <div class="d-flex card flex-row py-2 px-4">
-                                    <div class="col  text-start">
-                                        @vehicle.Brand - @vehicle.Model
+                            <div class="d-flex card flex-row py-2 px-4">
+                                <div class="col  text-start">
+                                    @vehicle.Brand - @vehicle.Model
+                                </div>
+                                <div class="col  text-end">
+                                    <div>
+                                        VIN: @vehicle.VIN
                                     </div>
-                                    <div class="col  text-end">
-                                        <div>
-                                            VIN: @vehicle.VIN
-                                        </div>
-                                        <hr />
-                                        <div>
-                                            LicensePlate: @vehicle.LicensePlate
-                                        </div>
+                                    <hr />
+                                    <div>
+                                        LicensePlate: @vehicle.LicensePlate
                                     </div>
                                 </div>
-                            }
-                        }
-                        else
-                        {
-                            <p>Ypi don't have any vehicle registered yet.</p>
+                            </div>
                         }
                     }
-                </div>
+                    else
+                    {
+                        <p>NO VEHICLES CURRENTLY REGISTERED.</p>
+                    }
+                }
             </div>
         </div>
     </div>

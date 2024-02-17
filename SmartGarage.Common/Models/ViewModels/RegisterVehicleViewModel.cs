@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SmartGarage.Common.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace SmartGarage.Common.Models.ViewModels
 {
@@ -8,10 +9,9 @@ namespace SmartGarage.Common.Models.ViewModels
         public string RegisterBrand { get; set; } = string.Empty;
         [Required, MaxLength(40)]
         public string RegisterModel { get; set; } = string.Empty;
-        
-        [Required]
+        [Required, MaxLength(17), ValidateVIN(ErrorMessage = "VIN number must be with 17 characters long.")]
         public string VIN { get; set; } = string.Empty;
-        [Required]
+        [Required, ValidateProductionYear(ErrorMessage = "Year must be a valid number.")]
         public int CreationYear { get; set; }
         [Required]
         public string LicensePlate { get; set; } = string.Empty;

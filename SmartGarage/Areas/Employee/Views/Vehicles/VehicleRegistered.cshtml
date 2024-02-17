@@ -2,14 +2,14 @@
 
 @{
     var userName = ViewData["CurrentUser"];
+
 }
 
 <!-- customer index page -->
-<div class="d-flex flex-column align-items-center" style="height:100%;">
+<div class="d-flex flex-column justify-content-start" style="height:100%;">
 
     <!-- customer nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" area-name= />
-
 
     <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
         <div class="d-flex container justify-content-between">
@@ -19,7 +19,7 @@
                     BACK
                 </a>
                 <p class="lead my-2">
-                    VEHICLE <b>REGISTER</b>
+                    VEHICLE <b>REGISTERED</b>
                 </p>
             </div>
         </div>
@@ -31,10 +31,10 @@
     <div class="d-flex flex-column mx-auto my-auto bg-light rounded-3" style="width:50%;">
 
         <div class="d-flex flex-row mt-2 align-content-center  align-items-center flex-row bg-light rounded-3">
+            <span class="mb-2 ms-4 rounded-circle bg-success text-center text-light" style="width:24px; height:24px;">&#10003;</span>
             <h5 class="p-4 text-muted">
-                VEHICLE REGISTERED
+                REGISTERATOIN SUCCESSFUL
             </h5>
-            <span class="mb-2 rounded-circle bg-success text-center text-light" style="width:24px; height:24px;">&#10003;</span>
         </div>
 
         <form class="d-flex flex-column gap-4 p-4" method="post" style="width:100%;">

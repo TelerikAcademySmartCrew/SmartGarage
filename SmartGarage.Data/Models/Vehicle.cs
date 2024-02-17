@@ -28,7 +28,7 @@ public class Vehicle
     public string VIN { get; set; } = null!;
 
     [Required]
-    [IsBefore(ErrorMessage = InvalidYear)]
+    [ValidateProductionYear(ErrorMessage = InvalidYear)]
     public int ProductionYear { get; set; }
 
     [Required]
