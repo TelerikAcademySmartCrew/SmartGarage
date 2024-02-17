@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartGarage.Common", "Smart
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartGarage.Utilities", "SmartGarage.Utilities\SmartGarage.Utilities.csproj", "{0435C6A4-5428-4074-9E42-B5F3EFED4CC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartGarage.Tests", "SmartGarage.Tests\SmartGarage.Tests.csproj", "{FDFDA637-B9E5-4DEB-A5D3-188569C001E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartGarage.Tests", "SmartGarage.Tests\SmartGarage.Tests.csproj", "{22A0B4B4-0E3A-4096-9BFE-1615ABDC35CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{0435C6A4-5428-4074-9E42-B5F3EFED4CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0435C6A4-5428-4074-9E42-B5F3EFED4CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0435C6A4-5428-4074-9E42-B5F3EFED4CC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FDFDA637-B9E5-4DEB-A5D3-188569C001E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FDFDA637-B9E5-4DEB-A5D3-188569C001E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FDFDA637-B9E5-4DEB-A5D3-188569C001E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FDFDA637-B9E5-4DEB-A5D3-188569C001E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{22A0B4B4-0E3A-4096-9BFE-1615ABDC35CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22A0B4B4-0E3A-4096-9BFE-1615ABDC35CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22A0B4B4-0E3A-4096-9BFE-1615ABDC35CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22A0B4B4-0E3A-4096-9BFE-1615ABDC35CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

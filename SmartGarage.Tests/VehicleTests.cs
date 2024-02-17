@@ -1,168 +1,310 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Moq;
+using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services;
-using SmartGarage.Services.Contracts;
 
 namespace SmartGarage.Tests;
 
-[TestFixture]
+[TestClass]
 public class VehicleTests
 {
-    private Mock<IVehicleRepository> vehicleRepositoryMock;
-    private Mock<UserManager<AppUser>> userManagerMock;
-    private IVehicleService vehicleService;
-
-    [SetUp]
+    private Mock<IVehicleRepository> mockVehicleRepository;
+    private Mock<UserManager<AppUser>> mockUserManager;
+    private VehicleService vehicleService;
+    [TestInitialize]
     public void Setup()
     {
-        vehicleRepositoryMock = new Mock<IVehicleRepository>();
+        mockVehicleRepository = new Mock<IVehicleRepository>();
+        mockUserManager = MockUserManager<AppUser>();
 
-        userManagerMock = MockUserManager<AppUser>();
+        vehicleService = new VehicleService(mockVehicleRepository.Object, mockUserManager.Object);
+    }
+    
+    [TestMethod]
+    public async Task GetVehicleByVinAsync_Returns_Vehicle()
+    {
+        // Arrange
+        var vin = "VIN123";
+        var cancellationToken = new CancellationToken();
+        var expectedVehicle = new Vehicle { VIN = vin };
 
-        vehicleService = new VehicleService(vehicleRepositoryMock.Object,
-            userManagerMock.Object);
+        mockVehicleRepository.Setup(repo => repo.GetVehicleByVinAsync(vin, cancellationToken))
+            .ReturnsAsync(expectedVehicle);
+
+        // Act
+        var result = await vehicleService.GetVehicleByVinAsync(vin, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(vin, result.VIN);
+    }
+    
+    [TestMethod]
+    public async Task GetVehicleByVinAsync_Returns_Null_When_Not_Found()
+    {
+        // Arrange
+        var vin = "NonExistentVIN";
+        var cancellationToken = new CancellationToken();
+
+        mockVehicleRepository.Setup(repo => repo.GetVehicleByVinAsync(vin, cancellationToken))!
+            .ReturnsAsync((Vehicle)null!);
+
+        // Act
+        var result = await vehicleService.GetVehicleByVinAsync(vin, cancellationToken);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+    
+    [TestMethod]
+    public async Task CreateVehicleAsync_WithValidInput_ReturnsVehicle()
+    {
+        // Arrange
+        var vehicle = new Vehicle();
+        var email = "user@example.com";
+        var cancellationToken = new CancellationToken();
+        var user = new AppUser { Id = "userId" };
+
+        mockUserManager.Setup(manager => manager.FindByEmailAsync(email))
+            .ReturnsAsync(user);
+
+        mockVehicleRepository.Setup(repo => repo.CreateVehicleAsync(vehicle, user, cancellationToken))
+            .ReturnsAsync(vehicle);
+
+        // Act
+        var result = await vehicleService.CreateVehicleAsync(vehicle, email, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(user.Id, result.UserId);
     }
 
-    // [Test]
-    // public async Task CreateVehicleAsync_ValidData_ReturnsMappedVehicleResponseDTO()
-    // {
-    //
-    //     var vehicle = new Vehicle
-    //     {
-    //         ProductionYear = 2005,
-    //         LicensePlateNumber = "E4070MK",
-    //         VIN = "78467689092643567",
-    //     };
-    //
-    //     var user = new AppUser
-    //     {
-    //         Id = Guid.NewGuid().ToString(),
-    //     };
-    //
-    //     var expectedMappedVehicleResponseDto = new VehicleResponseDto()
-    //     {
-    //         CreationYear = 2005,
-    //         LicensePlate = "E4070MK",
-    //         VIN = "78467689092643567",
-    //     };
-    //
-    //     userManagerMock.Setup(x => x.FindByEmailAsync(It.IsAny<string>()))
-    //         .ReturnsAsync(user);
-    //
-    //     vehicleRepositoryMock.Setup(x => x.CreateVehicleAsync(It.IsAny<Data.Models.Vehicle>(), It.IsAny<AppUser>(), It.IsAny<CancellationToken>()))
-    //         .ReturnsAsync(new Data.Models.Vehicle());
-    //
-    //     // Act
-    //     var result = await vehicleService.CreateVehicleAsync(vehicle, "test@example.com", cancellationToken: new CancellationToken());
-    //
-    //     // Assert
-    //     Assert.That(result, Is.EqualTo(expectedMappedVehicleResponseDto));
-    // }
+    [TestMethod]
+    [ExpectedException(typeof(EntityNotFoundException))]
+    public async Task CreateVehicleAsync_WithInvalidUser_ThrowsException()
+    {
+        // Arrange
+        var vehicle = new Vehicle();
+        var email = "nonexistent@example.com";
+        var cancellationToken = new CancellationToken();
+
+        mockUserManager.Setup(manager => manager.FindByEmailAsync(email))!
+            .ReturnsAsync((AppUser)null!);
+
+        // Act
+        await vehicleService.CreateVehicleAsync(vehicle, email, cancellationToken);
+
+    }
     
-    [Test]
-    public async Task GetAllAsync_ValidQueryParameters_ReturnsMappedVehicleResponseDTOList()
+    [TestMethod]
+    public async Task GetAllAsync_ReturnsListOfVehicles()
     {
         // Arrange
         var vehicleQueryParameters = new VehicleQueryParameters();
+        var cancellationToken = new CancellationToken();
+        var expectedVehicles = new List<Vehicle> { new Vehicle(), new Vehicle() };
 
-        var vehicles = new List<Data.Models.Vehicle>
-        {
-            new Data.Models.Vehicle { ProductionYear = 2005,
-                LicensePlateNumber = "E4070MK",
-                VIN = "78467689092643567", },
-            new Data.Models.Vehicle { ProductionYear = 2011,
-                LicensePlateNumber = "CB1020MK",
-                VIN = "78467689092643095",},
-        };
-
-        var expectedMappedVehicleResponseDtoList = vehicles
-            .Select(vehicle => new Vehicle
-            {
-                ProductionYear = vehicle.ProductionYear,
-                LicensePlateNumber = vehicle.LicensePlateNumber,
-                VIN = vehicle.VIN,
-            })
-            .ToList();
-
-        var vehicleRepositoryMock = new Mock<IVehicleRepository>();
-        vehicleRepositoryMock.Setup(x => x.GetAllAsync(vehicleQueryParameters, new CancellationToken()))
-            .ReturnsAsync(vehicles);
-        
-
-        var vehicleService = new VehicleService(vehicleRepositoryMock.Object, userManagerMock.Object);
+        mockVehicleRepository.Setup(repo => repo.GetAllAsync(vehicleQueryParameters, cancellationToken))
+            .ReturnsAsync(expectedVehicles);
 
         // Act
-        var result = await vehicleService.GetAllAsync(vehicleQueryParameters, new CancellationToken());
+        var result = await vehicleService.GetAllAsync(vehicleQueryParameters, cancellationToken);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result, Is.InstanceOf<IList<Vehicle>>());
-        Assert.That(result, Has.Count.EqualTo(expectedMappedVehicleResponseDtoList.Count));
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedVehicles.Count, result.Count);
+    }
 
+    [TestMethod]
+    public async Task GetAllAsync_ReturnsEmptyList_WhenNoVehiclesFound()
+    {
+        // Arrange
+        var vehicleQueryParameters = new VehicleQueryParameters();
+        var cancellationToken = new CancellationToken();
+
+        mockVehicleRepository.Setup(repo => repo.GetAllAsync(vehicleQueryParameters, cancellationToken))
+            .ReturnsAsync(new List<Vehicle>());
+
+        // Act
+        var result = await vehicleService.GetAllAsync(vehicleQueryParameters, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count);
     }
     
-    // [Test]
-    // public async Task GetVehicleByIdAsync_ValidId_ReturnsMappedDTO()
-    // {
-    //     // Arrange
-    //     var vehicleId = Guid.NewGuid();
-    //     var vehicleFromRepository = new Vehicle();
-    //     var mappedVehicleDto = new VehicleResponseDto(); // TODO: fix this test
-    //
-    //     vehicleRepositoryMock.Setup(repo => repo.GetVehicleByIdAsync(vehicleId)).ReturnsAsync(vehicleFromRepository);
-    //
-    //     // Act
-    //     var result = await vehicleService.GetVehicleByIdAsync(vehicleId);
-    //
-    //     // Assert
-    //     Assert.That(result, Is.EqualTo(mappedVehicleDto));
-    // }
-    
-    // [Test] // TODO: rewrite this test
-    // public async Task GetVehiclesByUserAsync_ValidUserId_ReturnsMappedDTOList()
-    // {
-    //     // Arrange
-    //     var userId = Guid.NewGuid().ToString();
-    //     var vehicleQueryParameters = new VehicleQueryParameters();
-    //     var vehicle1 = new Data.Models.Vehicle
-    //     {
-    //         Id = 1,
-    //         BrandId = 1,
-    //         ModelId = 1,
-    //         VIN = "12345678901234567",
-    //         ProductionYear = 2020,
-    //         LicensePlateNumber = "ABC123",
-    //         UserId = userId,
-    //         IsDeleted = false
-    //     };
-    //     var vehiclesFromRepository = new List<Data.Models.Vehicle>{vehicle1};
-    //     
-    //     var mappedVehicleDto1 = new Vehicle
-    //     {
-    //         Brand = "BrandName",
-    //         Model = "ModelName",
-    //         VIN = "12345678901234567",
-    //         CreationYear = 2020,
-    //         LicensePlate = "ABC123",
-    //         Username = "UserName"
-    //     };
-    //     var mappedVehicleDtos = new List<Vehicle>{mappedVehicleDto1};
-    //
-    //     vehicleRepositoryMock.Setup(repo => repo.GetVehiclesByUserAsync(userId, vehicleQueryParameters))
-    //         .ReturnsAsync(vehiclesFromRepository);
-    //
-    //     vehicleDtoMapperMock.Setup(mapper => mapper.Map(vehiclesFromRepository)).Returns(mappedVehicleDtos);
-    //
-    //     // Act
-    //     var result = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters);
-    //
-    //     // Assert
-    //     Assert.That(result, Is.EqualTo(mappedVehicleDtos));
-    // }
+    [TestMethod]
+    public async Task GetVehicleByIdAsync_ReturnsVehicle()
+    {
+        // Arrange
+        var vehicleId = Guid.NewGuid();
+        var cancellationToken = default(CancellationToken);
+        var expectedVehicle = new Vehicle { Id = vehicleId };
 
+        mockVehicleRepository.Setup(repo => repo.GetVehicleByIdAsync(vehicleId, cancellationToken))
+            .ReturnsAsync(expectedVehicle);
+
+        // Act
+        var result = await vehicleService.GetVehicleByIdAsync(vehicleId, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(vehicleId, result.Id);
+    }
+
+    [TestMethod]
+    public async Task GetVehicleByIdAsync_ReturnsNull_WhenNotFound()
+    {
+        // Arrange
+        var vehicleId = Guid.NewGuid();
+        var cancellationToken = default(CancellationToken);
+
+        mockVehicleRepository.Setup(repo => repo.GetVehicleByIdAsync(vehicleId, cancellationToken))!
+            .ReturnsAsync((Vehicle)null!);
+
+        // Act
+        var result = await vehicleService.GetVehicleByIdAsync(vehicleId, cancellationToken);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+    
+    [TestMethod]
+    public async Task GetVehicleByLicensePlateAsync_ReturnsVehicle()
+    {
+        // Arrange
+        var licensePlate = "ABC123";
+        var cancellationToken = new CancellationToken();
+        var expectedVehicle = new Vehicle { LicensePlateNumber = licensePlate };
+
+        mockVehicleRepository.Setup(repo => repo.GetVehicleByLicensePlateAsync(licensePlate, cancellationToken))
+            .ReturnsAsync(expectedVehicle);
+
+        // Act
+        var result = await vehicleService.GetVehicleByLicensePlateAsync(licensePlate, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(licensePlate, result.LicensePlateNumber);
+    }
+
+    [TestMethod]
+    public async Task GetVehicleByLicensePlateAsync_ReturnsNull_WhenNotFound()
+    {
+        // Arrange
+        var licensePlate = "NonExistentPlate";
+        var cancellationToken = new CancellationToken();
+
+        mockVehicleRepository.Setup(repo => repo.GetVehicleByLicensePlateAsync(licensePlate, cancellationToken))!
+            .ReturnsAsync((Vehicle)null!);
+
+        // Act
+        var result = await vehicleService.GetVehicleByLicensePlateAsync(licensePlate, cancellationToken);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+    
+    [TestMethod]
+    public async Task GetVehiclesByUserAsync_ReturnsListOfVehicles()
+    {
+        // Arrange
+        var userId = "userId";
+        var vehicleQueryParameters = new VehicleQueryParameters();
+        var cancellationToken = new CancellationToken();
+        var expectedVehicles = new List<Vehicle> { new Vehicle(), new Vehicle() };
+
+        mockVehicleRepository.Setup(repo => repo.GetVehiclesByUserAsync(userId, vehicleQueryParameters, cancellationToken))
+            .ReturnsAsync(expectedVehicles);
+
+        // Act
+        var result = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(expectedVehicles.Count, result.Count);
+    }
+
+    [TestMethod]
+    public async Task GetVehiclesByUserAsync_ReturnsEmptyList_WhenNoVehiclesFound()
+    {
+        // Arrange
+        var userId = "userId";
+        var vehicleQueryParameters = new VehicleQueryParameters();
+        var cancellationToken = new CancellationToken();
+
+        mockVehicleRepository.Setup(repo => repo.GetVehiclesByUserAsync(userId, vehicleQueryParameters, cancellationToken))
+            .ReturnsAsync(new List<Vehicle>());
+
+        // Act
+        var result = await vehicleService.GetVehiclesByUserAsync(userId, vehicleQueryParameters, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Count);
+    }
+    
+    [TestMethod]
+    public async Task UpdateVehicleAsync_ReturnsUpdatedVehicle()
+    {
+        // Arrange
+        var vehicleId = Guid.NewGuid();
+        var modelId = Guid.NewGuid();
+        var updatedModel = new VehicleModel { Id = modelId, Name = "UpdatedModel" };
+        var updatedVehicle = new Vehicle { Id = vehicleId, ModelId = modelId, Model = updatedModel };
+        var cancellationToken = default(CancellationToken);
+        var expectedVehicle = new Vehicle { Id = vehicleId, ModelId = modelId, Model = updatedModel };
+
+        mockVehicleRepository.Setup(repo => repo.UpdateVehicleAsync(vehicleId, updatedVehicle, cancellationToken))
+            .ReturnsAsync(expectedVehicle);
+
+        // Act
+        var result = await vehicleService.UpdateVehicleAsync(vehicleId, updatedVehicle, cancellationToken);
+
+        // Assert
+        Assert.IsNotNull(result);
+        Assert.AreEqual(vehicleId, result.Id);
+        Assert.AreEqual(modelId, result.ModelId);
+        Assert.AreEqual(updatedModel.Name, result.Model.Name);
+    }
+    
+    [TestMethod]
+    public async Task DeleteVehicleAsync_CallsDeleteVehicleAsyncInRepository()
+    {
+        // Arrange
+        var vehicleId = Guid.NewGuid();
+        var cancellationToken = default(CancellationToken);
+
+        // Act
+        await vehicleService.DeleteVehicleAsync(vehicleId, cancellationToken);
+
+        // Assert
+        mockVehicleRepository.Verify(repo => repo.DeleteVehicleAsync(vehicleId, cancellationToken), Times.Once);
+    }
+    
+    [TestMethod]
+    public async Task DeleteVehicleAsync_RemovesVehicle()
+    {
+        // Arrange
+        var vehicleId = Guid.NewGuid();
+        var cancellationToken = default(CancellationToken);
+
+        mockVehicleRepository.Setup(repo => repo.DeleteVehicleAsync(vehicleId, cancellationToken))
+            .Returns(Task.CompletedTask);
+
+        // Act
+        await vehicleService.DeleteVehicleAsync(vehicleId, cancellationToken);
+
+        // Assert
+        mockVehicleRepository.Setup(repo => repo.GetVehicleByIdAsync(vehicleId, cancellationToken))!
+            .ReturnsAsync((Vehicle)null!);
+        var result = await vehicleService.GetVehicleByIdAsync(vehicleId, cancellationToken);
+        Assert.IsNull(result);
+    }
+    
     private static Mock<UserManager<TUser>> MockUserManager<TUser>() where TUser : class
     {
         var store = new Mock<IUserStore<TUser>>();
@@ -171,4 +313,5 @@ public class VehicleTests
         mgr.Object.PasswordValidators.Add(new PasswordValidator<TUser>());
         return mgr;
     }
+
 }
