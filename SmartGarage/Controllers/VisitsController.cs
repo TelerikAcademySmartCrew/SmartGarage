@@ -2,6 +2,7 @@
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities;
 using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.Controllers
@@ -12,16 +13,19 @@ namespace SmartGarage.Controllers
         private readonly IVisitService visitService;
         private readonly IVisitMapper visitMapper;
         private readonly IUserMapper userMapper;
+        private readonly PDFGenerator pdfGenerator;
 
         public VisitsController(IUsersService usersService,
             IVisitService visitService,
             IVisitMapper visitMapper,
-            IUserMapper userMapper)
+            IUserMapper userMapper,
+            PDFGenerator pdfGenerator)
         {
             this.usersService = usersService;
             this.visitService = visitService;
             this.visitMapper = visitMapper;
             this.userMapper = userMapper;
+            this.pdfGenerator = pdfGenerator;
         }
 
         [HttpGet]
@@ -98,23 +102,23 @@ namespace SmartGarage.Controllers
         {
             try
             {
-
                 var _visiitId = Guid.Parse(visitId);
-                var visit = visitService.GetByIdAsync(_visiitId, cancellationToken);
+
+                var visit = await visitService.GetByIdAsync(_visiitId, cancellationToken);
 
                 // Your byte array (replace this with your actual byte array)
-                byte[] pdfBytes = null; // GetYourPdfBytes();
+                byte[] pdfBytes = pdfGenerator.GeneratePdf(visit);
 
                 // Convert byte array to MemoryStream
-                using (var ms = new MemoryStream(pdfBytes))
-                {
-                    // Return the PDF as a file for download
-                    return File(ms, "application/pdf", "YourFileName.pdf");
-                }
+                var ms = new MemoryStream(pdfBytes);
+
+                // Return the PDF as a file for download
+                //return File(ms, "application/pdf", "Visit-" + visit.Vehicle.LicensePlateNumber + + ".pdf");
+                return File(ms, "application/pdf", $"Visit-{visit.Vehicle.LicensePlateNumber}-{visit.Date.ToShortDateString()}.pdf");
             }
             catch (Exception ex)
             {
-                return null;
+                return View("DisplayVisit", new { visiid = Guid.Parse(visitId) });
             }
         }
     }

@@ -1,10 +1,6 @@
 ﻿@model VehicleViewModel
 
-@{
-
-}
-
-<div class="d-flex flex-column flex-fill bg-light bg-opacity-50 shadow m-auto p-3 rounded" style="text-decoration:none; color:black">
+<div class="d-flex flex-column flex-fill bg-light bg-opacity-50 shadow m-auto p-3 gap-2 rounded" style="text-decoration:none; color:black">
 
     <div class="d-flex flex-column mx-2 justify-content-between gap-3">
 
@@ -27,4 +23,8 @@
         </div>
 
     </div>
+
+    <a asp-controller="Visits" asp-action="CreateVisitByVin" asp-route-vin="@Model.VIN" class="d-flex flex-row align-self-end align-items-end btn btn-primary ms-auto">
+        Create Visit
+    </a>
 </div>

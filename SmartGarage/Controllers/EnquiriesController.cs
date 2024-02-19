@@ -47,6 +47,7 @@ namespace SmartGarage.Controllers
                     DateCreated = DateTime.Now,
                     PhoneNumber = user.PhoneNumber ?? ""
                 };
+
                 _ = await enquiryService.CreateAsync(enquiry, cancellationToken);
                 return RedirectToAction("NotifyEnquiryPosted");
             }

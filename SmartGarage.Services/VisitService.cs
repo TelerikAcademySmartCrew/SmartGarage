@@ -1,19 +1,33 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using SmartGarage.Common.Enumerations;
+using SmartGarage.Common.Exceptions;
+using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
+using SmartGarage.Utilities;
+using SmartGarage.Utilities.Contract;
+using static SmartGarage.Common.Exceptions.ExceptionMessages.Status;
 
 namespace SmartGarage.Services
 {
     public class VisitService : IVisitService
     {
         private readonly IVisitRepository visitRepository;
+        private readonly IEmailService emailService;
+        private readonly PDFGenerator pdfGenerator;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public VisitService(IVisitRepository visitRepository)
+        public VisitService(IVisitRepository visitRepository, IEmailService emailService, PDFGenerator pdfGenerator, IWebHostEnvironment webHostEnvironment)
         {
             this.visitRepository = visitRepository;
+            this.emailService = emailService;
+            this.pdfGenerator = pdfGenerator;
+            this.webHostEnvironment = webHostEnvironment;
         }
-        
+
         public async Task<ICollection<Visit>> GetAll(VisitsQueryParameters visitsQueryParameters, CancellationToken cancellationToken)
         {
             return await visitRepository.GetAll(visitsQueryParameters, cancellationToken);
@@ -51,7 +65,39 @@ namespace SmartGarage.Services
 
         public async Task<Visit> UpdateStatusAsync(Visit visit, CancellationToken cancellationToken)
         {
-            return await this.visitRepository.UpdateStatusAsync(visit, cancellationToken);
+            if (visit.Status == Status.Paid)
+            {
+                throw new InvalidOperationException(CannotUpdateStatus);
+            }
+
+            visit.Status++;
+
+            var updatedVist = await this.visitRepository.UpdateStatusAsync(visit, cancellationToken);
+
+            if (visit.Status == Status.Paid)
+            {
+                const string subject = "Repair complete!";
+
+                // Get the wwwroot path
+                var wwwrootPath = webHostEnvironment.WebRootPath;
+                var filePath = Path.Combine(wwwrootPath, "PaidVisitInvoice.html")
+                    ?? throw new EntityNotFoundException("Email template not found.");
+
+                string body;
+
+                using (var reader = new StreamReader(filePath))
+                {
+                    body = await reader.ReadToEndAsync();
+                }
+
+                body = body.Replace("{UserName}", visit.User.Email);
+
+                var pdfDocument = pdfGenerator.GeneratePdf(visit);
+
+                _ = emailService.SendEmailAsync(visit.User.Email, subject, body, pdfDocument);
+            }
+
+            return updatedVist;
         }
 
         public async Task<Visit> UpdateVisitRating(Visit visit, CancellationToken cancellationToken)

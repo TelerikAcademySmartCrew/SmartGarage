@@ -4,6 +4,17 @@
     var userName = ViewData["CurrentUser"];
     var visitRepairTypes = Model.RepairActivityTypes;
     var status = Model.Status;
+
+    var statusColor = string.Empty;
+
+    if (status == "Pending")
+        statusColor = "border-danger";
+    else if (status == "Active")
+        statusColor = "border-primary";
+    else if (status == "Completed")
+        statusColor = "border-success";
+    else if (status == "Paid")
+        statusColor = "border-secondary";
 }
 
 <!-- Advance status modal -->
@@ -48,7 +59,6 @@
         <div class="d-flex container justify-content-between">
 
             <div class="d-flex flex-row align-items-center gap-3">
-                @* <a onclick="custom_back()" class="btn btn-secondary rounded-pill"> *@
                 <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="btn btn-secondary rounded-pill">
                     BACK
                 </a>
@@ -65,10 +75,10 @@
 
             <!-- Show status and status advance button -->
             <div class="d-flex col justify-content-start gap-2 m-auto">
-                <div class="d-flex bg-secondary rounded-pill align-items-center py-2 px-4">@status</div>
+                <div class="d-flex badge bg-secondary bg-opacity-50 border @statusColor rounded-pill align-items-center py-3 px-4"><b>@status.ToUpper()</b></div>
                 @if (@status != "Paid")
                 {
-                    <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#updateStatus">Advance</button>
+                    <button type="button" class="badge btn btn-primary rounded-pill py-3 px-4" data-bs-toggle="modal" data-bs-target="#updateStatus">ADVANCE</button>
                 }
             </div>
 

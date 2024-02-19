@@ -172,19 +172,6 @@ namespace SmartGarage.Controllers
             {
                 var user = await usersService.GetByEmail(userChangePasswordData.UserName);
 
-                //var token = await userManager.GeneratePasswordResetTokenAsync(user);
-                //var result = await userManager.ResetPasswordAsync(user, token, userChangePasswordData.NewPassword);
-                //if (result.Succeeded)
-                //{
-                //    return Redirect("Profile");
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("NewPassword", result.Errors.First().Description);
-                //    ModelState.AddModelError("ConfirmPassword", result.Errors.First().Description);
-                //    return View(userChangePasswordData);
-                //}
-
                 var passwordCheckResult = await userManager.CheckPasswordAsync(user, userChangePasswordData.OldPassword);
                 if (!passwordCheckResult)
                 {
@@ -200,26 +187,9 @@ namespace SmartGarage.Controllers
                 }
                 else
                 {
-                    ModelState.AddModelError("OldPassword", result.Errors.First().Description);
-                    foreach (var error in result.Errors)
-                    {
-                        // Add errors to specific fields if needed
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    ModelState.AddModelError("NewPassword", result.Errors.First().Description);
                     return View(userChangePasswordData);
                 }
-
-                //if (result.Succeeded)
-                //{
-                //    return Redirect("Profile");
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("NewPassword", result.Errors.First().Description);
-                //    ModelState.AddModelError("ConfirmPassword", result.Errors.First().Description);
-                //    return View(userChangePasswordData);
-                //}
-
             }
             catch (EntityNotFoundException ex)
             {
