@@ -2,25 +2,51 @@
 
 @{
     double totalPrice = Model.RepairActivities.Sum(x => x.Price);
-    double discount = 20; // Model.Discount;
+    double discount = Model.Discount;
     var status = Model.Status;
+    var rating = Model.Rating;
 }
 
-<div class="d-flex justify-content-between flex-column bg-light bg-opacity-50 shadow p-3" style="max-height:96%">
+<div class="d-flex justify-content-between flex-column bg-light bg-opacity-50 shadow p-3" style="height:96%">
 
-    <div class="d-flex flex-column justify-content-start ">
+    <div class="d-flex flex-column justify-content-start" style="height:100%;">
 
-        <div class="d-flex flex-row p-3 justify-content-between">
-            <div class="row">
-                <dv>
-                    <b>(@Model.VehicleYear) @Model.VehicleBrand @Model.VehicleModel</b>
-                </dv>
-                <dv>
+        <div class="d-flex flex-row p-2 justify-content-between">
+            <div class="d-flex flex-column align-items-start gap-1">
+                <div class="bg-secondary rounded-pill text-light py-2 px-3 gap-4">
+                    <b>
+                        @status -
+                    </b>
+                    (@Model.VehicleYear) @Model.VehicleBrand @Model.VehicleModel
+                </div>
+                <div class="d-flex text-start col">
+                </div>
+                <div class="ms-3">
                     @Model.UserName
-                </dv>
+                </div>
+                <div class="col-2 ms-3 text-end">
+                    @Model.DateCreated.ToShortDateString()
+                </div>
             </div>
-            <div class="col-2 text-end">
-                @Model.DateCreated.ToShortDateString()
+            <div class="d-flex row me-0">
+                @if (status == "Paid")
+                {
+                    <div class="d-flex flex-column align-items-end">
+                        <div class="d-flex btn-secondary rounded-pill mb-2 px-4 py-1">
+                            <select id="rating-dropdown" class="dropdown btn btn-secondary dropdown-toggle mx-1">
+                                <option> 1 </option>
+                                <option> 2 </option>
+                                <option> 3 </option>
+                                <option> 4 </option>
+                                <option> 5 </option>
+                            </select>
+                            <img src="~/images/star-icon.png" id="rating-icon" style="width:36px; height:36px;" hidden />
+                        </div>
+                    </div>
+                    <a asp-area="" asp-controller="Visits" asp-action="DownloadPdf" asp-route-visitId="@Model.Id" class="d-flex btn btn-primary flex-grow-0 justify-content-end">
+                        Download PDF
+                    </a>
+                }
             </div>
         </div>
 
@@ -30,188 +56,210 @@
 
             <!-- Repair Activities Container -->
             <div id="" class="d-flex flex-column justify-content-start my-auto px-3 py-3 gap-3 repair-activities-container" style="overflow-y: auto;">
-                @{
-                    int iterator = 1;
 
-                    <!-- List Repair Activities -->
-                    @foreach (var repairActivity in Model.RepairActivities)
-                    {
-                        var item = repairActivity;
+                <!-- List Repair Activities -->
+                @foreach (var repairActivity in Model.RepairActivities)
+                {
+                    var item = repairActivity;
 
-                        <div id="" class="d-flex flex-row justify-content-between repair-activity-entry">
-                            <div class="d-flex gap-4 text-end" style="width:80%">
-                                <!-- Remove Repair Activities -->
-                                @if (status == "Active")
-                                {
-                                    <a onclick="onRepairActivityRemoveButtonClicked('@item.Id')"
-                                       class="d-flex align-self-center justify-content-center align-items-center btn btn-danger rounded-circle" style="width:32px; height:32px;"> X </a>
-                                }
-                                else
-                                {
-                                    <div class="d-flex align-self-center justify-content-center align-items-center bg-success text-light rounded-circle" style="width:32px; height:32px;">&#10003;</div>
-                                }
+                    <div id="" class="d-flex flex-row justify-content-between repair-activity-entry">
+                        <div class="d-flex gap-4 text-end" style="width:80%">
 
-                                <!-- Repair Activities Type -->
-                                <div id="" class="d-flex align-items-center repair-activity-id" style="min-width:20px;" data-id="@item.Id">@item.Name.</div>
-                            </div>
-                            <!-- Repair Activities Price -->
-                            <div class="d-flex bg-light pe-1 row rounded">
-                                @if (status == "Active")
-                                {
-                                    <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" autocomplete="off" value="@item.Price" style="width:100px;" />
-                                    <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
-                                }
-                                else
-                                {
-                                    <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" readonly autocomplete="off" value="@item.Price" style="width:100px;" />
-                                    <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
-                                }
-                            </div>
+                            <div class="d-flex align-self-center justify-content-center align-items-center bg-success text-light rounded-circle" style="width:14px; height:14px;"></div>
+
+                            @* Repair Activities Type *@
+                            <div id="" class="d-flex align-items-center repair-activity-id" style="min-width:20px;" data-id="@item.Id">@item.Name.</div>
                         </div>
 
-                        iterator++;
-                    }
+                        @* Repair Activities Price *@
+                        <div class="d-flex bg-light pe-1 row rounded">
+                            <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" readonly autocomplete="off" value="@item.Price" style="width:100px;" />
+                            <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> ЛВ.</div>
+                        </div>
+                    </div>
                 }
             </div>
         </div>
     </div>
 
-    @{
-        if (status != "Pending") // || status == "Completed")
-        {
-            <div class="d-flex flex-column justify-content-between">
+    <div class="d-flex flex-column justify-content-between">
+        <div class="d-flex flex-column bg-secondary bg-opacity-50 rounded m-2 py-3 text-light">
 
-                <div class="d-flex flex-column bg-secondary bg-opacity-50 rounded m-2 py-3 text-light">
-
-                    @if (discount != 0)
-                    {
-                        <div class="d-flex flex-row mx-5">
-                            <div class="d-flex col gap-4 text-end">
-                                <label class="d-flex m-0">Discount</label>
-                            </div>
-                            <div class="d-flex flex-column flex-stretch m-0">
-                                <p id="" class="badge bg-info px-4 py-2 row text-end">-@discount%</p>
-                            </div>
-                        </div>
-                    }
-
+            @{
+                if (@discount != 0)
+                {
                     <div class="d-flex flex-row mx-5">
                         <div class="d-flex col gap-4 text-end">
-                            <label class="d-flex m-0">Total Price</label>
+                            <label class="d-flex m-0">Discount</label>
                         </div>
-                        <div class="d-flex flex-row gap-5 m-0">
-                            @if (discount != 0)
-                            {
-                                <s id="total-price-original" class="row text-end">@totalPrice лв.</s>
-                            }
-                            <label id="total-price" class="row text-end">@totalPrice лв.</label>
+                        <div class="d-flex flex-column flex-stretch m-0">
+                            <p id="" class="badge bg-info px-4 py-2 row text-end">-@discount%</p>
                         </div>
-                    </div>
-                </div>
-
-                @if (status == "Active")
-                {
-                    <div class="d-flex row btn btn-primary mx-2">
-
-                        <div id="updateVisitButton" class="d-flex row btn btn-primary mx-2">
-                            <b>UPDATE VISIT</b>
-                        </div>
-
                     </div>
                 }
+            }
+
+            <div class="d-flex flex-row mx-5">
+                <div class="d-flex col gap-4 text-end">
+                    <label class="d-flex m-0">Total Price</label>
+                </div>
+
+                <div class="d-flex flex-row gap-5 m-0">
+                    @{
+                        if (@discount != 0)
+                        {
+                            <s id="total-price-original" class="row text-end">@totalPrice ЛВ.</s>
+                        }
+                    }
+                    <label id="total-price" class="row text-end">@totalPrice ЛВ.</label>
+
+                    <div class="d-flex flex-column align-items-end">
+                        <select id="currency-toggle" class="d-flex flex-fill dropdown btn btn-secondary dropdown-toggle mx-0">
+                            <option> BGN </option>
+                            <option> USD </option>
+                            <option> EUR </option>
+                        </select>
+                    </div>
+
+                </div>
             </div>
-        }
-    }
+        </div>
+    </div>
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
+
     $(document).ready(function () {
 
+        let visitDate = @Html.Raw(Json.Serialize(Model.DateCreated.ToString("yyyy-MM-dd")));
+
+        /**
+         *  Rating
+         */
+
+        let initialRating = @Html.Raw(Json.Serialize(rating));
+
+        let ratingDropdown = $('#rating-dropdown');
+
+        console.log(initialRating);
+
+        if (initialRating != '0') {
+            ratingDropdown.val(initialRating);
+            $('#rating-icon').removeAttr('hidden');
+        }
+        else {
+            let notRatedOption = $('<option>', { text: 'Not Rated' });
+            ratingDropdown.prepend(notRatedOption);
+            ratingDropdown.val('Not Rated');
+        }
+
+        ratingDropdown.change(function () {
+
+            let selectedRatingValue = $(this).val();
+
+            if (selectedRatingValue != 'Not Rated') {
+
+                let visitId = @Html.Raw(Json.Serialize(@Model.Id));
+                var actionUrl = '/Visits/UpdateVisitRating?visitId=' + visitId + '&rating=' + selectedRatingValue;
+
+                $.ajax({
+                    url: actionUrl,
+                    type: 'POST',
+                    success: function () {
+                        console.log('Rating updated to ', selectedRatingValue);
+                        if (ratingDropdown.find('option:first').text() === 'Not Rated') {
+                            ratingDropdown.find('option:first').remove();
+                        }
+                        $('#rating-icon').removeAttr('hidden');
+                    },
+                    error: function () {
+                        console.log('Error updating rating to ', selectedRatingValue);
+                    }
+                });
+            }
+            else {
+                $('#rating-icon').attr('hidden', 'hidden');
+            }
+
+        });
+
+        /**
+         *  Currency
+         */
+
         // Parse discount value to js
-        var discountValue = @Html.Raw(Json.Serialize(discount));
+        let discountValue = @Html.Raw(Json.Serialize(discount));
+
+        let totalPrice = 0.0;
+        let discount = (100.0 - discountValue) / 100;
 
         // Set initial total price
         calTotalPrice();
 
-        // Add event listener to input fields
-        $('[id^="price-field"]').on('input', function () {
-            // Recalculate total price when input changes
-            calTotalPrice();
-        });
-
         function calTotalPrice() {
-            var totalPrice = 0;
+            totalPrice = 0;
 
             // Loop through all input fields with IDs starting with 'price-field-'
             $('[id^="price-field"]').each(function () {
                 // Extract the numeric value from the input field
-                var fieldValue = parseFloat($(this).val()) || 0;
+                let fieldValue = parseFloat($(this).val()) || 0;
 
                 // Add the numeric value to the total price
                 totalPrice += fieldValue;
             });
 
-            // Update the #total-price element
             if (discountValue) {
-                $('#total-price-original').text(totalPrice.toFixed(2) + ' лв.');
-                $('#total-price').text((totalPrice * ((100.0 - discountValue) / 100)).toFixed(2) + ' лв.'); // Format to two decimal places
+                $('#total-price-original').text(totalPrice.toFixed(2) + ' ЛВ.');
+                $('#total-price').text((totalPrice * discount).toFixed(2) + ' ЛВ.')
             }
             else {
-                $('#total-price').text(totalPrice.toFixed(2) + ' лв.'); // Format to two decimal places
+                $('#total-price').text(totalPrice.toFixed(2) + ' ЛВ.');
             }
         }
 
-        // ----------------------------------------------------------------------------------------------------
+        $('#currency-toggle').change(function () {
 
-        // Add event listener to update button
-        $('#updateVisitButton').on('click', function () {
-            updateVisit();
+            let selectedCurrency = $(this).val();
+
+            //
+            let date = visitDate;
+            let baseCurrency = "BGN";
+            let targetCurrency = selectedCurrency;
+
+            if (targetCurrency != baseCurrency) {
+
+                // Frankfurter API endpoint for historical exchange rates
+                let apiUrl = "https://api.frankfurter.app/" + date + "?from=" + baseCurrency + "&to=" + targetCurrency;
+
+                $.ajax({
+                    url: apiUrl,
+                    type: "GET",
+                    success: function (response) {
+
+                        let exchangeRate = response.rates[targetCurrency];
+                        let price = (totalPrice * exchangeRate).toFixed(2);
+
+                        if (discountValue) {
+
+                            $('#total-price-original').text(targetCurrency + ' ' + price);
+                            $('#total-price').text(targetCurrency + ' ' + (price * discount));
+                        }
+                        else {
+                            $('#total-price').text(targetCurrency + ' ' + price);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: Unable to fetch exchange rates. Status: " + status + ", Error: " + error);
+                    }
+                });
+            }
+            else {
+                calTotalPrice();
+            }
+
         });
-
-        function updateVisit() {
-            // Create an array to store the updated repair activities
-            var updatedRepairActivities = [];
-
-            // console.log($('repair-activities-container').children.length);
-
-            $('.repair-activities-container').children('.repair-activity-entry').each(function () {
-                var repairActivityId = $(this).find('.repair-activity-id').data('id');
-                var price = parseFloat($(this).find('.repair-activity-price').val()) || 0;
-
-                var updatedActivity = {
-                    Id: repairActivityId,
-                    Price: price
-                };
-
-                // Add the updated activity to the array
-                updatedRepairActivities.push(updatedActivity);
-
-            });
-
-            console.log(updatedRepairActivities);
-
-            // Send the updated repair activities to the server using AJAX
-            $.ajax({
-                url: '/Employee/Visits/UpdateVisit',
-                type: 'POST',
-                data: {
-                    visitId: '@Model.Id',
-                    repairActivities: updatedRepairActivities
-                },
-                success: function () {
-                    // Optionally, handle success actions
-                    // alert('Visit updated successfully');
-                    console.log("Updae successful");
-                    alert('Visit updated');
-                },
-                error: function () {
-                    // Optionally, handle error actions
-                    // alert('Error updating visit');
-                }
-            });
-        }
     });
 
 </script>

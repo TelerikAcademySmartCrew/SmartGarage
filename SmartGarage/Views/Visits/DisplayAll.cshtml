@@ -1,7 +1,7 @@
 ﻿@model UserViewModel
 
 <!-- client index page -->
-<div class="d-flex flex-column justify-content-start" style="height:100%;">
+<div class="d-flex flex-column justify-content-start" style="height:calc(100% - 50px);">
 
     <!-- client nav bar -->
     <partial name="/Views/Shared/_CustomerNavBarPartial.cshtml" model="@Model.UserName" />
@@ -16,28 +16,26 @@
         </div>
     </div>
 
-    <div class="container justify-content-center my-5 pb-5">
+    <div class="d-flex container flex-column scrollable-div gap-3 mt-4 pb-4" style="width:100%;height:100%;">
 
-        <div class="scrollable-div d-flex gap-3 row mt-0 mx-auto p-2" style="max-height: 600px;">
-
-            @{
-                if (Model.Visits != null && Model.Visits.Count > 0)
+        <!-- These all elements are flowing out of the  -->
+        @{
+            if (Model.Visits != null && Model.Visits.Count > 0)
+            {
+                @foreach (var visit in Model.Visits)
                 {
-                    @foreach (var visit in Model.Visits)
-                    {
-                        <a asp-controller="Visits" asp-action="DisplayVisit" asp-route-visitId="@visit.Id" style="text-decoration:none">
-                            <partial name="Visits/_VisitElementPartial" model="@visit" />
-                        </a>
-                    }
-                }
-                else
-                {
-                    <div class="card p-3">
-                        YOU DON'T HAVE ANY VISITS REGISTERED YET
-                    </div>
+                    <a asp-controller="Visits" asp-action="DisplayVisit" asp-route-visitId="@visit.Id" style="text-decoration:none">
+                        <partial name="Visits/_VisitElementPartial" model="@visit" />
+                    </a>
                 }
             }
-        </div>
+            else
+            {
+                <div class="card p-3">
+                    YOU DON'T HAVE ANY VISITS REGISTERED YET
+                </div>
+            }
+        }
 
     </div>
 </div>

@@ -1,0 +1,29 @@
+﻿@model UserViewModel
+
+<!-- client index page -->
+<div class="d-flex flex-column justify-content-start" style="height:calc(100% - 50px);">
+
+    <!-- client nav bar -->
+    <partial name="/Views/Shared/_CustomerNavBarPartial.cshtml" model="@Model.UserName" />
+
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+            <div class="d-flex flex-row align-items-center gap-3">
+                <p class="lead my-2">
+                    POST AN <b>ENQUIRY</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column bg-light rounded align-conten-center justify-content-between m-auto p-5" style="width:50%; height:40%;">
+        <div class="d-flex">
+            <h2 class="text-muted fw-bold">
+                ENQUIRY SENT
+            </h2>
+        </div>
+        <a asp-controller="Visits" asp-action="DisplayAll" class="d-flex btn btn-success">
+            OK
+        </a>
+    </div>
+</div>

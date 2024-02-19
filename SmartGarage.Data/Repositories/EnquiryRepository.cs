@@ -17,14 +17,14 @@ namespace SmartGarage.Data.Repositories
             this.context = context;
         }
 
-        public async Task<Enquiry> CreateAsync(Enquiry enquiry)
+        public async Task<Enquiry> CreateAsync(Enquiry enquiry, CancellationToken cancellationToken)
         {
             await this.context.Enquiries.AddAsync(enquiry);
             await this.context.SaveChangesAsync();
             return enquiry;
         }
 
-        public async Task<IEnumerable<Enquiry>> GetAllAsync(EnquiryQueryParameters parameters)
+        public async Task<IEnumerable<Enquiry>> GetAllAsync(EnquiryQueryParameters parameters, CancellationToken cancellationToken)
         {
             var enquiries = this.context.Enquiries.AsQueryable();
 
@@ -40,7 +40,15 @@ namespace SmartGarage.Data.Repositories
             return await enquiries.ToListAsync();
         }
 
-        public async Task<Enquiry> ReadAsync(Guid id)
+        public async Task<Enquiry> GetById(Guid Id, CancellationToken cancellationToken)
+        {
+            var enquiry = await this.context.Enquiries
+                .FirstOrDefaultAsync(x => x.Id == Id)
+                ?? throw new EntityNotFoundException(EnquiryNotFound);
+            return enquiry;
+        }
+
+        public async Task<Enquiry> ReadAsync(Guid id, CancellationToken cancellationToken)
         {
             var enquiry = await this.context.Enquiries
                 .FirstOrDefaultAsync(x => x.Id == id)

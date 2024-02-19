@@ -41,9 +41,9 @@
         @{
             @foreach (var visit in Model.Vehicles)
             {
-                <a asp-area="Employee" asp-controller="Visits" asp-action="DisplayVisitDetails" asp-route-visitId="@visit.VIN" style="text-decoration:none">
+                <div>
                     <partial name="Vehicle/_VehicleElementPartial" model="@visit" />
-                </a>
+                </div>
             }
         }
     </div>

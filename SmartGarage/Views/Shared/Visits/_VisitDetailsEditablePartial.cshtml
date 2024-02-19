@@ -2,25 +2,10 @@
 
 @{
     double totalPrice = Model.RepairActivities.Sum(x => x.Price);
-    double discount = 20; // Model.Discount;
+    double discount = Model.Discount;
     var status = Model.Status;
 }
 
-@*
-<a asp-controller="Visits" asp-action="AddRepairActivity" asp-route-visitId="@Model.Id" class="btn btn-primary d-flex flex-column m-auto">
-    ADD ACTIVITY
-</a>
- *@
-@*
-<a class="btn btn-primary" asp-area="Employee" asp-controller="Visits" asp-action="DeleteRepairActivity"
-   asp-route-visitId="@Model.Id" asp-route-visitRepairActivityId="@item.Id">
-    X
-</a>
- *@
-@* <a asp-area="Employee" asp-controller="Visits" asp-action="UpdateVisit" asp-route-visitId="@Model.Id" method="post" class="d-flex px-4 justify-content-end text-light text-end" style="text-decoration:none">
-    <b>UPDATE VISIT</b>
-</a>
- *@
 <div class="d-flex justify-content-between flex-column bg-light bg-opacity-50 shadow p-3" style="max-height:96%">
 
     <div class="d-flex flex-column justify-content-start ">
@@ -45,113 +30,112 @@
 
             <!-- Repair Activities Container -->
             <div id="" class="d-flex flex-column justify-content-start my-auto px-3 py-3 gap-3 repair-activities-container" style="overflow-y: auto;">
-                @{
-                    if (status == "Pending")
-                    {
-                        <div class="d-flex justify-content-center m-auto text-muted">
-                            <h3>ADVANCE TO ACTIVE STATE TO EDIT</h3>
-                        </div>
-                    }
-                    else if (Model.RepairActivities.Count > 0)
-                    {
-                        int iterator = 1;
 
-                        <!-- List Repair Activities -->
-                        @foreach (var repairActivity in Model.RepairActivities)
-                        {
-                            var item = repairActivity;
-
-                            <div id="" class="d-flex flex-row justify-content-between repair-activity-entry">
-                                <div class="d-flex gap-4 text-end" style="width:80%">
-                                    <!-- Remove Repair Activities -->
-                                    @if (status == "Active")
-                                    {
-                                        <a onclick="onRepairActivityRemoveButtonClicked('@item.Id')"
-                                           class="d-flex align-self-center justify-content-center align-items-center btn btn-danger rounded-circle" style="width:32px; height:32px;"> X </a>
-                                    }
-                                    else
-                                    {
-                                        <div class="d-flex align-self-center justify-content-center align-items-center bg-success text-light rounded-circle" style="width:32px; height:32px;">&#10003;</div>
-                                    }
-
-                                    <!-- Repair Activities Type -->
-                                    <div id="" class="d-flex align-items-center repair-activity-id" style="min-width:20px;" data-id="@item.Id">@item.Name.</div>
-                                </div>
-                                <!-- Repair Activities Price -->
-                                <div class="d-flex bg-light pe-1 row rounded">
-                                    @if (status == "Active")
-                                    {
-                                        <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" autocomplete="off" value="@item.Price" style="width:100px;" />
-                                        <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
-                                    }
-                                    else
-                                    {
-                                        <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" readonly autocomplete="off" value="@item.Price" style="width:100px;" />
-                                        <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
-                                    }
-                                </div>
-                            </div>
-
-                            iterator++;
-                        }
-                    }
-                    else
-                    {
-                        <div class="d-flex justify-content-center m-auto text-muted">
-                            <h3>NO REPAIR ACTIVITIES</h3>
-                        </div>
-                    }
+                @if (status == "Pending")
+                {
+                    <div class="d-flex justify-content-center m-auto text-muted">
+                        <h3>ADVANCE TO ACTIVE STATE TO EDIT</h3>
+                    </div>
                 }
+                else if (@Model.RepairActivities.Count > 0)
+                {
+                    int iterator = 1;
+
+                    <!-- List Repair Activities -->
+                    @foreach (var repairActivity in Model.RepairActivities)
+                    {
+                        var item = repairActivity;
+
+                        <div id="" class="d-flex flex-row justify-content-between repair-activity-entry">
+                            <div class="d-flex gap-4 text-end" style="width:80%">
+                                <!-- Remove Repair Activities -->
+                                @if (status == "Active")
+                                {
+                                    <a onclick="onRepairActivityRemoveButtonClicked('@item.Id')"
+                                       class="d-flex align-self-center justify-content-center align-items-center btn btn-danger rounded-circle" style="width:32px; height:32px;"> X </a>
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-self-center justify-content-center align-items-center bg-success text-light rounded-circle" style="width:32px; height:32px;">&#10003;</div>
+                                }
+
+                                <!-- Repair Activities Type -->
+                                <div id="" class="d-flex align-items-center repair-activity-id" style="min-width:20px;" data-id="@item.Id">@item.Name.</div>
+                            </div>
+                            <!-- Repair Activities Price -->
+                            <div class="d-flex bg-light pe-1 row rounded">
+                                @if (status == "Active")
+                                {
+                                    <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" autocomplete="off" min="0" value="@item.Price" style="width:100px;" />
+                                    <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
+                                }
+                                else
+                                {
+                                    <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" readonly autocomplete="off" value="@item.Price" style="width:100px;" />
+                                    <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
+                                }
+                            </div>
+                        </div>
+                        iterator++;
+                    }
+
+                }
+                else
+                {
+                    <div class="d-flex justify-content-center m-auto text-muted">
+                        <h3>NO REPAIR ACTIVITIES</h3>
+                    </div>
+                }
+
             </div>
         </div>
     </div>
 
-    @{
-        if (status != "Pending") // || status == "Completed")
-        {
-            <div class="d-flex flex-column justify-content-between">
+    @if (status != "Pending")
+    {
+        <div class="d-flex flex-column justify-content-between">
 
-                <div class="d-flex flex-column bg-secondary bg-opacity-50 rounded m-2 py-3 text-light">
+            <div class="d-flex flex-column bg-secondary bg-opacity-50 rounded m-2 py-3 text-light">
 
-                    @if (discount != 0)
-                    {
-                        <div class="d-flex flex-row mx-5">
-                            <div class="d-flex col gap-4 text-end">
-                                <label class="d-flex m-0">Discount</label>
-                            </div>
-                            <div class="d-flex flex-column flex-stretch m-0">
-                                <p id="" class="badge bg-info px-4 py-2 row text-end">-@discount%</p>
-                            </div>
-                        </div>
-                    }
-
+                @if (discount != 0)
+                {
                     <div class="d-flex flex-row mx-5">
                         <div class="d-flex col gap-4 text-end">
-                            <label class="d-flex m-0">Total Price</label>
+                            <label class="d-flex m-0">Discount</label>
                         </div>
-                        <div class="d-flex flex-row gap-5 m-0">
-                            @if (discount != 0)
-                            {
-                                <s id="total-price-original" class="row text-end">@totalPrice лв.</s>
-                            }
-                            <label id="total-price" class="row text-end">@totalPrice лв.</label>
+                        <div class="d-flex flex-column flex-stretch m-0">
+                            <p id="" class="badge bg-info px-4 py-2 row text-end">-@discount%</p>
                         </div>
-                    </div>
-                </div>
-
-                @if (status == "Active")
-                {
-                    <div class="d-flex row btn btn-primary mx-2">
-
-                        <div id="updateVisitButton" class="d-flex row btn btn-primary mx-2">
-                            <b>UPDATE VISIT</b>
-                        </div>
-
                     </div>
                 }
+
+                <div class="d-flex flex-row mx-5">
+                    <div class="d-flex col gap-4 text-end">
+                        <label class="d-flex m-0">Total Price</label>
+                    </div>
+                    <div class="d-flex flex-row gap-5 m-0">
+                        @if (discount != 0)
+                        {
+                            <s id="total-price-original" class="row text-end">@totalPrice лв.</s>
+                        }
+                        <label id="total-price" class="row text-end">@totalPrice лв.</label>
+                    </div>
+                </div>
             </div>
-        }
+
+            @if (status == "Active")
+            {
+                <div class="d-flex row btn btn-primary mx-2">
+
+                    <div id="updateVisitButton" class="d-flex row btn btn-primary mx-2">
+                        <b>UPDATE VISIT</b>
+                    </div>
+
+                </div>
+            }
+        </div>
     }
+
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -220,9 +204,6 @@
 
             });
 
-            console.log(updatedRepairActivities);
-
-            // Send the updated repair activities to the server using AJAX
             $.ajax({
                 url: '/Employee/Visits/UpdateVisit',
                 type: 'POST',
@@ -231,17 +212,28 @@
                     repairActivities: updatedRepairActivities
                 },
                 success: function () {
-                    // Optionally, handle success actions
-                    // alert('Visit updated successfully');
                     console.log("Updae successful");
                     alert('Visit updated');
                 },
                 error: function () {
-                    // Optionally, handle error actions
-                    // alert('Error updating visit');
                 }
             });
         }
+
+        // ----------------------------------------------------------------------------------------------------
+
+        $(document).on('input', '#price-field', function () {
+            $(this).val(function (index, value) {
+                return value.replace(/^0+/, '');
+            });
+
+            if (this.value < 0 || !/^\d+$/.test(this.value)) {
+                this.setCustomValidity('Please enter a positive number');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
     });
 
 </script>

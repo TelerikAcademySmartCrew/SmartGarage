@@ -7,14 +7,12 @@
 }
 
 <!-- Advance status modal -->
-<div class="modal" id="updateStatus" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+<div class="modal" id="updateStatus" tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Advance status ?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 @if (status == "Pending")
@@ -31,7 +29,7 @@
                 }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <a asp-controller="Visits" asp-action="UpdateVisitStatus" asp-route-visitId="@Model.Id" class="btn btn-primary d-flex flex-column">
                     Set
                 </a>
@@ -50,7 +48,8 @@
         <div class="d-flex container justify-content-between">
 
             <div class="d-flex flex-row align-items-center gap-3">
-                <a onclick="custom_back()" class="btn btn-secondary rounded-pill">
+                @* <a onclick="custom_back()" class="btn btn-secondary rounded-pill"> *@
+                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="btn btn-secondary rounded-pill">
                     BACK
                 </a>
                 <p class="lead my-2">

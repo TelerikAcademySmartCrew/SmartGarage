@@ -9,18 +9,18 @@ using SmartGarage.Utilities;
 
 namespace SmartGarage.Controllers
 {
-    public class AuthController : Controller
+    public class AuthController : BaseCustomerController
     {
         private readonly SignInManager<AppUser> signInManager;
         private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly EmailService emailService;
+        private readonly AzureEmailService emailService;
         private readonly UserManager<AppUser> userManager;
         private readonly IUsersService usersService;
 
         public AuthController(UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             IWebHostEnvironment webHostEnvironment,
-            EmailService emailService,
+            AzureEmailService emailService,
             IUsersService usersService)
         {
             this.signInManager = signInManager;
@@ -79,12 +79,12 @@ namespace SmartGarage.Controllers
                     return RedirectToAction("Login");
                 }
 
-                ModelState.AddModelError("Password", "Invalid credentials 1");
+                ModelState.AddModelError("Password", "Invalid credentials");
                 return View(loginData);
             }
             catch (Exception)
             {
-                ModelState.AddModelError("Email", "Invalid credentials 2");
+                ModelState.AddModelError("Email", "Invalid credentials");
                 return View(loginData);
             }
         }
