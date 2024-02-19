@@ -92,7 +92,6 @@ namespace SmartGarage.Utilities
                     signature
                         .SetMarginTop(50)
                         .SetFontSize(10)
-                        //.SetItalic()
                         .SetTextAlignment(TextAlignment.CENTER);
 
                     signature.Add($"Thank you for your trust!{Environment.NewLine}");
@@ -103,9 +102,6 @@ namespace SmartGarage.Utilities
                 }
 
                 doc.Close();
-
-                //File.WriteAllBytes("D:\\MyPDF.pdf", stream.ToArray());
-                //File.Delete("D:\\MyPDF.pdf");
 
                 return stream.ToArray();
             }
@@ -123,13 +119,11 @@ namespace SmartGarage.Utilities
             {
                 cell
                     .SetTextAlignment(TextAlignment.LEFT);
-                    //.SetBackgroundColor(ColorConstants.GRAY);
             }
             else
             {
                 cell
                     .SetTextAlignment(TextAlignment.RIGHT)
-                    //.SetBackgroundColor(ColorConstants.LIGHT_GRAY)
                     .SetBold();
             }
 

@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using SmartGarage.Common.Enumerations;
+
 using SmartGarage.Common.Exceptions;
-using SmartGarage.Data;
+using SmartGarage.Common.Enumerations;
+using SmartGarage.Services.Contracts;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
-using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Utilities.Contract;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Status;
@@ -30,7 +29,7 @@ namespace SmartGarage.Services
 
         public async Task<ICollection<Visit>> GetAll(VisitsQueryParameters visitsQueryParameters, CancellationToken cancellationToken)
         {
-            return await visitRepository.GetAll(visitsQueryParameters, cancellationToken);
+            return await this.visitRepository.GetAll(visitsQueryParameters, cancellationToken);
         }
 
         public async Task<ICollection<Visit>> GetByUserIdAsync(string id, CancellationToken cancellationToken)
@@ -78,12 +77,11 @@ namespace SmartGarage.Services
             {
                 const string subject = "Repair complete!";
 
-                // Get the wwwroot path
                 var wwwrootPath = webHostEnvironment.WebRootPath;
                 var filePath = Path.Combine(wwwrootPath, "PaidVisitInvoice.html")
                     ?? throw new EntityNotFoundException("Email template not found.");
 
-                string body;
+                var body = string.Empty;
 
                 using (var reader = new StreamReader(filePath))
                 {

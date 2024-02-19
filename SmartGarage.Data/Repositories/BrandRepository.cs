@@ -19,7 +19,7 @@ namespace SmartGarage.Data.Repositories
         public async Task<ICollection<VehicleBrand>> GetAllAsync()
         {
             return await this.context.VehicleBrands
-                .Include(b => b.Models)
+                .Include(x => x.Models)
                 .ToListAsync();
         }
 
@@ -48,6 +48,7 @@ namespace SmartGarage.Data.Repositories
 
             await this.context.AddAsync(brand);
             await this.context.SaveChangesAsync();
+
             return brand;
         }
     }

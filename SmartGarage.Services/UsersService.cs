@@ -1,18 +1,15 @@
-﻿using System;
-using System.Security.Claims;
-using Azure;
-using Azure.Communication.Email;
+﻿using System.Security.Claims;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using SmartGarage.Common.Exceptions;
+
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
-using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Utilities.Contract;
-using static SmartGarage.Common.Exceptions.ExceptionMessages;
+using SmartGarage.Services.Contracts;
+using SmartGarage.Common.Exceptions;
 
 namespace SmartGarage.Services
 {
@@ -24,9 +21,7 @@ namespace SmartGarage.Services
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly PasswordGenerator passwordGenerator;
         
-        public UsersService(UserManager<AppUser> userManager,
-            RoleManager<IdentityRole> roleManager,
-            SignInManager<AppUser> signInManager,
+        public UsersService(UserManager<AppUser> userManager,            
             ApplicationDbContext applicationDbContext,
             IEmailService emailService,
             IWebHostEnvironment webHostEnvironment,
@@ -42,16 +37,16 @@ namespace SmartGarage.Services
 
         public async Task<ICollection<AppUser>> GetAll()
         {
-            return await userManager.GetUsersInRoleAsync("Customer");
+            return await this.userManager.GetUsersInRoleAsync("Customer");
         }
 
         public async Task<ICollection<AppUser>> GetUsersInRoleAsync(string role)
         {
-            var usersInRole = await userManager.GetUsersInRoleAsync(role);
+            var usersInRole = await this.userManager.GetUsersInRoleAsync(role);
 
             var userIds = usersInRole.Select(u => u.Id);
 
-            var users = await userManager.Users
+            var users = await this.userManager.Users
                 .Where(u => userIds.Contains(u.Id))
                 .Include(u => u.Vehicles)
                     .ThenInclude(v => v.Brand)
@@ -67,14 +62,13 @@ namespace SmartGarage.Services
 
         public async Task<IdentityResult> CreateUser(AppUser appUser)
         {
-            string randomPassword = passwordGenerator.Generate();
+            var randomPassword = this.passwordGenerator.Generate();
 
-            // Get the wwwroot path
-            var wwwrootPath = webHostEnvironment.WebRootPath;
+            var wwwrootPath = this.webHostEnvironment.WebRootPath;
             var filePath = Path.Combine(wwwrootPath, "AccountConfirmation.html")
                 ?? throw new EntityNotFoundException("Email template not found.");
 
-            string body;
+            var body = string.Empty;
             const string subject = "Welcome to Smart Garage!";
 
             using (var reader = new StreamReader(filePath))
@@ -85,34 +79,36 @@ namespace SmartGarage.Services
             body = body.Replace("{Password}", randomPassword);
             body = body.Replace("{UserName}", appUser.Email);
 
-            var userResult = await userManager.CreateAsync(appUser, randomPassword);
+            var userResult = await this.userManager.CreateAsync(appUser, randomPassword);
+
             if (!userResult.Succeeded)
             {
                 throw new DuplicateEntityFoundException($"User already exists");
             }
-            await userManager.AddToRoleAsync(appUser, "Customer");
-            await applicationDbContext.SaveChangesAsync();
 
-            await emailService.SendEmailAsync(appUser.Email, subject, body);
+            await this.userManager.AddToRoleAsync(appUser, "Customer");
+            await this.applicationDbContext.SaveChangesAsync();
+
+            await this.emailService.SendEmailAsync(appUser.Email, subject, body);
 
             return userResult;
         }
 
         public async Task<IdentityResult> CreateEmployee(AppUser appUser)
         {
-            string randomPassword = "@Employee54";
+            var randomPassword = "@Employee54";
 
             if (await UserWithEmailExists(appUser.Email))
             {
                 throw new DuplicateEntityFoundException($"Email is already registered.");
             }
 
-            var userResult = await userManager.CreateAsync(appUser, randomPassword);
+            var userResult = await this.userManager.CreateAsync(appUser, randomPassword);
 
             if (userResult.Succeeded)
             {
-                await userManager.AddToRoleAsync(appUser, "Employee");
-                await applicationDbContext.SaveChangesAsync();
+                await this.userManager.AddToRoleAsync(appUser, "Employee");
+                await this.applicationDbContext.SaveChangesAsync();
             }
 
             return userResult;
@@ -120,7 +116,7 @@ namespace SmartGarage.Services
 
         public async Task<AppUser> GetUserAsync(ClaimsPrincipal user)
         {
-            return await userManager.Users
+            return await this.userManager.Users
                 .Include(u => u.Vehicles)
                     .ThenInclude(v => v.Brand)
                 .Include(u => u.Vehicles)
@@ -135,27 +131,27 @@ namespace SmartGarage.Services
 
         public async Task<AppUser> GetByEmail(string email)
         {
-            return await userManager.FindByEmailAsync(email)
+            return await this.userManager.FindByEmailAsync(email)
                 ?? throw new Exception("User not found");
         }
 
         public async Task<bool> UserWithEmailExists(string email)
         {
-            return await userManager.FindByEmailAsync(email) != null;
+            return await this.userManager.FindByEmailAsync(email) != null;
         }
 
         public async Task<AppUser> Update(AppUser appUser)
         {
-            _ = await userManager.UpdateAsync(appUser);
+            _ = await this.userManager.UpdateAsync(appUser);
 
-            var updatedUser = await userManager.FindByIdAsync(appUser.Id)
+            var updatedUser = await this.userManager.FindByIdAsync(appUser.Id)
                 ?? throw new EntityNotFoundException("User not found.");
 
             return updatedUser;
         }
         public async Task<bool> Delete(AppUser user)
         {
-            _ = await userManager.DeleteAsync(user)
+            _ = await this.userManager.DeleteAsync(user)
                 ?? throw new Exception("User not found");
 
             return true;
@@ -168,8 +164,7 @@ namespace SmartGarage.Services
                 throw new ArgumentNullException($"Password reset link in invalid");
             }
 
-            // Get the wwwroot path
-            var wwwrootPath = webHostEnvironment.WebRootPath;
+            var wwwrootPath = this.webHostEnvironment.WebRootPath;
             var filePath = Path.Combine(wwwrootPath, "PasswordResetConfirmation.html")
                 ?? throw new EntityNotFoundException("Reset password email template not found.");
 
@@ -183,16 +178,16 @@ namespace SmartGarage.Services
 
             body = body.Replace("{ResetLink}", resetLink);
 
-            await emailService.SendEmailAsync(user.Email, subject, body);
+            await this.emailService.SendEmailAsync(user.Email, subject, body);
         }
 
         public async Task<IdentityResult> UpdateResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken)
         {
-            var result = await userManager.ResetPasswordAsync(user, resetToken, newPassword);
+            var result = await this.userManager.ResetPasswordAsync(user, resetToken, newPassword);
 
             if (result.Succeeded)
             {
-                applicationDbContext.SaveChanges();
+                this.applicationDbContext.SaveChanges();
             }
 
             return result;

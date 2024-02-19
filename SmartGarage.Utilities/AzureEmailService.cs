@@ -1,7 +1,9 @@
-﻿using Azure;
+﻿using System.Net.Mime;
+
+using Azure;
 using Azure.Communication.Email;
+
 using SmartGarage.Utilities.Contract;
-using System.Net.Mime;
 
 namespace SmartGarage.Utilities
 {
@@ -27,8 +29,7 @@ namespace SmartGarage.Utilities
 
             if (attactchment != null)
             {
-                BinaryData binaryDataAttachment = new BinaryData(attactchment);
-
+                var binaryDataAttachment = new BinaryData(attactchment);
                 var emailAttachment = new EmailAttachment("attachment.pdf", MediaTypeNames.Application.Pdf, binaryDataAttachment);
 
                 emailMessage.Attachments.Add(emailAttachment);

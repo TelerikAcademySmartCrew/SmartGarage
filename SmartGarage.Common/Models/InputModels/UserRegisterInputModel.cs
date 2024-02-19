@@ -1,6 +1,7 @@
-namespace SmartGarage.Common.Models.InputModels;
-
-public class UserRegisterInputModel
+namespace SmartGarage.Common.Models.InputModels
 {
-    public string Email { get; set; }
+    public class UserRegisterInputModel
+    {
+        public string Email { get; set; }
+    }
 }
