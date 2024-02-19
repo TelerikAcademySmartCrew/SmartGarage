@@ -1,0 +1,45 @@
+﻿@model UserViewModel
+
+<!-- client index page -->
+<div class="d-flex flex-column justify-content-start" style="height:calc(100% - 50px);">
+
+    <!-- client nav bar -->
+    <partial name="/Views/Shared/_CustomerNavBarPartial.cshtml" model="@Model.UserName" />
+
+    <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
+        <div class="d-flex container justify-content-between">
+            <div class="d-flex flex-row align-items-center gap-3">
+                <p class="lead my-2">
+                    POST AN <b>ENQUIRY</b>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-column bg-light rounded justify-content-between m-auto p-4" style="width:50%; height:40%;">
+        <div class="d-flex flex-row justify-content-between align-items-center me-4 gap-5">
+
+            <h2 class="fw-bold text-secondary mb-1">
+                ASK A QUESTION
+            </h2>
+
+            <h6 class="text-muted text-center">
+                @DateTime.Now.ToLocalTime().Date.ToString("dd/MM/yyyy")
+            </h6>
+        </div>
+
+        <form asp-controller="Enquiries" asp-action="PostEnquiry" method="post" id="enquiryForm">
+            <div class="d-flex flex-start w-100">
+                <div class="form-outline w-100">
+                    <textarea id="textAreaExample" name="content" class="form-control" rows="4" required maxlength="1000" style="background: #fff; resize: none; height: 130%;"></textarea>
+                </div>
+            </div>
+            <div class="float-end mt-5 pt-1 w-100">
+                <button id="postButton" type="submit" class="d-flex flex-row btn btn-primary w-100">
+                    OK
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>

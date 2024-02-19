@@ -16,7 +16,7 @@ using static SmartGarage.Common.Exceptions.ExceptionMessages;
 
 namespace SmartGarage.Controllers
 {
-    public class CustomerController : Controller
+    public class CustomerController : BaseCustomerController
     {
         private readonly SignInManager<AppUser> signInManager;
         private readonly IUsersService usersService;

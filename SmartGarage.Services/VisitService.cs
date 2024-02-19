@@ -53,5 +53,10 @@ namespace SmartGarage.Services
         {
             return await this.visitRepository.UpdateStatusAsync(visit, cancellationToken);
         }
+
+        public async Task<Visit> UpdateVisitRating(Visit visit, CancellationToken cancellationToken)
+        {
+            return await this.visitRepository.UpdateVisitRating(visit, cancellationToken);
+        }
     }
 }

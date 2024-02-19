@@ -14,5 +14,7 @@ namespace SmartGarage.Data.Repositories.Contracts
         Task<Visit> CreateAsync(Visit visit, CancellationToken cancellationToken);
 
         Task<Visit> UpdateStatusAsync(Visit visit, CancellationToken cancellationToken);
+        
+        Task<Visit> UpdateVisitRating(Visit visit, CancellationToken cancellationToken);
     }
 }

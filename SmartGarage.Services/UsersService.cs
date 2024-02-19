@@ -11,6 +11,7 @@ using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
+using SmartGarage.Utilities.Contract;
 using static SmartGarage.Common.Exceptions.ExceptionMessages;
 
 namespace SmartGarage.Services
@@ -18,35 +19,25 @@ namespace SmartGarage.Services
     public class UsersService : IUsersService
     {
         private readonly UserManager<AppUser> userManager;
-        private readonly RoleManager<IdentityRole> roleManager;
-        private readonly SignInManager<AppUser> signInManager;
         private readonly ApplicationDbContext applicationDbContext;
-        private readonly EmailService emailService;
-        private readonly IConfiguration configuration;
+        private readonly IEmailService emailService;
         private readonly IWebHostEnvironment webHostEnvironment;
         private readonly PasswordGenerator passwordGenerator;
-        private readonly EmailClient emailClient;
-        private const string SenderEmail = "DoNotReply@e5b418ff-9ee5-4fdc-b08f-e8bcf7bfc02c.azurecomm.net";
-
+        
         public UsersService(UserManager<AppUser> userManager,
             RoleManager<IdentityRole> roleManager,
             SignInManager<AppUser> signInManager,
             ApplicationDbContext applicationDbContext,
-            EmailService emailService,
-            IConfiguration configuration,
+            IEmailService emailService,
             IWebHostEnvironment webHostEnvironment,
-            PasswordGenerator passwordGenerator,
-            EmailClient emailClient)
+            PasswordGenerator passwordGenerator
+            )
         {
             this.userManager = userManager;
-            this.roleManager = roleManager;
-            this.signInManager = signInManager;
             this.applicationDbContext = applicationDbContext;
             this.emailService = emailService;
-            this.configuration = configuration;
             this.webHostEnvironment = webHostEnvironment;
             this.passwordGenerator = passwordGenerator;
-            this.emailClient = emailClient;
         }
 
         public async Task<ICollection<AppUser>> GetAll()
@@ -102,7 +93,7 @@ namespace SmartGarage.Services
             await userManager.AddToRoleAsync(appUser, "Customer");
             await applicationDbContext.SaveChangesAsync();
 
-            await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, appUser.Email, subject, body);
+            await emailService.SendEmailAsync(appUser.Email, subject, body);
 
             return userResult;
         }
@@ -110,7 +101,6 @@ namespace SmartGarage.Services
         public async Task<IdentityResult> CreateEmployee(AppUser appUser)
         {
             string randomPassword = "@Employee54";
-            //string randomPassword = passwordGenerator.Generate();
 
             if (await UserWithEmailExists(appUser.Email))
             {
@@ -193,7 +183,7 @@ namespace SmartGarage.Services
 
             body = body.Replace("{ResetLink}", resetLink);
 
-            _ = await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, user.Email, subject, body);
+            await emailService.SendEmailAsync(user.Email, subject, body);
         }
 
         public async Task<IdentityResult> UpdateResetPassword(AppUser user, string resetToken, string newPassword, CancellationToken cancellationToken)

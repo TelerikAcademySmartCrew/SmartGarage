@@ -92,6 +92,12 @@ namespace SmartGarage.Data.Repositories
             return visit;
         }
 
+        public async Task<Visit> UpdateVisitRating(Visit visit, CancellationToken cancellationToken)
+        {
+            await this.context.SaveChangesAsync(cancellationToken);
+            return visit;
+        }
+
         private static IQueryable<Visit> FilterVisitsByQuery(VisitsQueryParameters visitsQueryParameters, IQueryable<Visit> visitsToReturn)
         {
             if (visitsQueryParameters.Date != null)

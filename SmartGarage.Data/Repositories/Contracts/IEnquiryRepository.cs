@@ -5,10 +5,12 @@ namespace SmartGarage.Data.Repositories.Contracts
 {
     public interface IEnquiryRepository
     {
-        Task<Enquiry> CreateAsync(Enquiry enquiry);
+        Task<Enquiry> CreateAsync(Enquiry enquiry, CancellationToken cancellationToken);
 
-        Task<IEnumerable<Enquiry>> GetAllAsync(EnquiryQueryParameters parameters);
+        Task<IEnumerable<Enquiry>> GetAllAsync(EnquiryQueryParameters parameters, CancellationToken cancellationToken);
 
-        Task<Enquiry> ReadAsync(Guid id);
+        Task<Enquiry> GetById(Guid Id, CancellationToken cancellationToken);
+
+        Task<Enquiry> ReadAsync(Guid id, CancellationToken cancellationToken);
     }
 }

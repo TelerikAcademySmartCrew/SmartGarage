@@ -15,6 +15,7 @@ using SmartGarage.Utilities;
 using SmartGarage.Utilities.Mappers;
 using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;
+using SmartGarage.Utilities.Contract;
 
 namespace SmartGarage
 {
@@ -32,6 +33,7 @@ namespace SmartGarage
 
             // Configure Emails
             var emailConnectionString = builder.Configuration.GetConnectionString("EmailConnectionString");
+            builder.Services.AddScoped<IEmailService, AzureEmailService>();
             builder.Services.AddScoped<EmailClient>(_ => new EmailClient(emailConnectionString));
 
             builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -56,11 +58,14 @@ namespace SmartGarage
             builder.Services.AddScoped<IRepairActivityRepository, RepairActivityRepository>();
             builder.Services.AddScoped<IRepairActivityTypeService, RepairActivityTypeService>();
             builder.Services.AddScoped<IRepairActivityTypeRepository, RepairActivityTypeRepository>();
+            builder.Services.AddScoped<IEnquiryService, EnquiryService>();
+            builder.Services.AddScoped<IEnquiryRepository, EnquiryRepository>();
+            builder.Services.AddScoped<IEnquiryModelMapper, EnquiryModelMapper>();
 
             // Configure Emails
             var emailConfig = builder.Configuration.GetSection("EmailConfig").Get<EmailConfig>();
             builder.Services.AddSingleton(emailConfig);
-            builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<AzureEmailService>();
             builder.Services.AddScoped<PasswordGenerator>();
 
             builder.Services.AddScoped<IUsersService, UsersService>();

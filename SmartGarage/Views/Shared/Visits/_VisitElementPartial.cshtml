@@ -1,6 +1,8 @@
 ﻿@model VisitViewModel
 
 @{
+    double discount = Model.Discount;
+    double discountPercentage = ((100.0 - discount) / 100.0);
     double totalPrice = Model.RepairActivities.Sum(x => x.Price);
 }
 
@@ -49,7 +51,17 @@
             <div class="d-flex flex-row gap-4 text-end">
                 <p class="ms-3">Total Cost</p>
             </div>
-            <p>@totalPrice лв.</p>
+            <div class="d-flex flex-row gap-2">
+                @if (discount > 0)
+                {
+                    <p><s>@totalPrice лв.</s></p>
+                    <p>@(totalPrice * discountPercentage) лв.</p>
+                }
+                else
+                {
+                    <p>@totalPrice лв.</p>
+                }
+            </div>
         </div>
     </div>
 </div>
