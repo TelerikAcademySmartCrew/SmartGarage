@@ -2,9 +2,20 @@
 
 @{
     double totalPrice = Model.RepairActivities.Sum(x => x.Price);
-    double discount = Model.Discount;
+    double discount = 20.0; // Model.Discount;
     var status = Model.Status;
     var rating = Model.Rating;
+
+    var statusColor = string.Empty;
+
+    if (status == "Pending")
+        statusColor = "bg-danger";
+    else if (status == "Active")
+        statusColor = "bg-primary";
+    else if (status == "Completed")
+        statusColor = "bg-success";
+    else if (status == "Paid")
+        statusColor = "bg-secondary";
 }
 
 <div class="d-flex justify-content-between flex-column bg-light bg-opacity-50 shadow p-3" style="height:96%">
@@ -13,7 +24,7 @@
 
         <div class="d-flex flex-row p-2 justify-content-between">
             <div class="d-flex flex-column align-items-start gap-1">
-                <div class="bg-secondary rounded-pill text-light py-2 px-3 gap-4">
+                <div class="@statusColor rounded-pill text-light py-2 px-3 gap-4">
                     <b>
                         @status -
                     </b>
@@ -28,11 +39,11 @@
                     @Model.DateCreated.ToShortDateString()
                 </div>
             </div>
-            <div class="d-flex row me-0">
+            <div class="d-flex row me-0" style="max-width:200px;">
                 @if (status == "Paid")
                 {
-                    <div class="d-flex flex-column align-items-end">
-                        <div class="d-flex btn-secondary rounded-pill mb-2 px-4 py-1">
+                    <div class="d-flex flex-column flex-fill align-items-end">
+                        <div class="d-flex flex-row justify-content-around btn-secondary rounded-pill mb-2 px-4 py-1 mx-0" style="width:100%;">
                             <select id="rating-dropdown" class="dropdown btn btn-secondary dropdown-toggle mx-1">
                                 <option> 1 </option>
                                 <option> 2 </option>
@@ -42,10 +53,22 @@
                             </select>
                             <img src="~/images/star-icon.png" id="rating-icon" style="width:36px; height:36px;" hidden />
                         </div>
+
+                        <div class="d-flex gap-2 mx-auto">
+                            <a asp-area="" asp-controller="Visits" asp-action="DownloadPdf" asp-route-visitId="@Model.Id" data-bs-toggle="tooltip" data-bs-placement="top" title="Download PDF"
+                               class="d-flex flex-row flex-fill w-100 justify-content-center m-0 py-1 btn btn-info rounded flex-grow-0 justify-content-end">
+                                @* Download *@
+                                <img src="~/images/icon-download.png" style="max-width:24px; max-height:24px;"/>
+                            </a>
+                            <div class="d-flex flex-column align-items-end">
+                                <select id="currency-toggle" class="d-flex flex-fill dropdown btn btn-secondary dropdown-toggle mx-0">
+                                    <option> BGN </option>
+                                    <option> USD </option>
+                                    <option> EUR </option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <a asp-area="" asp-controller="Visits" asp-action="DownloadPdf" asp-route-visitId="@Model.Id" class="d-flex btn btn-primary flex-grow-0 justify-content-end">
-                        Download PDF
-                    </a>
                 }
             </div>
         </div>
@@ -68,13 +91,13 @@
                             <div class="d-flex align-self-center justify-content-center align-items-center bg-success text-light rounded-circle" style="width:14px; height:14px;"></div>
 
                             @* Repair Activities Type *@
-                            <div id="" class="d-flex align-items-center repair-activity-id" style="min-width:20px;" data-id="@item.Id">@item.Name.</div>
+                            <div id="" class="d-flex align-items-center repair-activity-id" style="min-width:20px;" data-id="@item.Id">@item.Name</div>
                         </div>
 
                         @* Repair Activities Price *@
                         <div class="d-flex bg-light pe-1 row rounded">
                             <input id="price-field" class="d-flex form-control me-3 repair-activity-price" type="number" readonly autocomplete="off" value="@item.Price" style="width:100px;" />
-                            <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> ЛВ.</div>
+                            <div class="d-flex flex-row justify-content-center align-items-center pe-4" style="width:20px;"> лв.</div>
                         </div>
                     </div>
                 }
@@ -92,34 +115,34 @@
                         <div class="d-flex col gap-4 text-end">
                             <label class="d-flex m-0">Discount</label>
                         </div>
-                        <div class="d-flex flex-column flex-stretch m-0">
+                        <div class="d-flex flex-column flex-stretch me-3">
                             <p id="" class="badge bg-info px-4 py-2 row text-end">-@discount%</p>
                         </div>
                     </div>
                 }
             }
 
-            <div class="d-flex flex-row mx-5">
+            <div class="d-flex flex-row mx-5 align-items-center">
                 <div class="d-flex col gap-4 text-end">
-                    <label class="d-flex m-0">Total Price</label>
+                    <b><label class="d-flex m-0">Total Price</label></b>
                 </div>
 
-                <div class="d-flex flex-row gap-5 m-0">
+                <div class="d-flex flex-row align-items-center gap-5 m-0 mx-3">
                     @{
                         if (@discount != 0)
                         {
-                            <s id="total-price-original" class="row text-end">@totalPrice ЛВ.</s>
+                            <s id="total-price-original" class="row text-end">@totalPrice лв.</s>
                         }
                     }
-                    <label id="total-price" class="row text-end">@totalPrice ЛВ.</label>
+                    <label id="total-price" class="row text-end align-items-center">@totalPrice лв.</label>
 
-                    <div class="d-flex flex-column align-items-end">
-                        <select id="currency-toggle" class="d-flex flex-fill dropdown btn btn-secondary dropdown-toggle mx-0">
-                            <option> BGN </option>
-                            <option> USD </option>
-                            <option> EUR </option>
-                        </select>
-                    </div>
+                    @* <div class="d-flex flex-column align-items-end">
+                    <select id="currency-toggle" class="d-flex flex-fill dropdown btn btn-secondary dropdown-toggle mx-0">
+                    <option> BGN </option>
+                    <option> USD </option>
+                    <option> EUR </option>
+                    </select>
+                    </div> *@
 
                 </div>
             </div>
@@ -195,6 +218,11 @@
         let totalPrice = 0.0;
         let discount = (100.0 - discountValue) / 100;
 
+        let currencySigns = {
+            'USD': '$',
+            'EUR': '€'
+        }
+
         // Set initial total price
         calTotalPrice();
 
@@ -211,11 +239,11 @@
             });
 
             if (discountValue) {
-                $('#total-price-original').text(totalPrice.toFixed(2) + ' ЛВ.');
-                $('#total-price').text((totalPrice * discount).toFixed(2) + ' ЛВ.')
+                $('#total-price-original').text(totalPrice.toFixed(2) + ' лв.');
+                $('#total-price').text((totalPrice * discount).toFixed(2) + ' лв.')
             }
             else {
-                $('#total-price').text(totalPrice.toFixed(2) + ' ЛВ.');
+                $('#total-price').text(totalPrice.toFixed(2) + ' лв.');
             }
         }
 
@@ -243,11 +271,11 @@
 
                         if (discountValue) {
 
-                            $('#total-price-original').text(targetCurrency + ' ' + price);
-                            $('#total-price').text(targetCurrency + ' ' + (price * discount));
+                            $('#total-price-original').text(currencySigns[selectedCurrency] + ' ' + price);
+                            $('#total-price').text(currencySigns[selectedCurrency] + ' ' + (price * discount));
                         }
                         else {
-                            $('#total-price').text(targetCurrency + ' ' + price);
+                            $('#total-price').text(currencySigns[selectedCurrency] + ' ' + price);
                         }
                     },
                     error: function (xhr, status, error) {

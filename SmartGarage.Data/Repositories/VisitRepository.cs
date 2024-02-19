@@ -82,12 +82,6 @@ namespace SmartGarage.Data.Repositories
 
         public async Task<Visit> UpdateStatusAsync(Visit visit, CancellationToken cancellationToken)
         {
-            if (visit.Status == Status.Paid)
-            {
-                throw new InvalidOperationException(CannotUpdateStatus);
-            }
-
-            visit.Status++;
             await this.context.SaveChangesAsync(cancellationToken);
             return visit;
         }

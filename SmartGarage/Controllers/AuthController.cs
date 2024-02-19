@@ -34,8 +34,6 @@ namespace SmartGarage.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
-            //await signInManager.SignOutAsync();
-
             if (User.Identity.IsAuthenticated)
             {
                 // User is already authenticated, no need to show the login page again
@@ -135,7 +133,6 @@ namespace SmartGarage.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel registertionData)
         {
             try

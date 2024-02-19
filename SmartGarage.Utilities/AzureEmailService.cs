@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Azure.Communication.Email;
 using SmartGarage.Utilities.Contract;
+using System.Net.Mime;
 
 namespace SmartGarage.Utilities
 {
@@ -15,9 +16,25 @@ namespace SmartGarage.Utilities
             this.emailClient = emailClient;
         }
 
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        public async Task SendEmailAsync(string toEmail, string subject, string body, byte[] attactchment)
         {
-            _ = await emailClient.SendAsync(WaitUntil.Completed, SenderEmail, toEmail, subject, body);
+            var emailContent = new EmailContent(subject)
+            {
+                Html = body
+            };
+
+            var emailMessage = new EmailMessage(SenderEmail, toEmail, emailContent);
+
+            if (attactchment != null)
+            {
+                BinaryData binaryDataAttachment = new BinaryData(attactchment);
+
+                var emailAttachment = new EmailAttachment("attachment.pdf", MediaTypeNames.Application.Pdf, binaryDataAttachment);
+
+                emailMessage.Attachments.Add(emailAttachment);
+            }
+
+            _ = await emailClient.SendAsync(WaitUntil.Completed, emailMessage);
         }
     }
 }

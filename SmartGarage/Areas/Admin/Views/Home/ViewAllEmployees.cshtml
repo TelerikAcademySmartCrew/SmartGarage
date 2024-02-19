@@ -54,7 +54,7 @@
             }
 
             <div class="d-flex flex-row justify-content-end gap-3 mt-4">
-                <a id="backButton" type="button" class="btn my-1 primary-button text-black btn-outline-light bg-secondary opacity-50 flex-shrink-1"
+                <a id="cancelButton" type="button" class="btn my-1 primary-button text-black btn-outline-light bg-secondary opacity-50 flex-shrink-1"
                    style="width: 8.0rem;">
                     Cancel
                 </a>
@@ -81,8 +81,8 @@
                 {
                     foreach (var employee in Model.Employees)
                     {
-                        <div class="d-flex flex-row justify-content-between align-items-center rounded-3 flex-row bg-light m-1 p-4">
-                            <div class="d-flex flex-column justify-content-between align-items-center rounded-3 flex-row bg-light m-1 p-4">
+                        <div class="d-flex flex-row justify-content-between align-items-center rounded-3 flex-row bg-light m-1 p-2 px-4">
+                            <div class="d-flex flex-column justify-content-between align-items-center rounded-3 flex-row bg-light m-1">
                                 <h6>
                                     @employee.UserName
                                 </h6>
@@ -127,13 +127,14 @@
         });
 
         // Hide employee register form
-        $("#backButton").click(function () {
+        $("#cancelButton").click(function () {
 
-            $("#registerEmployeeForm").removeClass("show").addClass("d-none");
             $("#reg-error-input-1").removeAttr("required");
             $("#reg-error-input-2").removeAttr("required");
             $("#reg-error-input-3").removeAttr("required");
             $("#reg-error-input-4").removeAttr("required");
+
+            console.log('click');
 
             $("#reg-notify-message").text("");
 
@@ -150,6 +151,8 @@
             clearForm();
 
             $("#newButton").removeClass("d-none");
+
+            $("#registerEmployeeForm").removeClass("show").addClass("d-none");
         });
 
         var b = @Html.Raw(Json.Serialize(registerMessage));

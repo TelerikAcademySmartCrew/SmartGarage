@@ -30,12 +30,12 @@
 
                     <hr />
 
-                    <div class="col justify-content-start align-items-start m-auto gap-4">
+                    <div class="d-flex justify-content-start text-light gap-1">
                         @{
                             foreach (var item in Model.RepairActivityTypes)
                             {
-                                <span class="badge m-auto bg-secondary p-2">
-                                    <p>@item.Name</p>
+                                <span class="d-flex bg-secondary rounded p-2">
+                                    <label>@item.Name</label>
                                 </span>
                             }
                         }
@@ -54,12 +54,12 @@
                         @{
                             foreach (var brand in Model.VehicleBrandAndModels)
                             {
-                                <span class="d-flex flex-row justify-content-start m-auto bg-secondary p-2">
-                                    <label class="badge bg-info me-2">@brand.Name</label>
+                                <span class="d-flex flex-row justify-content-start m-auto bg-secondary rounded p-2">
+                                    <label class="d-flex align-items-center badge bg-info me-2">@brand.Name</label>
 
                                     @foreach (var brandModel in brand.Models)
                                     {
-                                        <label class="badge p-2">@brandModel,</label>
+                                        <label class="badge p-2">@brandModel</label>
                                     }
                                 </span>
                             }

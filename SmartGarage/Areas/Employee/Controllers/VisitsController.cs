@@ -39,6 +39,19 @@ namespace SmartGarage.Areas.Employee.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> CreateVisitByVin(string vin, CancellationToken cancellationToken)
+        {
+            VisitCreateViewModel viewModel = new VisitCreateViewModel
+            {
+                VIN = vin,
+            };
+
+            //return View("CreateVisit", viewModel);
+
+            return await CreateVisit(viewModel, cancellationToken);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> CreateVisit(CancellationToken cancellationToken)
         {
             base.InitializeUserName();
@@ -247,7 +260,7 @@ namespace SmartGarage.Areas.Employee.Controllers
 
                 return RedirectToAction("DisplayVisitDetails", new { area = "Employee", visitId = visitId });
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException)
             {
                 return RedirectToAction("DisplayVisitDetails", new { area = "Employee", visitId = visitId });
             }

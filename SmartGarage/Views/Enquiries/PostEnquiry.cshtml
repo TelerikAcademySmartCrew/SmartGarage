@@ -35,11 +35,21 @@
                 </div>
             </div>
             <div class="float-end mt-5 pt-1 w-100">
-                <button id="postButton" type="submit" class="d-flex flex-row btn btn-primary w-100">
-                    OK
+                <button id="submit-button" type="submit" class="d-flex flex-row align-items-center btn btn-primary gap-2 w-100">
+                    <div id="loading-spinner" class="spinner-border spinner-border-sm" style="display: none;"></div>
+                    SEND
                 </button>
             </div>
         </form>
     </div>
 
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+
+        setFormAsWaitable('enquiryForm', 'submit-button', 'loading-spinner');
+    });
+</script>

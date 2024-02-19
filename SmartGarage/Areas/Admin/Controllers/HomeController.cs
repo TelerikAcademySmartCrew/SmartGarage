@@ -65,7 +65,6 @@ namespace SmartGarage.Areas.Admin.Controllers
 
         [HttpPost]
         public async Task<IActionResult> RegisterEmployee(
-            //[Bind(nameof(AdminManageEmployeesViewModel.RegisterData))]
             RegisterEmployeeViewModel registerData)
         {
             var employees = await userManager.GetUsersInRoleAsync("Employee");

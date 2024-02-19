@@ -72,15 +72,16 @@
                 <!-- Enquiry Data Panel Content -->
                 <div class="d-flex flex-column justify-content-between my-0" style="width:100%; max-height:40%;">
 
-                    <form method="post" id="enquiryForm">
+                    <form method="post" id="enquiry-form">
                         <div class="d-flex flex-start w-100">
                             <div class="form-outline w-100">
-                                <textarea id="replyTextArea" name="content" class="form-control" rows="4" required maxlength="1000" style="background: #fff; resize: none; height: 130%;"></textarea>
+                                <textarea id="replyTextArea" name="content" class="form-control" rows="4" maxlength="1000" style="background: #fff; resize: none; height: 130%;"></textarea>
                             </div>
                         </div>
                         <div class="float-end mt-5 pt-1 w-100">
-                            <button id="postButton" type="button" readonly class="d-flex flex-row btn btn-primary w-100">
-                                REPLY
+                            <button id="submit-button" type="button" readonly class="d-flex flex-row align-items-center btn btn-primary gap-2 w-100">
+                                <div id="loading-spinner" class="spinner-border spinner-border-sm" style="display: none;"></div>
+                                <div id="submit-button-text">REPLY</div>
                             </button>
                         </div>
                     </form>
@@ -170,54 +171,57 @@
             if (state == 'true') {
                 $('#replyTextArea').prop("readonly", true);
 
-                $('#postButton').text("REPLY SENT");
-                $('#postButton').prop("disabled", true);
-                $('#postButton').removeClass("btn-primary").addClass("btn-success");
+                $('#submit-button-text').text("REPLY SENT");
+                $('#submit-button').prop("disabled", true);
+                $('#submit-button').removeClass("btn-primary").addClass("btn-success");
             }
             else {
                 $('#replyTextArea').prop("readonly", false);
 
-                $('#postButton').text("REPLY");
-                $('#postButton').prop("disabled", false);
-                $('#postButton').removeClass("btn-success").addClass("btn-primary");
+                $('#submit-button-text').text("REPLY");
+                $('#submit-button').prop("disabled", false);
+                $('#submit-button').removeClass("btn-success").addClass("btn-primary");
             }
         }
 
         // Form submit
 
-        $('#postButton').click(onSubmitForm);
+        $('#submit-button').click(onSubmitForm);
 
         function onSubmitForm() {
 
-            let enquiryId = activeElement['id'];
-            let senderEmail = activeElement['email'];
-            let enquiryContent = activeElement['content'];
+            if ($('#replyTextArea').val() != '') {
+                let enquiryId = activeElement['id'];
+                let senderEmail = activeElement['email'];
+                let enquiryContent = activeElement['content'];
 
-            var data = {
-                Id: enquiryId,
-                Email: senderEmail,
-                Content: enquiryContent,
-                Reply: $('#replyTextArea').val()
-            }
-
-            var actionUrl = '/Employee/Enquiries/PostEnquiry';
-
-            console.log('Form submit');
-
-            $.ajax({
-                url: actionUrl,
-                type: 'POST',
-                data: data,
-                success: function (result) {
-                    activeElement['isRead'] = 'true';
-                    toggleReplyFormActiveState(activeElement['isRead']);
-                    console.log(activeElement);
-                },
-                error: function (error) {
-                    console.error('Error loading partial view:', error);
+                var data = {
+                    Id: enquiryId,
+                    Email: senderEmail,
+                    Content: enquiryContent,
+                    Reply: $('#replyTextArea').val()
                 }
-            });
 
+                var actionUrl = '/Employee/Enquiries/PostEnquiry';
+
+                setFormAsWaitableManual('enquiry-form', 'submit-button', 'loading-spinner');
+
+                $.ajax({
+                    url: actionUrl,
+                    type: 'POST',
+                    data: data,
+                    success: function (result) {
+                        activeElement['isRead'] = 'true';
+                        toggleReplyFormActiveState(activeElement['isRead']);
+                        toggleLoagindSpinner('loading-spinner', false);
+                    },
+                    error: function (error) {
+                        console.error('Error: could not reply to enquiry:', error);
+                        toggleLoagindSpinner('loading-spinner', false);
+                    }
+                });
+
+            }
         }
     });
 </script>

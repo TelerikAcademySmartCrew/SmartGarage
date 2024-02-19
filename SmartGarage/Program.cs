@@ -70,8 +70,9 @@ namespace SmartGarage
 
             builder.Services.AddScoped<IUsersService, UsersService>();
 
-            // Configure DinkToPDF Generator
-            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            // Configure PDF Generator
+            builder.Services.AddSingleton<PDFGenerator>();
+            //builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             
             var app = builder.Build();
             using (var scope = app.Services.CreateScope())
