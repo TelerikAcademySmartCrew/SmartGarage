@@ -1,15 +1,11 @@
 using Azure.Communication.Email;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Data.Repositories;
 using SmartGarage.Data.Seeding;
-using SmartGarage.Hubs;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
@@ -17,6 +13,7 @@ using SmartGarage.Utilities.Mappers;
 using SmartGarage.Utilities.Mappers.Contracts;
 using SmartGarage.Utilities.Models;
 using SmartGarage.Utilities.Contract;
+using SmartGarage.Hubs;
 
 namespace SmartGarage
 {
@@ -107,18 +104,19 @@ namespace SmartGarage
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapHub<ChatHub>("/chatHub");
+
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "/{area:exists}/{controller=Home}/{action=Index}/{id?}"
-          );
+            );
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "/{controller=Auth}/{action=Login}/{id?}");
+                pattern: "/{controller=Auth}/{action=Login}/{id?}"
+            );
             
             app.MapRazorPages();
-
-            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }

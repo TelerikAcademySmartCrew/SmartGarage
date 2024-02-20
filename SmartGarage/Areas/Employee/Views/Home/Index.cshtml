@@ -2,6 +2,8 @@
     var userName = ViewData["CurrentUser"];
 }
 
+<div id="current-user" hidden>@userName</div>
+
 <!-- customer index page -->
 <div class="d-flex flex-column justify-content-start" style="height:100%;">
 
@@ -19,7 +21,11 @@
         </div>
     </div>
 
-    <div class="bg-light">
+    <div id="chat" style="display:none">
+        <partial name="_ChatPartial" style="position: absolute; right:0; bottom:0;" />
+    </div>
+    <div id="chat-btn" style="display:block">
+        <partial name="_ChatTogglePartial" style="position: absolute; right:0; bottom:0" />
     </div>
 
     <div class="d-flex m-auto" style="width:50%; max-height:60%;">
@@ -70,9 +76,13 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="~/js/chat.js"></script>
 
 <script>
+
+    let chatOpened = false;
 
     function filterWithStatus(status) {
 
@@ -80,5 +90,29 @@
         url = url.replace('status', status);
         window.location.href = url;
     }
+
+    $(document).ready(function () {
+
+        let chatButton = $('#chat-toggle-button').on('click', function () {
+            console.log('chat button click');
+            toggleChat();
+        });
+
+        let chatButtonClose = $('#chat-panel-close').on('click', function () {
+            toggleChat();
+        });
+
+        var toggleChat = function () {
+            chatOpened = !chatOpened;
+            if (chatOpened) {
+                $('#chat-btn').css('display', 'none');
+                $('#chat').css('display', 'block');
+            }
+            else {
+                $('#chat-btn').css('display', 'block');
+                $('#chat').css('display', 'none');
+            }
+        }
+    });
 
 </script>
