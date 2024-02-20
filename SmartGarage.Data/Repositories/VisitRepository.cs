@@ -7,6 +7,8 @@ using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Common.Enumerations;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Visit;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Status;
+using Microsoft.AspNetCore.Mvc;
+using SmartGarage.Common.Models.ViewModels;
 
 namespace SmartGarage.Data.Repositories
 {
@@ -125,5 +127,18 @@ namespace SmartGarage.Data.Repositories
             return visitsToReturn;
         }
 
+        public async Task<Visit> UpdateVisitRepairActivities(Visit visit, ICollection<VisitRepairActivityViewModel> repairActivities, CancellationToken cancellationToken)
+        {
+            foreach (var item in repairActivities)
+            {
+                Guid repairActivityId = Guid.Parse(item.Id);
+                var entry = visit.RepairActivities.First(x => x.Id == repairActivityId);
+                entry.Price = item.Price;
+            }
+
+            await this.context.SaveChangesAsync(cancellationToken);
+
+            return visit;
+        }
     }
 }

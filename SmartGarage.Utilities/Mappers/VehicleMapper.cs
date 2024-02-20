@@ -2,9 +2,9 @@
 using SmartGarage.Common.Models.InputModels;
 using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Common.Models.ResponseDtos;
+using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
 using SmartGarage.Utilities.Mappers.Contracts;
-using SmartGarage.Utilities.Models;
 
 namespace SmartGarage.Utilities.Mappers;
 
@@ -72,5 +72,19 @@ public class VehicleMapper : IVehicleMapper
     public IList<VehicleResponseDto> ToResponseDto(IEnumerable<Vehicle> vehicles)
     {
         return vehicles.Select(ToResponseDto).ToList();
+    }
+
+    public RegisterdVehicleInfoViewModel VehicleDataToRegisterdVehicleDataViewModel(RegisterVehicleViewModel vehileRegisterData)
+    {
+        var registeredVehicleData = new RegisterdVehicleInfoViewModel
+        {
+            RegisterBrand = vehileRegisterData.RegisterBrand,
+            RegisterModel = vehileRegisterData.RegisterModel,
+            VIN = vehileRegisterData.VIN,
+            CreationYear = vehileRegisterData.CreationYear,
+            LicensePlate = vehileRegisterData.LicensePlate,
+            CustomerEmail = vehileRegisterData.CustomerEmail
+        };
+        return registeredVehicleData;
     }
 }

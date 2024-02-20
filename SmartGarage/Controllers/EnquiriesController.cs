@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Data.Models;
-using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Utilities.Mappers;
 using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.Controllers
@@ -26,8 +24,8 @@ namespace SmartGarage.Controllers
         public async Task<IActionResult> PostEnquiry()
         {
 
-            var user = await usersService.GetUserAsync(User);
-            var userViewModel = userMapper.Map(user);
+            var user = await this.usersService.GetUserAsync(User);
+            var userViewModel = this.userMapper.Map(user);
 
             return View(userViewModel);
         }
@@ -37,18 +35,18 @@ namespace SmartGarage.Controllers
         {
             try
             {
-                var user = await usersService.GetUserAsync(User);
+                var user = await this.usersService.GetUserAsync(this.User);
 
                 var enquiry = new Enquiry()
                 {
                     Id = Guid.NewGuid(),
-                    Email = User.Identity.Name,
+                    Email = User.Identity!.Name!,
                     Content = content,
                     DateCreated = DateTime.Now,
                     PhoneNumber = user.PhoneNumber ?? ""
                 };
 
-                _ = await enquiryService.CreateAsync(enquiry, cancellationToken);
+                _ = await this.enquiryService.CreateAsync(enquiry, cancellationToken);
                 return RedirectToAction("NotifyEnquiryPosted");
             }
             catch (Exception)
@@ -60,8 +58,8 @@ namespace SmartGarage.Controllers
         [HttpGet]
         public async Task<IActionResult> NotifyEnquiryPosted()
         {
-            var user = await usersService.GetUserAsync(User);
-            var userViewModel = userMapper.Map(user);
+            var user = await this.usersService.GetUserAsync(this.User);
+            var userViewModel = this.userMapper.Map(user);
 
             return View(userViewModel);
         }

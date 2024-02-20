@@ -8,7 +8,7 @@
 <div class="d-flex flex-column justify-content-start" style="height:calc(100% - 30px);">
 
     <!-- employee nav bar -->
-    <partial name="_EmployeeNavBarPartial" model="@userName" area-name="" />
+    <partial name="_EmployeeNavBarPartial" model="@userName" />
 
     <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
         <div class="d-flex container justify-content-between">
@@ -122,8 +122,8 @@
 
                 if (element != null && activeElement != element) {
                     $('#enquiry-sender').text(element['email']);
-                    $('#enquiry-sender-phone').text(element['phoneNumber']);
-                    $('#enquiry-date').text(element['dateCreated']);
+                    $('#enquiry-sender-phone').text(element['formattedPhoneNumber']);
+                    $('#enquiry-date').text(element['readableDate']);
                     $('#enquiry-content').text(element['content']);
 
                     activeElement = element;

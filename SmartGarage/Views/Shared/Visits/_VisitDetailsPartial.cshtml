@@ -2,7 +2,7 @@
 
 @{
     double totalPrice = Model.RepairActivities.Sum(x => x.Price);
-    double discount = 20.0; // Model.Discount;
+    double discount = Model.Discount;
     var status = Model.Status;
     var rating = Model.Rating;
 
