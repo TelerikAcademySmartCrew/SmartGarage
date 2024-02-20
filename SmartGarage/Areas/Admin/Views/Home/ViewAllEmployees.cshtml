@@ -134,8 +134,6 @@
             $("#reg-error-input-3").removeAttr("required");
             $("#reg-error-input-4").removeAttr("required");
 
-            console.log('click');
-
             $("#reg-notify-message").text("");
 
             $("#reg-error-input-1").val("");
@@ -155,14 +153,15 @@
             $("#registerEmployeeForm").removeClass("show").addClass("d-none");
         });
 
-        var b = @Html.Raw(Json.Serialize(registerMessage));
-        var s1 = document.getElementById("reg-error-span-1").innerText;
-        var s2 = document.getElementById("reg-error-span-2").innerText;
-        var s3 = document.getElementById("reg-error-span-3").innerText;
-        var s4 = document.getElementById("reg-error-span-4").innerText;
+        let b = @Html.Raw(Json.Serialize(registerMessage));
+        let s1 = document.getElementById("reg-error-span-1").innerText;
+        let s2 = document.getElementById("reg-error-span-2").innerText;
+        let s3 = document.getElementById("reg-error-span-3").innerText;
+        let s4 = document.getElementById("reg-error-span-4").innerText;
 
         if ((b != null && b != "") || (s1 != null && s1 != "")
-            || (s2 != null && s2 != "") || (s3 != null && s3 != "") || (s4 != null && s4 != "")) {
+        || (s2 != null && s2 != "") || (s3 != null && s3 != "")
+        || (s4 != null && s4 != "")) {
             $("#reg-notify-message").text(b);
             $("#registerEmployeeForm").removeClass("d-none").addClass("show");
             $("#newButton").click();

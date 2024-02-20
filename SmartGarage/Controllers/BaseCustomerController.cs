@@ -4,8 +4,7 @@ using static SmartGarage.Common.GeneralApplicationConstants.Roles;
 
 namespace SmartGarage.Controllers
 {
-    //[AllowAnonymous]
-    //[Authorize(Roles = CustomerRoleName)]
+    [Authorize(Roles = CustomerRoleName)]
     public class BaseCustomerController : Controller
     {
         public BaseCustomerController()

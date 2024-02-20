@@ -1,3 +1,4 @@
+using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
 
@@ -16,5 +17,7 @@ namespace SmartGarage.Data.Repositories.Contracts
         Task<Visit> UpdateStatusAsync(Visit visit, CancellationToken cancellationToken);
         
         Task<Visit> UpdateVisitRating(Visit visit, CancellationToken cancellationToken);
+
+        Task<Visit> UpdateVisitRepairActivities(Visit visit, ICollection<VisitRepairActivityViewModel> repairActivities, CancellationToken cancellationToken);
     }
 }

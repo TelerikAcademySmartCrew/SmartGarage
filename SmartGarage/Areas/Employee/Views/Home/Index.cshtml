@@ -2,10 +2,8 @@
     var userName = ViewData["CurrentUser"];
 }
 
-<!-- customer index page -->
 <div class="d-flex flex-column justify-content-start" style="height:100%;">
 
-    <!-- customer nav bar -->
     <partial name="_EmployeeNavBarPartial" model="@userName" />
 
     <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
@@ -23,9 +21,9 @@
     </div>
 
     <div class="d-flex m-auto" style="width:50%; max-height:60%;">
-        <div class="d-flex row gap-3 align-items-center justify-content-center align-content-center" style="width:100%; height:100%;">
+        <div class="d-flex row gap-2 align-items-center justify-content-center align-content-center" style="width:100%; height:100%;">
 
-            <div class="d-flex gap-3 m-auto flex-fill">
+            <div class="d-flex gap-2 m-auto flex-fill">
                 <a asp-area="Employee" asp-controller="Customers" asp-action="RegisterCustomer" class="employee-menu-element col gap-2">
                     <img class="position-relative opacity-50" src="~/images/add-user.png" style="width:64px; filter:sepia()" />
                     <div>REGISTER CUSTOMER</div>
@@ -35,7 +33,7 @@
                     <div>CUSTOMERS</div>
                 </a>
             </div>
-            <div class="d-flex gap-3 m-auto flex-fill">
+            <div class="d-flex gap-2 m-auto flex-fill">
                 <a asp-area="Employee" asp-controller="Vehicles" asp-action="RegisterVehicle" class="employee-menu-element col gap-2 m-0">
                     <img class="position-relative opacity-50" src="~/images/add-vehicle.png" style="width:50px; filter:sepia()" />
                     <div>REGISTER VEHICLE</div>
@@ -45,20 +43,32 @@
                     <div>VEHICLES</div>
                 </a>
             </div>
-            <div class="d-flex gap-3 pe-auto m-auto flex-fill">
-                <a asp-area="Employee" asp-controller="Visits" asp-action="CreateVisit" class="employee-menu-element col-4 gap-2">
+            <div class="d-flex gap-2 ">
+
+                <a asp-area="Employee" asp-controller="Visits" asp-action="CreateVisit" class="employee-menu-element col-3 gap-2">
                     <img class="position-relative opacity-50" src="~/images/add-visit.png" style="width:40px; filter:sepia()" />
                     <div>CREATE VISIT</div>
                 </a>
-                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="employee-menu-element col-4 gap-">
+
+                <a asp-area="Employee" asp-controller="Visits" asp-action="ManageVisits" class="employee-menu-element col-6 gap-2">
                     <img class="position-relative opacity-50" src="~/images/visits.png" style="width:80px; filter:sepia()" />
                     <div>ALL VISITS</div>
                 </a>
 
-                <a href="#" onclick="filterWithStatus('Active')" class="employee-menu-element col-2 flex-fill gap-2">
-                    <img class="position-relative opacity-50" src="~/images/visits.png" style="width:80px; filter:sepia()" />
-                    <div>ACTIVE VISITS</div>
-                </a>
+                <div class="d-flex flex-column flex-fill gap-1 align-items-stretch m-auto justify-content-center">
+                    <a href="#" onclick="filterWithStatus('Pending')" class="d-flex align-items-end employee-menu-element rounded-1 p-2 pe-5">
+                        PENDING
+                    </a>
+
+                    <a href="#" onclick="filterWithStatus('Active')" class="d-flex align-items-end employee-menu-element rounded-1 p-2 pe-5">
+                        ACTIVE
+                    </a>
+
+                    <a href="#" onclick="filterWithStatus('Completed')" class="d-flex align-items-end employee-menu-element rounded-1 p-2 pe-5">
+                        COMPLETED
+                    </a>
+                </div>
+
             </div>
             <div class="d-flex" style="max-height:130px;">
                 <a asp-area="Employee" asp-controller="Enquiries" asp-action="EmployeeGetAllEnquiries" class="employee-menu-element col gap-2">
@@ -70,15 +80,12 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
-
     function filterWithStatus(status) {
-
-        var url = '@Url.Action("ManageVisits", "Visits", new { area = "Employee", Status = "status" })';
+        let url = '@Url.Action("ManageVisits", "Visits", new { area = "Employee", Status = "status" })';
         url = url.replace('status', status);
         window.location.href = url;
     }
-
 </script>

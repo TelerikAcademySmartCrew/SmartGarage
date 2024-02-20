@@ -10,7 +10,8 @@ namespace SmartGarage.Areas.Employee.Controllers
     {
         protected void InitializeUserName()
         {
-            var userName = this.User.Identity.Name.Substring(0, this.User.Identity.Name.IndexOf("@"));
+            var userName = this.User.Identity!.Name![..this.User.Identity!.Name!.IndexOf("@")];
+
             this.ViewData["CurrentUser"] = userName;
         }
     }

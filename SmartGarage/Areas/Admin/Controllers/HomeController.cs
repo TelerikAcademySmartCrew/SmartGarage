@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
-using SmartGarage.Data;
 using SmartGarage.Data.Models;
 using SmartGarage.Services.Contracts;
-using SmartGarage.Utilities.Mappers;
 using SmartGarage.Utilities.Mappers.Contracts;
 using static SmartGarage.Common.GeneralApplicationConstants.Admin;
 
@@ -17,19 +15,19 @@ namespace SmartGarage.Areas.Admin.Controllers
     public class HomeController : BaseAdminController
     {
         private readonly IUsersService usersService;
-        private readonly IRepairActivityTypeService repairActivityTypeService;
         private readonly UserManager<AppUser> userManager;
         private readonly IUserMapper userMapper;
+        private readonly IRepairActivityTypeService repairActivityTypeService;
 
         public HomeController(IUsersService usersService,
-            IRepairActivityTypeService repairActivityTypeService,
             UserManager<AppUser> userManager,
-            IUserMapper userMapper)
+            IUserMapper userMapper,
+            IRepairActivityTypeService repairActivityTypeService)
         {
             this.usersService = usersService;
-            this.repairActivityTypeService = repairActivityTypeService;
             this.userManager = userManager;
             this.userMapper = userMapper;
+            this.repairActivityTypeService = repairActivityTypeService;
         }
 
         public IActionResult Index()
@@ -41,22 +39,25 @@ namespace SmartGarage.Areas.Admin.Controllers
         {
             try
             {
-                var employees = await userManager.GetUsersInRoleAsync("Employee");
+                var employees = await this.userManager.GetUsersInRoleAsync("Employee");
 
-                var employeesVM = userMapper.Map(employees);
+                var employeesViewModel = this.userMapper.Map(employees);
 
-                var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
-                adminManageEmployeesViewModel.Employees = employeesVM;
+                var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel
+                {
+                    Employees = employeesViewModel
+                };
+                
                 return View(adminManageEmployeesViewModel);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View();
             }
         }
 
         [HttpGet]
-        public async Task<IActionResult> RegisterEmployee()
+        public IActionResult RegisterEmployee()
         {
             var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
 
@@ -67,16 +68,18 @@ namespace SmartGarage.Areas.Admin.Controllers
         public async Task<IActionResult> RegisterEmployee(
             RegisterEmployeeViewModel registerData)
         {
-            var employees = await userManager.GetUsersInRoleAsync("Employee");
-            var employeesVM = userMapper.Map(employees);
-            var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
-            adminManageEmployeesViewModel.Employees = employeesVM;
+            var employees = await this.userManager.GetUsersInRoleAsync("Employee");
+            var employeesVM = this.userMapper.Map(employees);
+            var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel
+            {
+                Employees = employeesVM
+            };
 
             try
             {
-                if (!ModelState.IsValid)
+                if (!this.ModelState.IsValid)
                 {
-                    ModelState.AddModelError("EmployeeRegisterData.Email", "Error. Please try again.");
+                    this.ModelState.AddModelError("EmployeeRegisterData.Email", "Error. Please try again.");
                     return View("ViewAllEmployees", adminManageEmployeesViewModel);
                 }
 
@@ -91,32 +94,32 @@ namespace SmartGarage.Areas.Admin.Controllers
                     JoinDate = DateTime.UtcNow,
                 };
 
-                var result = await usersService.CreateEmployee(newUser);
+                var result = await this.usersService.CreateEmployee(newUser);
 
                 if (!result.Succeeded)
                 {
-                    ModelState.AddModelError("EmployeeRegisterData.Email", "Error. Please try again.");
+                    this.ModelState.AddModelError("EmployeeRegisterData.Email", "Error. Please try again.");
                     return View("ViewAllEmployees", adminManageEmployeesViewModel);
                 }
 
-                adminManageEmployeesViewModel.Employees.Add(userMapper.Map(newUser));
+                adminManageEmployeesViewModel.Employees.Add(this.userMapper.Map(newUser));
 
-                ViewData["PostRegisterMessage"] = "Registration successful!";
+                this.ViewData["PostRegisterMessage"] = "Registration successful!";
                 return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (DuplicateEntityFoundException ex)
             {
-                ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
+                this.ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
                 return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (EntityNotFoundException ex)
             {
-                ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
+                this.ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
                 return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
+                this.ModelState.AddModelError("EmployeeRegisterData.Email", ex.Message);
                 return View("ViewAllEmployees", adminManageEmployeesViewModel);
             }
         }
@@ -124,15 +127,15 @@ namespace SmartGarage.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> RemoveEmployee(string userName)
         {
-            var adminManageEmployeesViewModel = new AdminManageEmployeesViewModel();
-
             try
             {
-                var employee = await usersService.GetByEmail(userName);
-                _ = await usersService.Delete(employee);
+                var employee = await this.usersService.GetByEmail(userName);
+
+                _ = await this.usersService.Delete(employee);
+
                 return RedirectToAction("ViewAllEmployees");
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException)
             {
                 return RedirectToAction("ViewAllEmployees");
             }
@@ -143,7 +146,7 @@ namespace SmartGarage.Areas.Admin.Controllers
         {
             var adminManageRepairActivityTypes = new AdminManageRepairActivityTypes();
 
-            var allActivityTypes = await repairActivityTypeService.GetAllAsync();
+            var allActivityTypes = await this.repairActivityTypeService.GetAllAsync();
 
             adminManageRepairActivityTypes.RepairActivities = allActivityTypes.Select(activity => new RepairActivityTypeViewModel
             {
@@ -157,7 +160,9 @@ namespace SmartGarage.Areas.Admin.Controllers
         public async Task<IActionResult> CreateActivityType([Bind(nameof(RepairActivityTypeViewModel.Name))] RepairActivityTypeViewModel repairActivityName)
         {
             var adminManageRepairActivityTypes = new AdminManageRepairActivityTypes();
-            var allActivityTypes = await repairActivityTypeService.GetAllAsync();
+
+            var allActivityTypes = await this.repairActivityTypeService.GetAllAsync();
+
             adminManageRepairActivityTypes.RepairActivities = allActivityTypes.Select(activity => new RepairActivityTypeViewModel
             {
                 Name = activity.Name,
@@ -183,22 +188,22 @@ namespace SmartGarage.Areas.Admin.Controllers
                     Name = newRepairActivityType.Name
                 });
 
-                ViewData["PostCreateMessage"] = "Crete activity type successful!";
+                this.ViewData["PostCreateMessage"] = "Crete activity type successful!";
                 return View(adminManageRepairActivityTypes);
             }
             catch (EntityAlreadyExistsException ex)
             {
-                ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
+                this.ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
                 return View(adminManageRepairActivityTypes);
             }
             catch (DuplicateEntityFoundException ex)
             {
-                ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
+                this.ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
                 return View(adminManageRepairActivityTypes);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
+                this.ModelState.AddModelError("RepairActivityRegister.Name", ex.Message);
                 return View(adminManageRepairActivityTypes);
             }
         }

@@ -3,6 +3,8 @@ using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.InputModels;
 using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Common.Models.ResponseDtos;
+using SmartGarage.Common.Models.ViewModels;
+using SmartGarage.Data.Models;
 
 namespace SmartGarage.Utilities.Mappers.Contracts
 {
@@ -19,6 +21,7 @@ namespace SmartGarage.Utilities.Mappers.Contracts
         VehicleResponseDto ToResponseDto(Vehicle vehicle);
 
         IList<VehicleResponseDto> ToResponseDto(IEnumerable<Vehicle> vehicles);
-
+        
+        RegisterdVehicleInfoViewModel VehicleDataToRegisterdVehicleDataViewModel(RegisterVehicleViewModel vehileRegisterData);
     }
 }

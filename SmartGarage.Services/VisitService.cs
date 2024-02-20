@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Hosting;
 
 using SmartGarage.Common.Exceptions;
+using SmartGarage.Common.Models.ViewModels;
+using SmartGarage.Data;
 using SmartGarage.Common.Enumerations;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Data.Models;
@@ -77,7 +79,9 @@ namespace SmartGarage.Services
             {
                 const string subject = "Repair complete!";
 
-                var wwwrootPath = webHostEnvironment.WebRootPath;
+                // Get the wwwroot path
+                var wwwrootPath = this.webHostEnvironment.WebRootPath;
+
                 var filePath = Path.Combine(wwwrootPath, "PaidVisitInvoice.html")
                     ?? throw new EntityNotFoundException("Email template not found.");
 
@@ -90,9 +94,9 @@ namespace SmartGarage.Services
 
                 body = body.Replace("{UserName}", visit.User.Email);
 
-                var pdfDocument = pdfGenerator.GeneratePdf(visit);
+                var pdfDocument = this.pdfGenerator.GeneratePdf(visit);
 
-                _ = emailService.SendEmailAsync(visit.User.Email, subject, body, pdfDocument);
+                _ = this.emailService.SendEmailAsync(visit.User.Email, subject, body, pdfDocument);
             }
 
             return updatedVist;
@@ -101,6 +105,11 @@ namespace SmartGarage.Services
         public async Task<Visit> UpdateVisitRating(Visit visit, CancellationToken cancellationToken)
         {
             return await this.visitRepository.UpdateVisitRating(visit, cancellationToken);
+        }
+
+        public async Task<Visit> UpdateVisitRepairActivities(Visit visit, ICollection<VisitRepairActivityViewModel> repairActivities, CancellationToken cancellationToken)
+        {
+            return await this.visitRepository.UpdateVisitRepairActivities(visit, repairActivities, cancellationToken);
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
-using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities.Mappers.Contracts;
 
@@ -12,13 +10,11 @@ namespace SmartGarage.Areas.Employee.Controllers
     public class CustomersController : BaseEmployeeController
     {
         private readonly IUsersService usersService;
-        private readonly IVehicleService vehicleService;
         private readonly IUserMapper userMapper;
 
-        public CustomersController(IUsersService usersService, IVehicleService vehicleService, IUserMapper userMapper)
+        public CustomersController(IUsersService usersService, IUserMapper userMapper)
         {
             this.usersService = usersService;
-            this.vehicleService = vehicleService;
             this.userMapper = userMapper;
         }
 
@@ -33,7 +29,7 @@ namespace SmartGarage.Areas.Employee.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterCustomer(RegisterViewModel registertionData)
         {
-            if (!ModelState.IsValid)
+            if (!this.ModelState.IsValid)
             {
                 this.ModelState.AddModelError("Email", "Invalid email.");
                 return View(registertionData);
@@ -59,7 +55,6 @@ namespace SmartGarage.Areas.Employee.Controllers
             }
             catch (DuplicateEntityFoundException ex)
             {
-                //this.ViewData["CustomerRegisteredMessage"] = null;
                 this.ModelState.AddModelError("Email", ex.Message);
                 return View(registertionData);
             }

@@ -34,10 +34,10 @@ namespace SmartGarage.Controllers
             try
             {
                 var visitQueryParameters = new VisitsQueryParameters();
-                var visits = await visitService.GetAll(visitQueryParameters, cancellationToken);
+                var visits = await this.visitService.GetAll(visitQueryParameters, cancellationToken);
 
-                var user = await usersService.GetUserAsync(User);
-                var userViewModel = userMapper.Map(user);
+                var user = await this.usersService.GetUserAsync(this.User);
+                var userViewModel = this.userMapper.Map(user);
 
                 return View(userViewModel);
             }
@@ -52,7 +52,7 @@ namespace SmartGarage.Controllers
         {
             try
             {
-                var visit = await visitService.GetByIdAsync(visitId, cancellationToken);
+                var visit = await this.visitService.GetByIdAsync(visitId, cancellationToken);
 
                 var visitViewModel = this.visitMapper.ToViewModel(visit);
 
@@ -67,33 +67,34 @@ namespace SmartGarage.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateVisitRating(string visitId, string rating, CancellationToken cancellationToken)
         {
-            Guid _visitId = Guid.Parse(visitId);
-            int _rating = int.Parse(rating);
+            Guid visitGuid = Guid.Parse(visitId);
+            int ratingNumeric = int.Parse(rating);
             try
             {
 
-                var visit = await visitService.GetByIdAsync(_visitId, cancellationToken);
+                var visit = await this.visitService.GetByIdAsync(visitGuid, cancellationToken);
 
-                if (_rating < 1 || _rating > 5)
+                if (ratingNumeric < 1 || ratingNumeric > 5)
                 {
                     throw new InvalidOperationException("Rating must be between 1 and 5");
                 }
 
-                visit.Rating = _rating;
-                _ = await visitService.UpdateVisitRating(visit, cancellationToken);
-                return RedirectToAction("DisplayAll", "Visits");
+                visit.Rating = ratingNumeric;
+                _ = await this.visitService.UpdateVisitRating(visit, cancellationToken);
+                
+                return Json(new { success = true, message = "Rating updated successfully" });
             }
             catch (EntityNotFoundException)
             {
-                return View("DisplayVisit", _visitId);
+                return Json(new { success = false, error = "Visit not found" });
             }
             catch (InvalidOperationException)
             {
-                return View("DisplayVisit", _visitId);
+                return Json(new { success = false });
             }
             catch (Exception)
             {
-                return RedirectToAction("DisplayAll", "Visits");
+                return Json(new { success = false });
             }
         }
 
@@ -102,21 +103,17 @@ namespace SmartGarage.Controllers
         {
             try
             {
-                var _visiitId = Guid.Parse(visitId);
+                var visitGuid = Guid.Parse(visitId);
 
-                var visit = await visitService.GetByIdAsync(_visiitId, cancellationToken);
+                var visit = await this.visitService.GetByIdAsync(visitGuid, cancellationToken);
 
-                // Your byte array (replace this with your actual byte array)
-                byte[] pdfBytes = pdfGenerator.GeneratePdf(visit);
+                byte[] pdfBytes = this.pdfGenerator.GeneratePdf(visit);
 
-                // Convert byte array to MemoryStream
                 var ms = new MemoryStream(pdfBytes);
 
-                // Return the PDF as a file for download
-                //return File(ms, "application/pdf", "Visit-" + visit.Vehicle.LicensePlateNumber + + ".pdf");
                 return File(ms, "application/pdf", $"Visit-{visit.Vehicle.LicensePlateNumber}-{visit.Date.ToShortDateString()}.pdf");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return View("DisplayVisit", new { visiid = Guid.Parse(visitId) });
             }

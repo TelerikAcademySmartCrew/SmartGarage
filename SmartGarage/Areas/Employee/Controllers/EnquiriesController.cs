@@ -1,12 +1,6 @@
-﻿using Azure.Communication.Email;
-using Azure;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
-using SmartGarage.Data.Models;
-using SmartGarage.Data;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities.Mappers.Contracts;
@@ -19,17 +13,14 @@ namespace SmartGarage.Areas.Employee.Controllers
     {
         private readonly IEnquiryService enquiryService;
         private readonly IEnquiryModelMapper enquiryModelMapper;
-        private readonly IWebHostEnvironment webHostEnvironment;
         private readonly IEmailService emailService;
 
         public EnquiriesController(IEnquiryService enquiryService,
             IEnquiryModelMapper enquiryModelMapper,
-            IWebHostEnvironment webHostEnvironment,
             IEmailService emailService)
         {
             this.enquiryService = enquiryService;
             this.enquiryModelMapper = enquiryModelMapper;
-            this.webHostEnvironment = webHostEnvironment;
             this.emailService = emailService;
         }
 
@@ -47,8 +38,9 @@ namespace SmartGarage.Areas.Employee.Controllers
 
             var viewModel = new EnquiriesManageEmployeeViewModel
             {
-                Enquiries = enquiryModelMapper.ToViewModel(enquiriesManageEmployeeViewModel)
+                Enquiries = this.enquiryModelMapper.ToViewModel(enquiriesManageEmployeeViewModel)
             };
+
             return View(viewModel);
         }
 
@@ -58,7 +50,7 @@ namespace SmartGarage.Areas.Employee.Controllers
             try
             {
                 var enquiryId = Guid.Parse(enquiryViewModel.Id);
-                var enquiry = await enquiryService.GetById(enquiryId, cancellationToken);
+                var enquiry = await this.enquiryService.GetById(enquiryId, cancellationToken);
 
                 const string subject = "Helo from Smart Garage!";
 
@@ -78,13 +70,13 @@ namespace SmartGarage.Areas.Employee.Controllers
 
                 var toEmail = enquiryViewModel.Email;
 
-                await enquiryService.ReadAsync(enquiryId, cancellationToken);
+                await this.enquiryService.ReadAsync(enquiryId, cancellationToken);
 
-                await emailService.SendEmailAsync(toEmail, subject, body);
+                await this.emailService.SendEmailAsync(toEmail, subject, body);
 
                 return Json(new { success = true, message = sb });
             }
-            catch (DuplicateEntityFoundException ex)
+            catch (DuplicateEntityFoundException)
             {
                 return Json(new { success = true, message = "Enquiry ID not found." });
             }
