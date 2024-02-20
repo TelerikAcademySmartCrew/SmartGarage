@@ -8,6 +8,7 @@ Application Link - [smartgarage54a.azurewebsites.net](https://smartgarage54a.azu
 
 ---
 <br />
+
 ## Features
 
 - User authentication and authorization.
