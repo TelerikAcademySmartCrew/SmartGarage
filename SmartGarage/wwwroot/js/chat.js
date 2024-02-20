@@ -5,27 +5,30 @@ var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 document.getElementById("sendButton").disabled = true;
 
 connection.on("ReceiveMessage", function (user, message) {
-
+    
     if (message == "")
         return;
-    
+
     let currentUser = document.getElementById("current-user");
+
+    let currentUserName = "";
+
+    if (currentUser)
+        currentUserName = currentUser.innerText;
+
     let ul = document.getElementById("messagesList");
     let li = document.createElement("li");
     li.style.listStyle = "none";
-    
-    let itsMe = user === currentUser
-    let template = !itsMe ? "/MyMessage.html" : "/OthersMessage.html";
-    
+
+    let itsMe = user === currentUserName
+    let template = itsMe ? "/MyMessage.html" : "/OthersMessage.html";
+
     fetch(template)
         .then(response => response.text())
         .then(html => {
 
             li.innerHTML = html;
-
-            if (user)
-                li.querySelector(".user").textContent = user;
-
+            
             li.querySelector(".message").textContent = message;
 
             ul.appendChild(li);
@@ -42,9 +45,15 @@ connection.start().then(function () {
 });
 
 document.getElementById("sendButton").addEventListener("click", function (event) {
-    var user = document.getElementById("userInput").value;
+    
+    let currentUser = document.getElementById("current-user");
+    let currentUserName = "";
+    if (currentUser)
+        currentUserName = currentUser.innerText;
+    
     var message = document.getElementById("messageInput").value;
-    connection.invoke("SendMessage", user, message).catch(function (err) {
+    
+    connection.invoke("SendMessage", currentUserName, message).catch(function (err) {
         return console.error(err.toString());
     });
     event.preventDefault();
