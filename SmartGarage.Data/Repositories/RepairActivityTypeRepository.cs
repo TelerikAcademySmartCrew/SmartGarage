@@ -42,10 +42,10 @@ namespace SmartGarage.Data.Repositories
 			return repairActivityType;
 		}
 
-		public async Task<RepairActivityType> UpdateAsync(string name)
+		public async Task<RepairActivityType> UpdateAsync(Guid id, string name)
 		{
 			var repairActivityType = await this.context.RepairActivityTypes
-				.FirstAsync(x => x.Name == name);
+				.FirstAsync(x => x.Id == id);
 
 			repairActivityType.Name = name;
 
