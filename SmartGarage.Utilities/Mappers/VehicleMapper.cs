@@ -3,6 +3,8 @@ using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.InputModels;
 using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Common.Models.ResponseDtos;
+using SmartGarage.Common.Models.ViewModels;
+using SmartGarage.Data.Models;
 using SmartGarage.Utilities.Mappers.Contracts;
 
 namespace SmartGarage.Utilities.Mappers
@@ -76,5 +78,19 @@ namespace SmartGarage.Utilities.Mappers
         {
             return vehicles.Select(ToResponseDto).ToList();
         }
+
+    public RegisterdVehicleInfoViewModel VehicleDataToRegisteredVehicleDataViewModel(RegisterVehicleViewModel vehicleRegisterData)
+    {
+        var registeredVehicleData = new RegisterdVehicleInfoViewModel
+        {
+            RegisterBrand = vehicleRegisterData.RegisterBrand,
+            RegisterModel = vehicleRegisterData.RegisterModel,
+            VIN = vehicleRegisterData.VIN,
+            CreationYear = vehicleRegisterData.CreationYear,
+            LicensePlate = vehicleRegisterData.LicensePlate,
+            CustomerEmail = vehicleRegisterData.CustomerEmail
+        };
+        return registeredVehicleData;
+    }
     }
 }

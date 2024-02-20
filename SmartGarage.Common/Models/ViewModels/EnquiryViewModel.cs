@@ -15,5 +15,18 @@
         public bool IsDeleted { get; set; }
 
         public DateTime DateCreated { get; set; } = DateTime.Now;
+        public string ReadableDate => DateCreated.ToString("yyyy-MM-dd HH:mm:ss");
+
+        public string FormattedPhoneNumber => FormatPhoneNumber(PhoneNumber);
+
+        private string FormatPhoneNumber(string phoneNumber)
+        {
+            if (phoneNumber.Length == 10)
+            {
+                return string.Format("{0:(####) ###-###}", int.Parse(phoneNumber));
+            }
+
+            return phoneNumber;
+        }
     }
 }

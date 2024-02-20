@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using SmartGarage.Common.Exceptions;
-using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
 using SmartGarage.Data.Models;
@@ -139,7 +139,7 @@ namespace SmartGarage.Areas.Employee.Controllers
                     var createdModel = await modelService.CreateAsync(newModel);
                     modelId = createdModel.Id;
                 }
-                
+
                 var vehicle = new Vehicle()
                 {
                     BrandId = brandId,
@@ -151,16 +151,39 @@ namespace SmartGarage.Areas.Employee.Controllers
 
                 _ = await this.vehicleService.CreateVehicleAsync(vehicle, vehileRegisterData.CustomerEmail, cancellationToken);
 
+                vehileRegisterData.RegisterBrand = vehicle.Brand.Name;
+                vehileRegisterData.RegisterModel = vehicle.Model.Name;
+
                 InitializeUserName();
 
-                var model = new RegisterdVehicleInfoViewModel();
-                return View("VehicleRegistered", model);
+                var model = vehicleMapper.VehicleDataToRegisteredVehicleDataViewModel(vehileRegisterData);
+
+                TempData["VehicleRegisteredModel"] = JsonConvert.SerializeObject(model);
+
+                return RedirectToAction("VehicleRegistered", "Vehicles", new { Area = "Employee" });
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException)
             {
                 ModelState.AddModelError("CustomerEmail", "User not found");
                 var model = GetBrandsAndModels();
                 return View(model);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult VehicleRegistered()
+        {
+            try
+            {
+                string? dataString = TempData["VehicleRegisteredModel"] as string;
+
+                var model = JsonConvert.DeserializeObject<RegisterdVehicleInfoViewModel>(dataString!);
+
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return View("RegisterVehicle", "Vehicles");
             }
         }
 

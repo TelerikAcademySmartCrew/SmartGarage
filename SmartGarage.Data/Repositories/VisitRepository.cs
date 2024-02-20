@@ -5,6 +5,7 @@ using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Common.Exceptions;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Visit;
+using SmartGarage.Common.Models.ViewModels;
 
 namespace SmartGarage.Data.Repositories
 {
@@ -122,6 +123,20 @@ namespace SmartGarage.Data.Repositories
             }
 
             return visitsToReturn;
+        }
+
+        public async Task<Visit> UpdateVisitRepairActivities(Visit visit, ICollection<VisitRepairActivityViewModel> repairActivities, CancellationToken cancellationToken)
+        {
+            foreach (var item in repairActivities)
+            {
+                Guid repairActivityId = Guid.Parse(item.Id);
+                var entry = visit.RepairActivities.First(x => x.Id == repairActivityId);
+                entry.Price = item.Price;
+            }
+
+            await this.context.SaveChangesAsync(cancellationToken);
+
+            return visit;
         }
     }
 }

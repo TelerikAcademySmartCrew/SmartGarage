@@ -103,7 +103,6 @@
         <div class="d-flex row justify-content-start" style="height:100%">
 
             <div id="partialViewContainer" class="scrollable-div row mx-auto" style="height: calc(100% - 50px);">
-                <!-- How to replace the content of this partial view with the updated information that comes as a result from theajax function below ? -->
                 <partial id="partial-view" name="Visits/_VisitDetailsEditablePartial" model="@Model" class="d-flex overflow-auto" />
             </div>
         </div>
@@ -116,19 +115,18 @@
 
     $(document).ready(function () {
 
-        //
-        var repairTypesFull = @Html.Raw(Json.Serialize(Model.RepairActivityTypes));
-        var repairTypesUsed = @Html.Raw(Json.Serialize(Model.RepairActivities));
+        let repairTypesFull = @Html.Raw(Json.Serialize(Model.RepairActivityTypes));
+        let repairTypesUsed = @Html.Raw(Json.Serialize(Model.RepairActivities));
 
         // Callback declared in site.js
         subscribeToRepairActivityRemovedCallback(function (activityId) {
             console.log(activityId);
             // Extract the necessary information from the clicked anchor
-            var visitId = '@Model.Id';
-            var visitRepairActivityId = activityId;
+            let visitId = '@Model.Id';
+            let visitRepairActivityId = activityId;
 
             // Construct the action URL
-            var actionUrl = '/Employee/Visits/DeleteRepairActivity?visitId=' + visitId + '&visitRepairActivityId=' + visitRepairActivityId;
+            let actionUrl = '/Employee/Visits/DeleteRepairActivity?visitId=' + visitId + '&visitRepairActivityId=' + visitRepairActivityId;
 
             // Make an AJAX request to delete the repair activity
             $.ajax({
@@ -147,18 +145,14 @@
             });
         });
 
-        // $('#partial-view')[0].window.subscribeToNameClickedCallback(function (activityId) {
-        //     console.log(activityId);
-        // });
-
         $('#submitBtn').on('click', function () {
             console.log('activity add button click');
 
-            var selectedValue = $('#dropdown-options').val();
-            var visitId = '@Model.Id';
+            let selectedValue = $('#dropdown-options').val();
+            let visitId = '@Model.Id';
 
             // Construct the action URL
-            var actionUrl = '/Employee/Visits/AddRepairActivity?visitId=' + visitId + '&repairActivityTypeId=' + selectedValue;
+            let actionUrl = '/Employee/Visits/AddRepairActivity?visitId=' + visitId + '&repairActivityTypeId=' + selectedValue;
 
             $.ajax({
                 url: actionUrl,
@@ -178,6 +172,5 @@
             });
         });
     });
-
 
 </script>

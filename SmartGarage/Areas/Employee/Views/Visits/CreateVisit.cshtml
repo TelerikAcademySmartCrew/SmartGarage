@@ -8,7 +8,7 @@
 <div class="d-flex flex-column justify-content-start" style="height:100%;">
 
     <!-- employee nav bar -->
-    <partial name="_EmployeeNavBarPartial" model="@userName" area-name="" />
+    <partial name="_EmployeeNavBarPartial" model="@userName" />
 
     <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
         <div class="d-flex container justify-content-between">
@@ -53,30 +53,35 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 
 <script>
-    var inputVIN = $("#input-vin");
-    var inputLicense = $("#input-license");
-    var dropdownOptions = $("#dropdown-options");
 
-    // Add an event listener to the dropdown
-    dropdownOptions.on("change", function () {
-        // Clear both input fields
-        inputVIN.val("");
-        inputLicense.val("");
+    $(document).ready(function () {
 
-        // Show or hide inputs based on selected option
-        if (dropdownOptions.val() === "VIN") {
-            inputVIN.removeAttr("hidden").attr("required", "required");
-            inputLicense.attr("hidden", "true").removeAttr("required");
-        } else if (dropdownOptions.val() === "LicensePlateNumber") {
-            inputVIN.attr("hidden", "true").removeAttr("required");
-            inputLicense.removeAttr("hidden").attr("required", "required");
-        }
+        let inputVIN = $("#input-vin");
+        let inputLicense = $("#input-license");
+        let dropdownOptions = $("#dropdown-options");
+
+        // Add an event listener to the dropdown
+        dropdownOptions.on("change", function () {
+            // Clear both input fields
+            inputVIN.val("");
+            inputLicense.val("");
+
+            // Show or hide inputs based on selected option
+            if (dropdownOptions.val() === "VIN") {
+                inputVIN.removeAttr("hidden").attr("required", "required");
+                inputLicense.attr("hidden", "true").removeAttr("required");
+            } else if (dropdownOptions.val() === "LicensePlateNumber") {
+                inputVIN.attr("hidden", "true").removeAttr("required");
+                inputLicense.removeAttr("hidden").attr("required", "required");
+            }
+        });
+
+        // Set the dropdown value to "VIN" initially
+        dropdownOptions.val("VIN").change();
     });
 
-    // Set the dropdown value to "VIN" using jQuery
-    dropdownOptions.val("VIN").change();
 </script>
 

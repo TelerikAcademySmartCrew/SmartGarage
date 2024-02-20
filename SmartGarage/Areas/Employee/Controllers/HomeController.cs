@@ -7,6 +7,7 @@ namespace SmartGarage.Areas.Employee.Controllers
         public IActionResult Index()
         {
             InitializeUserName();
+
             return View();
         }
     }

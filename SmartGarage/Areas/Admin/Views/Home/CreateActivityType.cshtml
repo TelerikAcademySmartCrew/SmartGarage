@@ -115,8 +115,8 @@
             $("#newButton").removeClass("d-none");
         });
 
-        var b = @Html.Raw(Json.Serialize(registerMessage));
-        var s = document.getElementById("reg-error-span").innerText;
+        let b = @Html.Raw(Json.Serialize(registerMessage));
+        let s = document.getElementById("reg-error-span").innerText;
 
         if ((b != null && b != "") || (s != null && s != "")) {
             $("#reg-notify-message").text(b);

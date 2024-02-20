@@ -9,7 +9,7 @@
 <div class="d-flex flex-column justify-content-start" style="height:100%;">
 
     <!-- customer nav bar -->
-    <partial name="_EmployeeNavBarPartial" model="@userName" area-name= />
+    <partial name="_EmployeeNavBarPartial" model="@userName" />
 
 
     <div class="d-flex flex-column justify-items-between justify-content-end bg-light py-2">
@@ -35,7 +35,7 @@
         <div class="d-flex flex-row mt-2 align-content-center  align-items-center flex-row bg-light rounded-3">
             <h5 class="p-4 text-muted">
                 ENTER VEHICLE DETAILS
-            </h5> 
+            </h5>
         </div>
 
         <form id="vehicle-create-form" asp-area="Employee" asp-controller="Vehicles" asp-action="RegisterVehicle" class="d-flex flex-column gap-1 p-4" method="post" style="width:100%;">
@@ -80,7 +80,7 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/dynamicList.js" asp-append-version="true"></script>
 
 <script>
@@ -112,7 +112,6 @@
 
             console.log(brandSelectValue);
             console.log(modelSelectValue);
-
 
             if (brandData.hasOwnProperty(brandSelectValue)) {
                 $("#hiddenBrandInput").val(brandData[brandSelectValue].id);
