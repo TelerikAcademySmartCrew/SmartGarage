@@ -9,6 +9,7 @@ using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Data.Repositories;
 using SmartGarage.Data.Seeding;
+using SmartGarage.Hubs;
 using SmartGarage.Services;
 using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
@@ -41,6 +42,8 @@ namespace SmartGarage
            .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddSignalR();
 
             builder.Services.AddScoped<ApplicationDbContext>();
             builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
@@ -114,6 +117,8 @@ namespace SmartGarage
                 pattern: "/{controller=Auth}/{action=Login}/{id?}");
             
             app.MapRazorPages();
+
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }
