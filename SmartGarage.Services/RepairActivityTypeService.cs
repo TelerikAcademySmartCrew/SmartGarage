@@ -28,9 +28,9 @@ namespace SmartGarage.Services
 			return await this.repairActivityTypeRepository.CreateAsync(repairActivityType);
 		}
 
-		public async Task<RepairActivityType> UpdateAsync(string name)
+		public async Task<RepairActivityType> UpdateAsync(Guid id, string name)
 		{
-			return await this.repairActivityTypeRepository.UpdateAsync(name);
+			return await this.repairActivityTypeRepository.UpdateAsync(id, name);
 		}
 
 		public async Task DeleteAsync(string name)
