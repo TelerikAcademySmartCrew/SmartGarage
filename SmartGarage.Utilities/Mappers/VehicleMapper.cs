@@ -78,19 +78,19 @@ namespace SmartGarage.Utilities.Mappers
         {
             return vehicles.Select(ToResponseDto).ToList();
         }
-    }
 
-    public RegisterdVehicleInfoViewModel VehicleDataToRegisterdVehicleDataViewModel(RegisterVehicleViewModel vehileRegisterData)
+    public RegisterdVehicleInfoViewModel VehicleDataToRegisteredVehicleDataViewModel(RegisterVehicleViewModel vehicleRegisterData)
     {
         var registeredVehicleData = new RegisterdVehicleInfoViewModel
         {
-            RegisterBrand = vehileRegisterData.RegisterBrand,
-            RegisterModel = vehileRegisterData.RegisterModel,
-            VIN = vehileRegisterData.VIN,
-            CreationYear = vehileRegisterData.CreationYear,
-            LicensePlate = vehileRegisterData.LicensePlate,
-            CustomerEmail = vehileRegisterData.CustomerEmail
+            RegisterBrand = vehicleRegisterData.RegisterBrand,
+            RegisterModel = vehicleRegisterData.RegisterModel,
+            VIN = vehicleRegisterData.VIN,
+            CreationYear = vehicleRegisterData.CreationYear,
+            LicensePlate = vehicleRegisterData.LicensePlate,
+            CustomerEmail = vehicleRegisterData.CustomerEmail
         };
         return registeredVehicleData;
+    }
     }
 }

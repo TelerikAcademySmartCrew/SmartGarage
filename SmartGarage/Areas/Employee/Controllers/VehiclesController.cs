@@ -156,7 +156,7 @@ namespace SmartGarage.Areas.Employee.Controllers
 
                 InitializeUserName();
 
-                var model = vehicleMapper.VehicleDataToRegisterdVehicleDataViewModel(vehileRegisterData);
+                var model = vehicleMapper.VehicleDataToRegisteredVehicleDataViewModel(vehileRegisterData);
 
                 TempData["VehicleRegisteredModel"] = JsonConvert.SerializeObject(model);
 

@@ -22,6 +22,6 @@ namespace SmartGarage.Utilities.Mappers.Contracts
 
         IList<VehicleResponseDto> ToResponseDto(IEnumerable<Vehicle> vehicles);
         
-        RegisterdVehicleInfoViewModel VehicleDataToRegisterdVehicleDataViewModel(RegisterVehicleViewModel vehileRegisterData);
+        RegisterdVehicleInfoViewModel VehicleDataToRegisteredVehicleDataViewModel(RegisterVehicleViewModel vehicleRegisterData);
     }
 }
