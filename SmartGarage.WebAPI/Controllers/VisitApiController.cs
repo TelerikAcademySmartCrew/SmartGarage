@@ -65,7 +65,6 @@ public class VisitApiController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Policy = "EmployeeRequired")]
     public async Task<IActionResult> Create([FromBody] VisitRequestDto visitRequestDto, CancellationToken cancellationToken)
     {
         try
@@ -73,9 +72,7 @@ public class VisitApiController : ControllerBase
             var user = await this.userManager.FindByEmailAsync(visitRequestDto.CustomerEmail)
                 ?? throw new EntityNotFoundException(UserNotFound);
 
-            var vehicleList = await this.vehicleService.GetAllAsync(new VehicleQueryParameters { LicensePlate = visitRequestDto.LicensePlateNumber }, cancellationToken);
-            var vehicle = vehicleList[0];
-
+            var vehicle = await this.vehicleService.GetVehicleByLicensePlateAsync(visitRequestDto.LicensePlateNumber, cancellationToken);
             var visit = this.visitMapper.MaterializeRequestDto(visitRequestDto, user.Id, vehicle.Id);            
 
             await this.visitService.CreateAsync(visit, vehicle.Visits.Count, cancellationToken);
