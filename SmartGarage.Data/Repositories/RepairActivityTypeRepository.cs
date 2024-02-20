@@ -19,7 +19,7 @@ namespace SmartGarage.Data.Repositories
         public async Task<ICollection<RepairActivityType>> GetAllAsync()
 		{
 			return await this.context.RepairActivityTypes
-				.Where(rat => !rat.IsDeleted)
+				.Where(x => !x.IsDeleted)
 				.ToListAsync();
 		}
 
@@ -38,17 +38,20 @@ namespace SmartGarage.Data.Repositories
 
 			await this.context.RepairActivityTypes.AddAsync(repairActivityType);
 			await this.context.SaveChangesAsync();
+
 			return repairActivityType;
 		}
 
 		public async Task<RepairActivityType> UpdateAsync(string name)
 		{
-			var rat = await this.context.RepairActivityTypes
-				.FirstAsync(rat => rat.Name == name);
+			var repairActivityType = await this.context.RepairActivityTypes
+				.FirstAsync(x => x.Name == name);
 
-			rat.Name = name;
+			repairActivityType.Name = name;
+
 			await this.context.SaveChangesAsync();
-			return rat;
+
+			return repairActivityType;
 		}
 
 		public async Task DeleteAsync(string name)
@@ -58,17 +61,18 @@ namespace SmartGarage.Data.Repositories
 				throw new EntityNotFoundException(TypeNotFound);
 			}
 
-			var rat = await this.context.RepairActivityTypes
-				.FirstAsync(rat => rat.Name == name);
+			var repairActivityType = await this.context.RepairActivityTypes
+				.FirstAsync(x => x.Name == name);
 
-			rat.IsDeleted = true;
+            repairActivityType.IsDeleted = true;
+
 			await this.context.SaveChangesAsync();
 		}
 		
 		private async Task<bool> RepairActivityTypeExists(string name)
 		{
 			return await this.context.RepairActivityTypes
-				.AnyAsync(rat => rat.Name == name);
+				.AnyAsync(x => x.Name == name);
 		}
 	}
 }

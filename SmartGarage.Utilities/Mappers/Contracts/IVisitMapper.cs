@@ -1,6 +1,6 @@
+using SmartGarage.Data.Models;
 using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Common.Models.ViewModels;
-using SmartGarage.Data.Models;
 
 namespace SmartGarage.Utilities.Mappers.Contracts
 {

@@ -1,8 +1,6 @@
-﻿using SmartGarage.Common.Exceptions;
-using SmartGarage.Data.Models;
+﻿using SmartGarage.Data.Models;
 using SmartGarage.Data.Repositories.Contracts;
 using SmartGarage.Services.Contracts;
-using static SmartGarage.Common.Exceptions.ExceptionMessages.VehicleBrand;
 
 namespace SmartGarage.Services
 {

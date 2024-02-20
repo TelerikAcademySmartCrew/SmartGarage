@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
+
 using Moq;
+
+using SmartGarage.Services;
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
-using SmartGarage.Services;
 
 namespace SmartGarage.Tests;
 
@@ -14,6 +16,7 @@ public class VehicleTests
     private Mock<IVehicleRepository> mockVehicleRepository;
     private Mock<UserManager<AppUser>> mockUserManager;
     private VehicleService vehicleService;
+
     [TestInitialize]
     public void Setup()
     {
@@ -309,9 +312,10 @@ public class VehicleTests
     {
         var store = new Mock<IUserStore<TUser>>();
         var mgr = new Mock<UserManager<TUser>>(store.Object, null, null, null, null, null, null, null, null);
+
         mgr.Object.UserValidators.Add(new UserValidator<TUser>());
         mgr.Object.PasswordValidators.Add(new PasswordValidator<TUser>());
+
         return mgr;
     }
-
 }

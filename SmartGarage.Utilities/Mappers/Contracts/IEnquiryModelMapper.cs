@@ -6,6 +6,7 @@ namespace SmartGarage.Utilities.Mappers.Contracts
     public interface IEnquiryModelMapper
     {
         EnquiryViewModel ToViewModel(Enquiry enquiry);
+
         IEnumerable<EnquiryViewModel> ToViewModel(IEnumerable<Enquiry> enquiry);
     }
 }
