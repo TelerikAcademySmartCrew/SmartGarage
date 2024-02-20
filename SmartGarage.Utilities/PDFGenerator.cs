@@ -6,6 +6,7 @@ using iText.Layout.Element;
 using iText.Layout.Properties;
 
 using SmartGarage.Data.Models;
+using System.Text;
 
 namespace SmartGarage.Utilities
 {
@@ -39,8 +40,8 @@ namespace SmartGarage.Utilities
                     var header = new Paragraph()
                         .SetFontSize(20)
                         .SetMarginTop(30);
-
-                    header.Add($"{visit.Vehicle.LicensePlateNumber} {new string('\t', 14)} {DateTime.Now.ToShortDateString()}");
+                  
+                    header.Add($"{visit.Vehicle.LicensePlateNumber} {new string('\t', 14)} {visit.Date.ToShortDateString()}");
 
                     doc.Add(header);
                 }
