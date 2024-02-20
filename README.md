@@ -7,7 +7,7 @@ SmartGarage is a web application designed to manage and organize garage visits e
 Application Link - [smartgarage54a.azurewebsites.net](https://smartgarage54a.azurewebsites.net)
 
 ---
-<br>
+<br />
 ## Features
 
 - User authentication and authorization.
