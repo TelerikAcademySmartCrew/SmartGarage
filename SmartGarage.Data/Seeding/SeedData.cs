@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+
 using SmartGarage.Data.Models;
 
 namespace SmartGarage.Data.Seeding
@@ -7,6 +8,7 @@ namespace SmartGarage.Data.Seeding
     {
         private const string MasterAdminEmail = "master@admin.com";
         private const string MasterAdminPassword = "Admin@123";
+
         public static async Task<IdentityUser> Initialize(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             var seededUser = await SeedUser(userManager, roleManager);
@@ -17,7 +19,9 @@ namespace SmartGarage.Data.Seeding
         {
             var user = await userManager.FindByEmailAsync(MasterAdminEmail);
 
-            if (user != null) return user;
+            if (user != null)
+                return user;
+
             user = new AppUser
             {
                 UserName = MasterAdminEmail,

@@ -3,6 +3,7 @@
     public class AdminManageEmployeesViewModel
     {
         public ICollection<UserViewModel> Employees { get; set; } = new List<UserViewModel>();
+
         public RegisterEmployeeViewModel RegisterData { get; set; } = new();
     }
 }

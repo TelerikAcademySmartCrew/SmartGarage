@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using SmartGarage.Common.Exceptions;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
-using System.Threading;
+using SmartGarage.Common.Exceptions;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.RepairActivity;
 
 namespace SmartGarage.Data.Repositories
@@ -22,18 +21,12 @@ namespace SmartGarage.Data.Repositories
             CancellationToken cancellationToken)
         {
             var repairActivitiesToReturn = this.context.RepairActivities
-                .Include(ra => ra.RepairActivityType)
+                .Include(x => x.RepairActivityType)
                 .Where(x => !x.IsDeleted)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(queryParameters.Name))
             {
-                //var repairActivityType = await this.context.RepairActivityTypes
-                //    .FirstOrDefaultAsync(x => x.Name == queryParameters.Name)
-                //    ?? throw new EntityNotFoundException(TypeNotFound);
-
-                //repairActivitiesToReturn.Where(x => x.RepairActivityTypeId == repairActivityType.Id);
-
                 repairActivitiesToReturn = repairActivitiesToReturn
                     .Where(x => x.RepairActivityType.Name.Equals(queryParameters.Name));
             }
@@ -106,14 +99,16 @@ namespace SmartGarage.Data.Repositories
         public async Task<RepairActivity> AddAsync(RepairActivity repairActivity, CancellationToken cancellationToken)
         {
             await this.context.RepairActivities.AddAsync(repairActivity, cancellationToken);
-            // maybe add it to the list in the visit
+            
             await this.context.SaveChangesAsync(cancellationToken);
+
             return repairActivity;
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var repairActivity = await this.GetById(id);
+
             repairActivity.IsDeleted = true;
 
             await this.context.SaveChangesAsync(cancellationToken);
@@ -122,15 +117,10 @@ namespace SmartGarage.Data.Repositories
         public async Task<RepairActivity> GetById(Guid id)
         {
             var activity = await this.context.RepairActivities
-                .Where(ra => ra.Id == id && !ra.IsDeleted)
-                .Include(ra => ra.RepairActivityType)
+                .Where(x => x.Id == id && !x.IsDeleted)
+                .Include(x => x.RepairActivityType)
                 .FirstOrDefaultAsync()
                 ?? throw new EntityNotFoundException($"Activity not found");
-
-            //var activity = await this.context.RepairActivities
-            //    .Include(ra => ra.RepairActivityType)
-            //    .FirstOrDefaultAsync(ra => ra.Id == id && !ra.IsDeleted)
-            //    ?? throw new EntityNotFoundException($"Activity not found");
 
             return activity;
         }

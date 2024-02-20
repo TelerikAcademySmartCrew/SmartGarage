@@ -41,13 +41,9 @@ namespace SmartGarage.Data.Repositories
 
         public async Task<VehicleModel> CreateAsync(VehicleModel model)
         {
-            //if (await this.context.VehicleModels.AnyAsync(x => x.Name == model.Name))
-            //{
-            //    throw new EntityAlreadyExistsException(ModelAlreadyExists);
-            //}
-
             await this.context.AddAsync(model);
             await this.context.SaveChangesAsync();
+
             return model;
         }
     }

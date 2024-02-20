@@ -1,5 +1,4 @@
-﻿using SmartGarage.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartGarage.Data.Models

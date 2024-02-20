@@ -1,9 +1,11 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text;
+
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+
 using SmartGarage.Data.Models;
 
 namespace SmartGarage.Services
@@ -31,7 +33,8 @@ namespace SmartGarage.Services
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-            var roles = userManager.GetRolesAsync(user).Result;
+            var roles = this.userManager.GetRolesAsync(user).Result;
+
             authClaims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             var jwtSecret = this.configuration["JWT:Secret"];
@@ -43,8 +46,7 @@ namespace SmartGarage.Services
                 audience: this.configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddHours(3),
                 claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-            );
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
@@ -52,7 +54,9 @@ namespace SmartGarage.Services
         public async Task<AppUser> TryGetUserFromToken(string token)
         {
             token = token.Replace("Bearer ", string.Empty);
+
             var username = GetUsernameFromToken(token);
+
             return await this.userManager.FindByNameAsync(username);
         }
 
@@ -64,6 +68,7 @@ namespace SmartGarage.Services
             try
             {
                 SecurityToken securityToken;
+
                 var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
@@ -73,8 +78,8 @@ namespace SmartGarage.Services
                     ClockSkew = TimeSpan.Zero
                 }, out securityToken);
 
-                if (securityToken is JwtSecurityToken jwtSecurityToken &&
-                    principal.Identity is ClaimsIdentity claimsIdentity)
+                if (securityToken is JwtSecurityToken jwtSecurityToken 
+                    && principal.Identity is ClaimsIdentity claimsIdentity)
                 {
                     var usernameClaim = claimsIdentity.FindFirst(ClaimTypes.Name);
                     return usernameClaim?.Value;

@@ -1,4 +1,5 @@
-﻿using SmartGarage.Common.Models;
+﻿using SmartGarage.Data.Models;
+using SmartGarage.Common.Models;
 using SmartGarage.Common.Models.InputModels;
 using SmartGarage.Common.Models.RequestDtos;
 using SmartGarage.Common.Models.ResponseDtos;
@@ -6,72 +7,77 @@ using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data.Models;
 using SmartGarage.Utilities.Mappers.Contracts;
 
-namespace SmartGarage.Utilities.Mappers;
-
-public class VehicleMapper : IVehicleMapper
+namespace SmartGarage.Utilities.Mappers
 {
-    public Vehicle MaterializeInputModel(VehicleInputModel vehicleInputModel)
+    public class VehicleMapper : IVehicleMapper
     {
-        var vehicle = new Vehicle()
+        public Vehicle MaterializeInputModel(VehicleInputModel vehicleInputModel)
         {
-            BrandId = vehicleInputModel.BrandId,
-            ModelId = vehicleInputModel.ModelId,
-            VIN = vehicleInputModel.VIN,
-            ProductionYear = vehicleInputModel.CreationYear,
-            LicensePlateNumber = vehicleInputModel.LicensePlate,
-        };
-        return vehicle;
-    }
+            var vehicle = new Vehicle()
+            {
+                BrandId = vehicleInputModel.BrandId,
+                ModelId = vehicleInputModel.ModelId,
+                VIN = vehicleInputModel.VIN,
+                ProductionYear = vehicleInputModel.CreationYear,
+                LicensePlateNumber = vehicleInputModel.LicensePlate,
+            };
 
-    public VehicleViewModel ToViewModel(Vehicle vehicle)
-    {
-        var vehicleViewModel = new VehicleViewModel()
+            return vehicle;
+        }
+
+        public VehicleViewModel ToViewModel(Vehicle vehicle)
         {
-            Brand = vehicle.Brand.Name,
-            Model = vehicle.Model.Name,
-            VIN = vehicle.VIN,
-            CreationYear = vehicle.ProductionYear,
-            LicensePlate = vehicle.LicensePlateNumber,
-            Username = vehicle.User.UserName,
-        };
-        return vehicleViewModel;
-    }
+            var vehicleViewModel = new VehicleViewModel()
+            {
+                Brand = vehicle.Brand.Name,
+                Model = vehicle.Model.Name,
+                VIN = vehicle.VIN,
+                CreationYear = vehicle.ProductionYear,
+                LicensePlate = vehicle.LicensePlateNumber,
+                Username = vehicle.User.UserName,
+            };
 
-    public IList<VehicleViewModel> ToViewModel(IEnumerable<Vehicle> vehicles)
-    {
-        return vehicles.Select(ToViewModel).ToList();
-    }
+            return vehicleViewModel;
+        }
 
-    public Vehicle MaterializeRequestDto(VehicleRequestDto vehicleRequestDto)
-    {
-        var vehicle = new Vehicle()
+        public IList<VehicleViewModel> ToViewModel(IEnumerable<Vehicle> vehicles)
         {
-            BrandId = vehicleRequestDto.BrandId,
-            ModelId = vehicleRequestDto.ModelId,
-            VIN = vehicleRequestDto.VIN,
-            ProductionYear = vehicleRequestDto.CreationYear,
-            LicensePlateNumber = vehicleRequestDto.LicensePlate,
-        };
-        return vehicle;
-    }
+            return vehicles.Select(ToViewModel).ToList();
+        }
 
-    public VehicleResponseDto ToResponseDto(Vehicle vehicle)
-    {
-        var vehicleResponse = new VehicleResponseDto
+        public Vehicle MaterializeRequestDto(VehicleRequestDto vehicleRequestDto)
         {
-            Brand = vehicle.Brand.Name,
-            Model = vehicle.Model.Name,
-            VIN = vehicle.VIN,
-            CreationYear = vehicle.ProductionYear,
-            LicensePlate = vehicle.LicensePlateNumber,
-            Username = vehicle.User.UserName,
-        };
-        return vehicleResponse;
-    }
+            var vehicle = new Vehicle()
+            {
+                BrandId = vehicleRequestDto.BrandId,
+                ModelId = vehicleRequestDto.ModelId,
+                VIN = vehicleRequestDto.VIN,
+                ProductionYear = vehicleRequestDto.CreationYear,
+                LicensePlateNumber = vehicleRequestDto.LicensePlate,
+            };
 
-    public IList<VehicleResponseDto> ToResponseDto(IEnumerable<Vehicle> vehicles)
-    {
-        return vehicles.Select(ToResponseDto).ToList();
+            return vehicle;
+        }
+
+        public VehicleResponseDto ToResponseDto(Vehicle vehicle)
+        {
+            var vehicleResponse = new VehicleResponseDto
+            {
+                Brand = vehicle.Brand.Name,
+                Model = vehicle.Model.Name,
+                VIN = vehicle.VIN,
+                CreationYear = vehicle.ProductionYear,
+                LicensePlate = vehicle.LicensePlateNumber,
+                Username = vehicle.User.UserName,
+            };
+
+            return vehicleResponse;
+        }
+
+        public IList<VehicleResponseDto> ToResponseDto(IEnumerable<Vehicle> vehicles)
+        {
+            return vehicles.Select(ToResponseDto).ToList();
+        }
     }
 
     public RegisterdVehicleInfoViewModel VehicleDataToRegisterdVehicleDataViewModel(RegisterVehicleViewModel vehileRegisterData)

@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using SmartGarage.Common.Enumerations;
+
 using SmartGarage.Common.Exceptions;
 using SmartGarage.Common.Models.ViewModels;
 using SmartGarage.Data;
+using SmartGarage.Common.Enumerations;
+using SmartGarage.Services.Contracts;
 using SmartGarage.Data.Models;
 using SmartGarage.Data.Models.QueryParameters;
 using SmartGarage.Data.Repositories.Contracts;
-using SmartGarage.Services.Contracts;
 using SmartGarage.Utilities;
 using SmartGarage.Utilities.Contract;
 using static SmartGarage.Common.Exceptions.ExceptionMessages.Status;
@@ -81,10 +81,11 @@ namespace SmartGarage.Services
 
                 // Get the wwwroot path
                 var wwwrootPath = this.webHostEnvironment.WebRootPath;
+
                 var filePath = Path.Combine(wwwrootPath, "PaidVisitInvoice.html")
                     ?? throw new EntityNotFoundException("Email template not found.");
 
-                string body;
+                var body = string.Empty;
 
                 using (var reader = new StreamReader(filePath))
                 {

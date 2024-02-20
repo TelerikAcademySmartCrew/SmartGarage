@@ -21,6 +21,7 @@ namespace SmartGarage.Data.Repositories
         {
             await this.context.Enquiries.AddAsync(enquiry);
             await this.context.SaveChangesAsync();
+
             return enquiry;
         }
 
@@ -45,6 +46,7 @@ namespace SmartGarage.Data.Repositories
             var enquiry = await this.context.Enquiries
                 .FirstOrDefaultAsync(x => x.Id == Id)
                 ?? throw new EntityNotFoundException(EnquiryNotFound);
+
             return enquiry;
         }
 
@@ -55,7 +57,9 @@ namespace SmartGarage.Data.Repositories
                 ?? throw new EntityNotFoundException(EnquiryNotFound);
 
             enquiry.IsRead = true;
+            
             await this.context.SaveChangesAsync();
+
             return enquiry;
         }
     }
