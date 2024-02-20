@@ -57,5 +57,33 @@ namespace SmartGarage.Tests
                 VisitId = Guid.NewGuid()
             };
         }
+
+        public static VehicleBrand GetTestBrand()
+        {
+            return new VehicleBrand()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Brand"
+            };
+        }
+
+        public static VehicleModel GetTestModel()
+        {
+            var brand = new VehicleBrand
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Brand"
+            };
+
+            var model = new VehicleModel
+            {
+                Id = Guid.NewGuid(),
+                Name = "Test Model",
+                BrandId = brand.Id,
+                Brand = brand                
+            };
+
+            return model;
+        }
     }
 }
