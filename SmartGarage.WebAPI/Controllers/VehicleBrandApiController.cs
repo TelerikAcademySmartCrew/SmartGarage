@@ -51,8 +51,8 @@ namespace SmartGarage.WebAPI.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetById([FromQuery] Guid id)
+        [HttpGet("brandId:guid")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             try
             {
