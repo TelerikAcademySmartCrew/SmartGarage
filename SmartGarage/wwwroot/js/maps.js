@@ -38,7 +38,7 @@ function loadBingMapsScript(callback) {
 function loadMapScenario() {
     var bingMapsKeyScript = document.createElement('script');
     bingMapsKeyScript.type = 'text/javascript';
-    bingMapsKeyScript.src = 'https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=ApvRORj156hj-Yz4V_afezO6aKGaah_wlNO_WSnL7sRJ6igeOx_6LFB2biXEnFGu';
+    bingMapsKeyScript.src = 'https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=';
     bingMapsKeyScript.async = true;
     bingMapsKeyScript.defer = true;
     document.head.appendChild(bingMapsKeyScript);
